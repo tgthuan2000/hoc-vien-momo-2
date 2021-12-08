@@ -4,13 +4,19 @@
  */
 package Client;
 
+import BUS.RegisterBUS;
+import DTO.NguoiDungDTO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -19,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -38,6 +46,11 @@ public class Register extends javax.swing.JFrame {
     private static BufferedWriter out;
     private static BufferedReader in;
 
+    public static NguoiDungDTO nguoiDungDTO;
+    
+    public RegisterBUS bus; 
+    
+    
 
     /**
      * Creates new form Register
@@ -52,6 +65,7 @@ public class Register extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Đăng ký");
+        bus = new RegisterBUS();
     }
 
     /**
@@ -75,11 +89,11 @@ public class Register extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
-        txDate = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         rdNam = new javax.swing.JRadioButton();
         rdNu = new javax.swing.JRadioButton();
+        txtDate = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,12 +137,13 @@ public class Register extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setText("ngày sinh:");
+        jLabel3.setText("Ngày sinh:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Giới tính :");
 
         buttonGroup1.add(rdNam);
+        rdNam.setSelected(true);
         rdNam.setText(" Nam");
 
         buttonGroup1.add(rdNu);
@@ -145,27 +160,27 @@ public class Register extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addGroup(pnLoginLayout.createSequentialGroup()
                         .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(lbUser)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel3)
+                            .addComponent(lbUser))
+                        .addGap(106, 106, 106)
                         .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                             .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                            .addComponent(txDate, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(pnLoginLayout.createSequentialGroup()
                         .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbPass)
                             .addComponent(jLabel1))
-                        .addGap(46, 46, 46)
+                        .addGap(51, 51, 51)
                         .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnLoginLayout.createSequentialGroup()
                                 .addComponent(rdNam)
-                                .addGap(18, 18, 18)
+                                .addGap(27, 27, 27)
                                 .addComponent(rdNu))
                             .addComponent(txtPassAgain, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnLoginLayout.setVerticalGroup(
@@ -174,33 +189,35 @@ public class Register extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(lbTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbUser, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txDate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnLoginLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(rdNam)
                     .addComponent(rdNu))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(20, 20, 20)
+                .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbPass, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPassAgain, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -217,39 +234,40 @@ public class Register extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUserActionPerformed
-
-    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        // TODO add your handling code here:
-        if(!txtUser.getText().equals("") && !txtEmail.getText().equals("") && !txtPass.getText().equals("") && !txtPassAgain.getText().equals("")){
-            String regex = "^([_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{1,6}))?$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(txtEmail.getText());
-            if (matcher.matches()) {
-                if(txtPass.getText().equals(txtPassAgain.getText())){
-                    try {
-                        handleClientToServer(txtEmail.getText());
-                    } catch (IOException ex) {
-                        Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                     this.setVisible(false);
-                     new OTP().setVisible(true);
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Mật khẩu không khớp");
-                }
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "Định dạng email sai (abc@abc.com)");
-            }
-        }else{
-            JOptionPane.showMessageDialog(rootPane, "Vui lòng nhập đầy đủ thông tin");
-        }
-    }//GEN-LAST:event_btnRegisterActionPerformed
-
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
+
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        // TODO add your handling code here:
+                if(bus.ktThemNguoiDung()){
+                            boolean isGoiTinh = false;
+                            String ngaysinh = "";
+                            if(rdNam.isSelected()){
+                                isGoiTinh = true;
+                            }
+                            try {
+                                ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
+                                nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(),getMd5(txtPass.getText()),txtUser.getText().trim(),isGoiTinh,ngaysinh);
+                                if(bus.ktTrung(nguoiDungDTO)){
+                                     try {
+                                            handleClientToServer(txtEmail.getText());
+                                        } catch (IOException ex) {
+                                            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(),getMd5(txtPass.getText()),txtUser.getText().trim(),isGoiTinh,ngaysinh);
+                                    this.setVisible(false);
+                                    new OTP().setVisible(true);
+                                }
+                            } catch (Exception e) {
+                                JOptionPane.showMessageDialog(null,"Lỗi ngày sinh");
+                            }
+                }
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUserActionPerformed
 
     
     /**
@@ -300,15 +318,15 @@ public class Register extends javax.swing.JFrame {
 	}
 	public void run() {
 		try {
-				System.out.println("mail: " + email);
-				out.write(email + "\n");
-				out.flush();
-                                String rs = in.readLine();
-                                otp= rs.toString();
-				System.out.println("Receive: " + rs);
-                        in.close();
-			out.close();
-			socket.close();
+                    System.out.println("mail: " + email);
+                    out.write(email + "\n");
+                    out.flush();
+                    String rs = in.readLine();
+                    otp= rs.toString();
+                    System.out.println("Receive: " + rs);
+                    in.close();
+                    out.close();
+                    socket.close();
 		} catch (IOException e) {}
 	}
 }
@@ -323,6 +341,34 @@ public class Register extends javax.swing.JFrame {
 		handleOTP send = new handleOTP(socket, out,in,st);
 		executor.execute(send);
     }
+    
+    public static String getMd5(String input)
+    {
+        try {
+  
+            // Static getInstance method is called with hashing MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+  
+            // digest() method is called to calculate message digest
+            //  of an input digest() return array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+  
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+  
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } 
+  
+        // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegister;
@@ -335,12 +381,12 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbUser;
     private javax.swing.JPanel pnLogin;
-    private javax.swing.JRadioButton rdNam;
-    private javax.swing.JRadioButton rdNu;
-    private javax.swing.JFormattedTextField txDate;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JPasswordField txtPass;
-    private javax.swing.JPasswordField txtPassAgain;
-    private javax.swing.JTextField txtUser;
+    public static javax.swing.JRadioButton rdNam;
+    public static javax.swing.JRadioButton rdNu;
+    public static com.toedter.calendar.JDateChooser txtDate;
+    public static javax.swing.JTextField txtEmail;
+    public static javax.swing.JPasswordField txtPass;
+    public static javax.swing.JPasswordField txtPassAgain;
+    public static javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }

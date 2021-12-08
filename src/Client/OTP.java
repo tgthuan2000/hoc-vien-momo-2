@@ -4,8 +4,11 @@
  */
 package Client;
 
+import BUS.RegisterBUS;
 import static Client.Register.email;
 import static Client.Register.otp;
+import static Client.Register.nguoiDungDTO;
+import Server.ServerHocVienMomo.DAO.RegisterDAO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -35,6 +38,8 @@ public class OTP extends javax.swing.JFrame {
 
     private static BufferedWriter out;
     private static BufferedReader in;
+    
+    private RegisterBUS bus;
     /**
      * Creates new form OTP
      */
@@ -48,7 +53,7 @@ public class OTP extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("OTP");
-        //handleClientToServer();
+        bus = new RegisterBUS();
     }
 
     /**
@@ -168,8 +173,19 @@ public class OTP extends javax.swing.JFrame {
         if((System.currentTimeMillis() - time) < 60000){
             if(!txtOTP.getText().equals("")){
                 if(txtOTP.getText().equals(Register.otp)){
-                    this.setVisible(false);
-                    new Main().setVisible(true);
+                    try{
+                        if(bus.ThemNguoiDung(nguoiDungDTO)){
+                        JOptionPane.showMessageDialog(null,"Success");
+                        this.setVisible(false);
+                        new Main().setVisible(true);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Đã tồn tại username");
+                            this.setVisible(false);
+                            new Register().setVisible(true);
+                        }
+                    }catch(Exception e){
+                         
+                    }
                 }else{
                     JOptionPane.showMessageDialog(rootPane, "Bạn nhập chưa đúng OTP");
                 }

@@ -4,8 +4,11 @@
  */
 package Client;
 
+import BUS.LoginBUS;
+import DTO.NguoiDungDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -14,7 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author thanh
  */
 public class Login extends javax.swing.JFrame {
-
+    private LoginBUS bus;
     /**
      * Creates new form Login
      */
@@ -27,6 +30,7 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Đăng nhập");
         initComponents();
+        bus = new LoginBUS();
     }
 
     /**
@@ -150,7 +154,18 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        new Register().setVisible(true);
+        NguoiDungDTO tmp = new NguoiDungDTO(txtUser.getText().trim(), txtPass.getText());
+        if(!txtUser.getText().equals("") && !txtPass.getText().equals("") ){
+            if(bus.kiemTra(tmp)){
+                this.setVisible(false);
+                new Main().setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
+        }
+        
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
@@ -206,7 +221,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbUser;
     private javax.swing.JPanel pnLogin;
-    private javax.swing.JPasswordField txtPass;
-    private javax.swing.JTextField txtUser;
+    public static javax.swing.JPasswordField txtPass;
+    public static javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
 }
