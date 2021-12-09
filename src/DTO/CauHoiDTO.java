@@ -4,16 +4,18 @@ public class CauHoiDTO {
 
     private int id;
     private String cauHoi, cauDung;
-    private String[] danhSachCauSai;
+    private String cauSai1,cauSai2,cauSai3;
 
     public CauHoiDTO() {
     }
 
-    public CauHoiDTO(int id, String cauHoi, String cauDung, String[] cauSai) {
+    public CauHoiDTO(int id, String cauHoi, String cauDung, String cauSai1, String cauSai2, String cauSai3) {
         this.id = id;
         this.cauHoi = cauHoi;
         this.cauDung = cauDung;
-        this.danhSachCauSai = cauSai;
+        this.cauSai1 = cauSai1;
+        this.cauSai2 = cauSai2;
+        this.cauSai3 = cauSai3;
     }
 
     public int getId() {
@@ -24,6 +26,14 @@ public class CauHoiDTO {
         this.id = id;
     }
 
+    public String getCauHoi() {
+        return cauHoi;
+    }
+
+    public void setCauHoi(String cauHoi) {
+        this.cauHoi = cauHoi;
+    }
+
     public String getCauDung() {
         return cauDung;
     }
@@ -32,20 +42,30 @@ public class CauHoiDTO {
         this.cauDung = cauDung;
     }
 
-    public String[] getDanhSachCauSai() {
-        return danhSachCauSai;
+    public String getCauSai1() {
+        return cauSai1;
     }
 
-    public void setDanhSachCauSai(String[] cauSai) {
-        this.danhSachCauSai = cauSai;
+    public void setCauSai1(String cauSai1) {
+        this.cauSai1 = cauSai1;
     }
 
-    public String getCauHoi() {
-        return cauHoi;
+    public String getCauSai2() {
+        return cauSai2;
     }
 
-    public void setCauHoi(String cauHoi) {
-        this.cauHoi = cauHoi;
+    public void setCauSai2(String cauSai2) {
+        this.cauSai2 = cauSai2;
     }
+
+    public String getCauSai3() {
+        return cauSai3;
+    }
+
+    public void setCauSai3(String cauSai3) {
+        this.cauSai3 = cauSai3;
+    }
+
+   
 
 }
