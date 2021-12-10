@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class Connect {
     private String host=" ";
     private String user="sa";
-    private String psswd="123";
+    private String psswd="ngan2000";
     private String database=" ";
     private Connection con;
     private PreparedStatement ps=null;
@@ -37,12 +37,12 @@ public class Connect {
     
     protected Connection getConnection(){
         if(this.con==null){
-           
-            
+  
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 con= DriverManager.getConnection("jdbc:sqlserver://"+this.host+":1433;databasename="+this.database+";username="+this.user+";password="+this.psswd+"");
             } catch (Exception e) {
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Không thể kết nối đến cơ sở dữ liệu");
             }
         }
@@ -68,5 +68,9 @@ public class Connect {
     
     public boolean excuteUpdate() throws Exception{
         return this.ps.executeUpdate()>0;
+    }
+    public static void main(String[] args) {
+        Connect connect = new Connect("localhost","sa", "ngan2000", "hoc_vien_momo");
+        connect.getConnection();
     }
 }

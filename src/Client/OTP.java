@@ -281,7 +281,7 @@ public class OTP extends javax.swing.JFrame {
 		handleOTP send = new handleOTP(socket, out,in,st);
 		executor.execute(send);
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel jLabel1;
