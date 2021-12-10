@@ -11,22 +11,15 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -36,9 +29,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author thanh
  */
 public class Register extends javax.swing.JFrame {
+
     public static String email;
     public static String otp;
-    
+
     private static String host = "localhost";
     private static int port = 1237;
     private static Socket socket;
@@ -47,16 +41,14 @@ public class Register extends javax.swing.JFrame {
     private static BufferedReader in;
 
     public static NguoiDungDTO nguoiDungDTO;
-    
-    public RegisterBUS bus; 
-    
-    
+
+    public RegisterBUS bus;
 
     /**
      * Creates new form Register
      */
     public Register() {
-          try {
+        try {
             UIManager.setLookAndFeel(new com.jtattoo.plaf.graphite.GraphiteLookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,36 +232,35 @@ public class Register extends javax.swing.JFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
-                if(bus.ktThemNguoiDung()){
-                            boolean isGoiTinh = false;
-                            String ngaysinh = "";
-                            if(rdNam.isSelected()){
-                                isGoiTinh = true;
-                            }
-                            try {
-                                ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
-                                nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(),getMd5(txtPass.getText()),txtUser.getText().trim(),isGoiTinh,ngaysinh);
-                                if(bus.ktTrung(nguoiDungDTO)){
-                                     try {
-                                            handleClientToServer(txtEmail.getText());
-                                        } catch (IOException ex) {
-                                            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                    nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(),getMd5(txtPass.getText()),txtUser.getText().trim(),isGoiTinh,ngaysinh);
-                                    this.setVisible(false);
-                                    new OTP().setVisible(true);
-                                }
-                            } catch (Exception e) {
-                                JOptionPane.showMessageDialog(null,"Lỗi ngày sinh");
-                            }
+        if (bus.ktThemNguoiDung()) {
+            boolean isGoiTinh = false;
+            String ngaysinh = "";
+            if (rdNam.isSelected()) {
+                isGoiTinh = true;
+            }
+            try {
+                ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
+                nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), getMd5(txtPass.getText()), txtUser.getText().trim(), isGoiTinh, ngaysinh);
+                if (bus.ktTrung(nguoiDungDTO)) {
+                    try {
+                        handleClientToServer(txtEmail.getText());
+                    } catch (IOException ex) {
+                        Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), getMd5(txtPass.getText()), txtUser.getText().trim(), isGoiTinh, ngaysinh);
+                    this.setVisible(false);
+                    new OTP().setVisible(true);
                 }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Lỗi ngày sinh");
+            }
+        }
     }//GEN-LAST:event_btnRegisterActionPerformed
 
     private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUserActionPerformed
 
-    
     /**
      * @param args the command line arguments
      */
@@ -277,7 +268,7 @@ public class Register extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -304,67 +295,68 @@ public class Register extends javax.swing.JFrame {
             }
         });
     }
-    
-    class handleOTP implements Runnable {
-	private BufferedWriter out;
-        private BufferedReader in;
-	private Socket socket;
-        private String email;
-	public handleOTP(Socket s, BufferedWriter o,BufferedReader i,String email) {
-		this.socket = s;
-		this.out = o;
-                this.in = i;
-                this.email = email;
-	}
-	public void run() {
-		try {
-                    System.out.println("mail: " + email);
-                    out.write(email + "\n");
-                    out.flush();
-                    String rs = in.readLine();
-                    otp= rs.toString();
-                    System.out.println("Receive: " + rs);
-                    in.close();
-                    out.close();
-                    socket.close();
-		} catch (IOException e) {}
-	}
-}
 
-    public void handleClientToServer(String st) throws IOException{
-                email = st.toString();
-                socket = new Socket(host, port);
-		System.out.println("Client connected");
-		out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		ExecutorService executor = Executors.newFixedThreadPool(2);
-		handleOTP send = new handleOTP(socket, out,in,st);
-		executor.execute(send);
+    class handleOTP implements Runnable {
+
+        private BufferedWriter out;
+        private BufferedReader in;
+        private Socket socket;
+        private String email;
+
+        public handleOTP(Socket s, BufferedWriter o, BufferedReader i, String email) {
+            this.socket = s;
+            this.out = o;
+            this.in = i;
+            this.email = email;
+        }
+
+        public void run() {
+            try {
+                System.out.println("mail: " + email);
+                out.write(email + "\n");
+                out.flush();
+                String rs = in.readLine();
+                otp = rs.toString();
+                System.out.println("Receive: " + rs);
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+            }
+        }
     }
-    
-    public static String getMd5(String input)
-    {
+
+    public void handleClientToServer(String st) throws IOException {
+        email = st.toString();
+        socket = new Socket(host, port);
+        System.out.println("Client connected");
+        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        handleOTP send = new handleOTP(socket, out, in, st);
+        executor.execute(send);
+    }
+
+    public static String getMd5(String input) {
         try {
-  
+
             // Static getInstance method is called with hashing MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
-  
+
             // digest() method is called to calculate message digest
             //  of an input digest() return array of byte
             byte[] messageDigest = md.digest(input.getBytes());
-  
+
             // Convert byte array into signum representation
             BigInteger no = new BigInteger(1, messageDigest);
-  
+
             // Convert message digest into hex value
             String hashtext = no.toString(16);
             while (hashtext.length() < 32) {
                 hashtext = "0" + hashtext;
             }
             return hashtext;
-        } 
-  
-        // For specifying wrong message digest algorithms
+        } // For specifying wrong message digest algorithms
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

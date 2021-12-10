@@ -8,13 +8,11 @@ import BUS.RegisterBUS;
 import static Client.Register.email;
 import static Client.Register.otp;
 import static Client.Register.nguoiDungDTO;
-import Server.ServerHocVienMomo.DAO.RegisterDAO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,23 +21,24 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  *
  * @author thanh
  */
 public class OTP extends javax.swing.JFrame {
+
     public long time = System.currentTimeMillis();
-    
+
     private static String host = "localhost";
     private static int port = 1237;
     private static Socket socket;
 
     private static BufferedWriter out;
     private static BufferedReader in;
-    
+
     private RegisterBUS bus;
+
     /**
      * Creates new form OTP
      */
@@ -170,31 +169,31 @@ public class OTP extends javax.swing.JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         // TODO add your handling code here:
-        if((System.currentTimeMillis() - time) < 60000){
-            if(!txtOTP.getText().equals("")){
-                if(txtOTP.getText().equals(Register.otp)){
-                    try{
-                        if(bus.ThemNguoiDung(nguoiDungDTO)){
-                        JOptionPane.showMessageDialog(null,"Success");
-                        this.setVisible(false);
-                        new Main().setVisible(true);
-                        }else{
+        if ((System.currentTimeMillis() - time) < 60000) {
+            if (!txtOTP.getText().equals("")) {
+                if (txtOTP.getText().equals(Register.otp)) {
+                    try {
+                        if (bus.ThemNguoiDung(nguoiDungDTO)) {
+                            JOptionPane.showMessageDialog(null, "Success");
+                            this.setVisible(false);
+                            new Main().setVisible(true);
+                        } else {
                             JOptionPane.showMessageDialog(null, "Đã tồn tại username");
                             this.setVisible(false);
                             new Register().setVisible(true);
                         }
-                    }catch(Exception e){
-                         
+                    } catch (Exception e) {
+
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(rootPane, "Bạn nhập chưa đúng OTP");
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(rootPane, "Vui lòng nhập đầy đủ thông tin");
             }
-        }else{
-             JOptionPane.showMessageDialog(rootPane, "Đã hết thời gian sử dụng mã này");
-            
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Đã hết thời gian sử dụng mã này");
+
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
@@ -202,14 +201,13 @@ public class OTP extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             handleClientToServer(email);
-            JOptionPane.showMessageDialog(rootPane,"Đã gửi");
+            JOptionPane.showMessageDialog(rootPane, "Đã gửi");
             time = System.currentTimeMillis();
         } catch (IOException ex) {
             Logger.getLogger(OTP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jLabel4MouseClicked
 
-    
     /**
      * @param args the command line arguments
      */
@@ -217,7 +215,7 @@ public class OTP extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -244,44 +242,48 @@ public class OTP extends javax.swing.JFrame {
             }
         });
     }
-    
-     class handleOTP implements Runnable {
-	private BufferedWriter out;
-        private BufferedReader in;
-	private Socket socket;
-        private String email;
-	public handleOTP(Socket s, BufferedWriter o,BufferedReader i,String email) {
-		this.socket = s;
-		this.out = o;
-                this.in = i;
-                this.email = email;
-	}
-	public void run() {
-		try {
-				System.out.println("mail: " + email);
-				out.write(email + "\n");
-				out.flush();
-                                String rs = in.readLine();
-                                otp= rs.toString();
-				System.out.println("Receive: " + rs);
-                        in.close();
-			out.close();
-			socket.close();
-		} catch (IOException e) {}
-	}
-}
 
-    public void handleClientToServer(String st) throws IOException{
-                email = st.toString();
-                socket = new Socket(host, port);
-		System.out.println("Client connected");
-		out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		ExecutorService executor = Executors.newFixedThreadPool(2);
-		handleOTP send = new handleOTP(socket, out,in,st);
-		executor.execute(send);
+    class handleOTP implements Runnable {
+
+        private BufferedWriter out;
+        private BufferedReader in;
+        private Socket socket;
+        private String email;
+
+        public handleOTP(Socket s, BufferedWriter o, BufferedReader i, String email) {
+            this.socket = s;
+            this.out = o;
+            this.in = i;
+            this.email = email;
+        }
+
+        public void run() {
+            try {
+                System.out.println("mail: " + email);
+                out.write(email + "\n");
+                out.flush();
+                String rs = in.readLine();
+                otp = rs.toString();
+                System.out.println("Receive: " + rs);
+                in.close();
+                out.close();
+                socket.close();
+            } catch (IOException e) {
+            }
+        }
     }
-    
+
+    public void handleClientToServer(String st) throws IOException {
+        email = st.toString();
+        socket = new Socket(host, port);
+        System.out.println("Client connected");
+        out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        handleOTP send = new handleOTP(socket, out, in, st);
+        executor.execute(send);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel jLabel1;
