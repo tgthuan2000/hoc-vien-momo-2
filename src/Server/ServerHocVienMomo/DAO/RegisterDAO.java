@@ -10,47 +10,48 @@ import Server.ServerHocVienMomo.ConnectDB.Connect;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author thanh
  */
 public class RegisterDAO {
-    Connect my = new Connect("localhost", "sa", "123", "hoc_vien_momo");
-    
-    public RegisterDAO(){}
-    
+
+    Connect my = new Connect("localhost", "sa", "ngan2000", "hoc_vien_momo");
+
+    public RegisterDAO() {
+    }
+
     //lấy dữ liệu sản phẩm
-    public ArrayList<NguoiDungDTO> docguoiDung() throws Exception{
+    public ArrayList<NguoiDungDTO> docguoiDung() throws Exception {
         ArrayList<NguoiDungDTO> list = new ArrayList<>();
         try {
-        String sql="SELECT * FROM NguoiDung";
-        PreparedStatement ps = my.getPreparedStatement(sql);
-        ResultSet rs =my.executeQuery();
-        while(rs.next()){
-            NguoiDungDTO nd= new NguoiDungDTO();
-            nd.setUsername(rs.getString("Username"));
-            nd.setPassword(rs.getString("Password"));
-            nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
-            nd.setGioiTinh(rs.getBoolean("GioiTinh"));
-            nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
-            list.add(nd);
-        }
-            
+            String sql = "SELECT * FROM NguoiDung";
+            PreparedStatement ps = my.getPreparedStatement(sql);
+            ResultSet rs = my.executeQuery();
+            while (rs.next()) {
+                NguoiDungDTO nd = new NguoiDungDTO();
+                nd.setUsername(rs.getString("Username"));
+                nd.setPassword(rs.getString("Password"));
+                nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
+                nd.setGioiTinh(rs.getBoolean("GioiTinh"));
+                nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+                list.add(nd);
+            }
+
         } catch (Exception e) {
 //            e.printStackTrace();
         }
-       return list;
+        return list;
     }
-    
+
     //thêm dữ liêu uoi dung
-    public boolean Them(NguoiDungDTO user){
-     
-        String sql="INSERT INTO NguoiDung(Username,Password,TenNguoiDung,GioiTinh,NgaySinh,TongTran,TongTranThang,ChuoiThangMax,ChuoiThuaMax,ChuoiThang,ChuoiThua,TrangThaiChuoi,TongDiem,DiemIQ,Block)"
-                +"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" ;
+    public boolean Them(NguoiDungDTO user) {
+
+        String sql = "INSERT INTO NguoiDung(Username,Password,TenNguoiDung,GioiTinh,NgaySinh,TongTran,TongTranThang,ChuoiThangMax,ChuoiThuaMax,ChuoiThang,ChuoiThua,TrangThaiChuoi,TongDiem,DiemIQ,Block)"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
-            PreparedStatement ps =my.getPreparedStatement(sql);
+            PreparedStatement ps = my.getPreparedStatement(sql);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getTenNguoiDung());

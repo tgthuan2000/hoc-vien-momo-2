@@ -16,30 +16,32 @@ import java.util.ArrayList;
  * @author thanh
  */
 public class LoginDAO {
-    Connect my = new Connect("localhost", "sa", "123", "hoc_vien_momo");
-    
-    public LoginDAO(){}
-    
+
+    Connect my = new Connect("localhost", "sa", "ngan2000", "hoc_vien_momo");
+
+    public LoginDAO() {
+    }
+
     //lấy dữ liệu sản phẩm
-    public ArrayList<NguoiDungDTO> docguoiDung() throws Exception{
+    public ArrayList<NguoiDungDTO> docguoiDung() throws Exception {
         ArrayList<NguoiDungDTO> list = new ArrayList<>();
         try {
-        String sql="SELECT * FROM NguoiDung";
-        PreparedStatement ps = my.getPreparedStatement(sql);
-        ResultSet rs =my.executeQuery();
-        while(rs.next()){
-            NguoiDungDTO nd= new NguoiDungDTO();
-            nd.setUsername(rs.getString("Username"));
-            nd.setPassword(rs.getString("Password"));
-            nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
-            nd.setGioiTinh(rs.getBoolean("GioiTinh"));
-            nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
-            list.add(nd);
-        }
-            
+            String sql = "SELECT * FROM NguoiDung";
+            PreparedStatement ps = my.getPreparedStatement(sql);
+            ResultSet rs = my.executeQuery();
+            while (rs.next()) {
+                NguoiDungDTO nd = new NguoiDungDTO();
+                nd.setUsername(rs.getString("Username"));
+                nd.setPassword(rs.getString("Password"));
+                nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
+                nd.setGioiTinh(rs.getBoolean("GioiTinh"));
+                nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+                list.add(nd);
+            }
+
         } catch (Exception e) {
 //            e.printStackTrace();
         }
-       return list;
+        return list;
     }
 }
