@@ -25,6 +25,7 @@ public class UserDAO {
 
             ResultSet rs = my.executeQuery();
             while (rs.next()) {
+                nd.setUsername(rs.getString("Username"));
                 nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
                 nd.setChuoiThang(rs.getInt("ChuoiThang"));
                 nd.setChuoiThangMax(rs.getInt("ChuoiThangMax"));
@@ -37,7 +38,6 @@ public class UserDAO {
                 nd.setTongTran(rs.getInt("TongTran"));
                 nd.setTongTranThang(rs.getInt("TongTranThang"));
             }
-
             my.close();
         } catch (Exception e) {
             e.printStackTrace();

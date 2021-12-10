@@ -32,6 +32,7 @@ public class LoginBUS {
             BUS.writeLine(usr);
             BUS.writeLine(pwd);
             BUS.flush();
+
             if (BUS.readLine().equals(Key.NHAN_DANGNHAP)) {
                 nguoiDung.setTenNguoiDung(BUS.readLine());
                 nguoiDung.setChuoiThang(BUS.readLineInt());
