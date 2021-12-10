@@ -38,39 +38,58 @@ public class Worker implements Runnable {
     private NguoiDungDTO nguoiDungDTO;
 
     public Worker(Socket s, String uuid) throws IOException {
-        this.socket = s;
         this.uuid = uuid;
+        this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
         userBUS = new UserBUS();
         nguoiDungDTO = new NguoiDungDTO();
     }
 
+    private void writeLine(String str) throws IOException {
+        out.write(str.trim() + "\n");
+    }
+
+    private void writeLine(int num) throws IOException {
+        out.write(num + "\n");
+    }
+
+    private void writeLine(boolean b) throws IOException {
+        out.write(b + "\n");
+    }
+
     @Override
     public void run() {
         System.out.println("Client " + socket.toString() + " accepted");
-        while (true) {
-            try {
-                switch (in.readLine()) {    // cú pháp phân biệt lệnh
-                    case Key.DANGKY:
-                        dangKy();
-                        break;
-                    case Key.DANGNHAP:
-                        dangNhap();
-                        break;
-                    case Key.GUILAI_OTP:
-                        guiLaiOtp();
-                        break;
-                    case Key.CHECK_OTP:
-                        checkOtp();
-                        break;
-                    case Key.GUI_THONGTIN_USER:
-                        luuNguoiDung();
-                        break;
+        try {
+            while (true) {
+                try {
+                    switch (in.readLine()) {    // cú pháp phân biệt lệnh
+                        case Key.DANGKY:
+                            dangKy();
+                            break;
+                        case Key.DANGNHAP:
+                            dangNhap();
+                            break;
+                        case Key.GUILAI_OTP:
+                            guiLaiOtp();
+                            break;
+                        case Key.CHECK_OTP:
+                            checkOtp();
+                            break;
+                        case Key.GUI_THONGTIN_USER:
+                            luuNguoiDung();
+                            break;
+                    }
+                } catch (IOException ex) {
+                    break;
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
             }
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -79,21 +98,21 @@ public class Worker implements Runnable {
             String username = in.readLine();
             String password = in.readLine();
             nguoiDungDTO = userBUS.login(username, password);
-            if (!nguoiDungDTO.getUsername().isEmpty()) {
-                out.write(Key.NHAN_DANGNHAP + "\n");
-                out.write(nguoiDungDTO.getTenNguoiDung() + "\n");
-                out.write(nguoiDungDTO.getChuoiThang() + "\n");
-                out.write(nguoiDungDTO.getChuoiThangMax() + "\n");
-                out.write(nguoiDungDTO.getChuoiThua() + "\n");
-                out.write(nguoiDungDTO.getChuoiThuaMax() + "\n");
-                out.write(nguoiDungDTO.getDiemIQ() + "\n");
-                out.write(nguoiDungDTO.getGioiTinh() + "\n");
-                out.write(nguoiDungDTO.getNgaySinh() + "\n");
-                out.write(nguoiDungDTO.getTongDiem() + "\n");
-                out.write(nguoiDungDTO.getTongTran() + "\n");
-                out.write(nguoiDungDTO.getTongTranThang() + "\n");
+            if (nguoiDungDTO.getUsername() != null) {
+                writeLine(Key.NHAN_DANGNHAP);
+                writeLine(nguoiDungDTO.getTenNguoiDung());
+                writeLine(nguoiDungDTO.getChuoiThang());
+                writeLine(nguoiDungDTO.getChuoiThangMax());
+                writeLine(nguoiDungDTO.getChuoiThua());
+                writeLine(nguoiDungDTO.getChuoiThuaMax());
+                writeLine(nguoiDungDTO.getDiemIQ());
+                writeLine(nguoiDungDTO.getGioiTinh());
+                writeLine(nguoiDungDTO.getNgaySinh());
+                writeLine(nguoiDungDTO.getTongDiem());
+                writeLine(nguoiDungDTO.getTongTran());
+                writeLine(nguoiDungDTO.getTongTranThang());
             } else {
-                out.write(Key.KONHAN_DANGNHAP + "\n");
+                writeLine(Key.KONHAN_DANGNHAP);
             }
             out.flush();
         } catch (IOException e) {
@@ -108,10 +127,10 @@ public class Worker implements Runnable {
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
-                out.write(Key.NHAN_DANGKY + "\n");
+                writeLine(Key.NHAN_DANGKY);
                 guiOtp();
             } else {
-                out.write(Key.KONHAN_DANGKY + "\n");
+                writeLine(Key.KONHAN_DANGKY);
             }
             out.flush();
         } catch (IOException e) {
@@ -122,7 +141,7 @@ public class Worker implements Runnable {
     private void guiLaiOtp() {
         try {
             guiOtp();
-            out.write(Key.NHAN_GUILAI_OTP + "\n");
+            writeLine(Key.NHAN_GUILAI_OTP);
             out.flush();
         } catch (IOException ex) {
             System.out.println(ex);
@@ -175,10 +194,10 @@ public class Worker implements Runnable {
             System.out.println("Nhận OTP");
             if (in.readLine().equals(Integer.toString(Otp))) {
                 System.out.println("OTP đúng");
-                out.write(Key.NHAN_KETQUA_CHECK_OTP + "\n");
+                writeLine(Key.NHAN_KETQUA_CHECK_OTP);
             } else {
                 System.out.println("OTP sai");
-                out.write(Key.KONHAN_KETQUA_CHECK_OTP + "\n");
+                writeLine(Key.KONHAN_KETQUA_CHECK_OTP);
             }
             out.flush();
         } catch (IOException e) {
@@ -197,10 +216,10 @@ public class Worker implements Runnable {
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(dto)) {
-                out.write(Key.NHAN_KETQUA_DANGKY + "\n");
+                writeLine(Key.NHAN_KETQUA_DANGKY);
                 System.out.println("Lưu người dùng " + email + " thành công");
             } else {
-                out.write(Key.KONHAN_KETQUA_DANGKY + "\n");
+                writeLine(Key.KONHAN_KETQUA_DANGKY);
                 System.out.println("Lưu người dùng " + email + " thất bại");
             }
             out.flush();

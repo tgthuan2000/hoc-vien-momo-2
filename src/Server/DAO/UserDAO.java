@@ -14,7 +14,7 @@ public class UserDAO {
         my = new Connect();
     }
 
-    // kiểm tra đăng nhập
+    // kiểm tra đăng nhập // kt tk đã đăng nhập chưa
     public NguoiDungDTO dangnhap(String username, String pasword) {
         NguoiDungDTO nd = new NguoiDungDTO();
         try {
@@ -24,12 +24,19 @@ public class UserDAO {
             ps.setString(2, pasword);
 
             ResultSet rs = my.executeQuery();
-
-            nd.setUsername(rs.getString("Username"));
-            nd.setPassword(rs.getString("Password"));
-            nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
-            nd.setGioiTinh(rs.getBoolean("GioiTinh"));
-            nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+            while (rs.next()) {
+                nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
+                nd.setChuoiThang(rs.getInt("ChuoiThang"));
+                nd.setChuoiThangMax(rs.getInt("ChuoiThangMax"));
+                nd.setChuoiThua(rs.getInt("ChuoiThua"));
+                nd.setChuoiThuaMax(rs.getInt("ChuoiThuaMax"));
+                nd.setDiemIQ(rs.getInt("DiemIQ"));
+                nd.setGioiTinh(rs.getBoolean("GioiTinh"));
+                nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+                nd.setTongDiem(rs.getInt("TongDiem"));
+                nd.setTongTran(rs.getInt("TongTran"));
+                nd.setTongTranThang(rs.getInt("TongTranThang"));
+            }
 
             my.close();
         } catch (Exception e) {

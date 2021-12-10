@@ -31,13 +31,13 @@ public class RegisterBUS {
             BUS.socket = new Socket(host, port);
 
             System.out.println("Client connected");
-            BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.socket.getOutputStream()));
-            BUS.in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
+            BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
+            BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
 
-            BUS.out.write(Key.DANGKY + "\n");
-            BUS.out.write(st.trim() + "\n");
-            BUS.out.flush();
-            return BUS.in.readLine().equals(Key.NHAN_DANGKY) ? 1 : 0;
+            BUS.writeLine(Key.DANGKY);
+            BUS.writeLine(st);
+            BUS.flush();
+            return BUS.readLine().equals(Key.NHAN_DANGKY) ? 1 : 0;
         } catch (IOException ex) {
             return -1;
         }
@@ -45,10 +45,10 @@ public class RegisterBUS {
 
     public int guiLaiOtp() {
         try {
-            BUS.out.write(Key.GUILAI_OTP + "\n");
-            BUS.out.write(nguoiDung.getUsername() + "\n");
-            BUS.out.flush();
-            return BUS.in.readLine().equals(Key.NHAN_GUILAI_OTP) ? 1 : 0;
+            BUS.writeLine(Key.GUILAI_OTP);
+            BUS.writeLine(nguoiDung.getUsername());
+            BUS.flush();
+            return BUS.readLine().equals(Key.NHAN_GUILAI_OTP) ? 1 : 0;
         } catch (IOException ex) {
             return -1;
         }
@@ -56,17 +56,17 @@ public class RegisterBUS {
 
     public int checkOtp(String otp) {
         try {
-            BUS.out.write(Key.CHECK_OTP + "\n");
-            BUS.out.write(otp + "\n");
-            BUS.out.flush();
-            if (BUS.in.readLine().equals(Key.NHAN_KETQUA_CHECK_OTP)) {
-                BUS.out.write(Key.GUI_THONGTIN_USER + "\n");
-                BUS.out.write(nguoiDung.getPassword() + "\n");
-                BUS.out.write(nguoiDung.getTenNguoiDung() + "\n");
-                BUS.out.write(nguoiDung.getNgaySinh() + "\n");
-                BUS.out.write(nguoiDung.getGioiTinh() + "\n");
-                BUS.out.flush();
-                return BUS.in.readLine().equals(Key.NHAN_KETQUA_DANGKY) ? 1 : -2;
+            BUS.writeLine(Key.CHECK_OTP);
+            BUS.writeLine(otp);
+            BUS.flush();
+            if (BUS.readLine().equals(Key.NHAN_KETQUA_CHECK_OTP)) {
+                BUS.writeLine(Key.GUI_THONGTIN_USER);
+                BUS.writeLine(nguoiDung.getPassword());
+                BUS.writeLine(nguoiDung.getTenNguoiDung());
+                BUS.writeLine(nguoiDung.getNgaySinh());
+                BUS.writeLine(nguoiDung.getGioiTinh() + "");
+                BUS.flush();
+                return BUS.readLine().equals(Key.NHAN_KETQUA_DANGKY) ? 1 : -2;
             }
             return 0;
         } catch (IOException ex) {

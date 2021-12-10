@@ -2,6 +2,9 @@ package Client.BUS;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -12,6 +15,30 @@ public class BUS {
     public static BufferedWriter out;
     public static Socket socket;
     public static BufferedReader in;
+
+    public static void writeLine(String str) throws IOException {
+        out.write(str.trim() + "\n");
+    }
+
+    public static String readLine() throws IOException {
+        return in.readLine();
+    }
+
+    public static int readLineInt() throws IOException {
+        return Integer.parseInt(in.readLine());
+    }
+
+    public static void flush() throws IOException {
+        out.flush();
+    }
+
+    public static OutputStream getOutputStream() throws IOException {
+        return socket.getOutputStream();
+    }
+
+    public static InputStream getInputStream() throws IOException {
+        return socket.getInputStream();
+    }
 
     public static String getMd5(String input) {
         try {
