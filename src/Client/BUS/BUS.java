@@ -10,6 +10,8 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BUS {
 
@@ -17,9 +19,18 @@ public class BUS {
     public static BufferedWriter out;
     public static BufferedReader in;
     public static NguoiDungDTO user;
+    public static ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    public static void execute(Runnable runnable) {
+        executor.execute(runnable);
+    }
 
     public static void writeLine(String str) throws IOException {
         out.write(str.trim() + "\n");
+    }
+
+    public static void shutdown() throws IOException {
+        executor.shutdown();
     }
 
     public static String readLine() throws IOException {

@@ -30,24 +30,19 @@ public class WattingGame implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
-                if (in.readLine().equals(Key.ACCEPT_GAME)) {
-                    System.out.println("Chấp nhận game");
-                    int rs = JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!");
-                    if (rs == JOptionPane.YES_OPTION) {
-                        writeLine(Key.OK_ACCEPT_GAME);
-                        break;
-                    } else {
-                        writeLine(Key.NO_ACCEPT_GAME);
-                    }
+            if (in.readLine().equals(Key.ACCEPT_GAME)) {
+                System.out.println("Chấp nhận game");
+                int rs = JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!");
+                if (rs == JOptionPane.YES_OPTION) {
+                    writeLine(Key.OK_ACCEPT_GAME);
                     out.flush();
-                    // writeLine(Key.CANCLE_ACCEPT_GAME);
+                    in.close();
+                    out.close();
+                    socket.close();
+                } else {
+                    writeLine(Key.NO_ACCEPT_GAME);
                 }
             }
-            out.flush();
-            in.close();
-            out.close();
-            socket.close();
         } catch (IOException ex) {
             Logger.getLogger(WattingGame.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -4,12 +4,8 @@ import Client.Status;
 import Client.Thread.WattingGame;
 import Shares.Key;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainBUS {
-
-    private ExecutorService executor;
 
     public MainBUS() {
     }
@@ -20,8 +16,7 @@ public class MainBUS {
             BUS.flush();
 
             if (BUS.readLine().equals(Key.WAITTING_GAME)) {
-                executor = Executors.newFixedThreadPool(1);
-                executor.execute(new WattingGame(BUS.socket));
+                BUS.execute(new WattingGame(BUS.socket));
                 return Status.OK;
             }
             return Status.FAILD;
@@ -36,7 +31,7 @@ public class MainBUS {
             BUS.flush();
 
             if (BUS.readLine().equals(Key.ACCEPT_CANCLE_GAME)) {
-                executor.shutdown();
+                BUS.shutdown();
                 return Status.OK;
             }
             return Status.FAILD;
