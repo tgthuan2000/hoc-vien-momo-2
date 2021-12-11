@@ -20,10 +20,11 @@ public class LoginBUS {
         try {
             pwd = BUS.getMd5(pwd); // mã hoá mật khẩu
             // kết nối server
-            BUS.socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
-            BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
-            BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
-
+            if (BUS.socket == null) {
+                BUS.socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
+                BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
+                BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
+            }
             // gửi tín hiệu đăng nhập và usr, pwd
             BUS.writeLine(Key.DANGNHAP);
             BUS.writeLine(usr);
@@ -31,7 +32,8 @@ public class LoginBUS {
             BUS.flush();
 
             // nhận tín hiệu đăng nhập
-            if (BUS.readLine().equals(Key.NHAN_DANGNHAP)) {
+            String rs = BUS.readLine();
+            if (rs.equals(Key.NHAN_DANGNHAP)) {
                 NguoiDungDTO nguoiDung = new NguoiDungDTO();
                 nguoiDung.setTenNguoiDung(BUS.readLine());
                 nguoiDung.setChuoiThang(BUS.readLineInt());
@@ -47,6 +49,8 @@ public class LoginBUS {
 
                 BUS.user = nguoiDung; // đăng nhập, ghi nhận thông tin vào biến toàn cục
                 return Status.OK;
+            } else if (rs.equals(Key.DATONTAI_DANGNHAP)) {
+                return Status.LOI_TONTAI_DANGNHAP;
             }
             return Status.FAILD;
         } catch (IOException ex) {

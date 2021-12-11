@@ -27,10 +27,12 @@ public class RegisterBUS {
     public int dangKy(String st) {
         try {
             // kết nối server
-            BUS.socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
-            BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
-            BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
-            System.out.println("Client connected");
+            if (BUS.socket == null) {
+                BUS.socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
+                BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
+                BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
+                System.out.println("Client connected");
+            }
 
             // gửi tín hiệu đăng kí và kiểm tra email
             BUS.writeLine(Key.DANGKY);

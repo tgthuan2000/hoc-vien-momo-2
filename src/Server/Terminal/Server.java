@@ -12,21 +12,18 @@ public class Server {
     public final int port;
     public final int numThread;
     private static ServerSocket server = null;
-    public static Vector<Worker> workers = new Vector<>();
+    public static Vector<String> users = new Vector<>();
 
     public Server() throws IOException {
         port = ServerConfig.PORT;
         numThread = ServerConfig.NUM_THREAD;
-        int i = 0;
         ExecutorService executor = Executors.newFixedThreadPool(numThread);
         try {
             server = new ServerSocket(port);
             System.out.println("Server binding at port " + port);
             System.out.println("Waiting for client...");
             while (true) {
-                Worker client = new Worker(server.accept(), Integer.toString(++i));
-                executor.execute(client);
-                workers.add(client);
+                executor.execute(new Worker(server.accept()));
             }
         } catch (IOException e) {
             System.out.println(e);

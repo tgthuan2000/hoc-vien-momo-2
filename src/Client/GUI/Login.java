@@ -160,6 +160,9 @@ public class Login extends javax.swing.JFrame {
                         this.setVisible(false);
                         new Main().setVisible(true);
                         break;
+                    case Status.LOI_TONTAI_DANGNHAP:
+                        JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
+                        break;
                     case Status.FAILD:
                         JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
                         break;

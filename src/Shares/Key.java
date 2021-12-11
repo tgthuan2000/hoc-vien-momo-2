@@ -9,6 +9,7 @@ public class Key {
     public static final String NHAN_DANGNHAP = "NHAN_DANGNHAP";
     public static final String KONHAN_DANGKY = "KONHAN_DANGKY";
     public static final String KONHAN_DANGNHAP = "KONHAN_DANGNHAP";
+    public static final String DATONTAI_DANGNHAP = "DATONTAI_DANGNHAP";
 
     public static final String GUILAI_OTP = "GUILAI_OTP";
     public static final String NHAN_GUILAI_OTP = "NHAN_GUILAI_OTP";

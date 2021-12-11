@@ -31,14 +31,12 @@ public class Worker implements Runnable {
     private final Socket socket;
     private final BufferedReader in;
     private final BufferedWriter out;
-    private final String uuid;
     private final UserBUS userBUS;
     private String email;
     private int Otp;
     private NguoiDungDTO nguoiDungDTO;
 
-    public Worker(Socket s, String uuid) throws IOException {
-        this.uuid = uuid;
+    public Worker(Socket s) throws IOException {
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
@@ -98,21 +96,36 @@ public class Worker implements Runnable {
             String username = in.readLine();
             String password = in.readLine();
             nguoiDungDTO = userBUS.login(username, password);
+            boolean flag = true;
             if (nguoiDungDTO.getUsername() != null) {
-                writeLine(Key.NHAN_DANGNHAP);
-                writeLine(nguoiDungDTO.getTenNguoiDung());
-                writeLine(nguoiDungDTO.getChuoiThang());
-                writeLine(nguoiDungDTO.getChuoiThangMax());
-                writeLine(nguoiDungDTO.getChuoiThua());
-                writeLine(nguoiDungDTO.getChuoiThuaMax());
-                writeLine(nguoiDungDTO.getDiemIQ());
-                writeLine(nguoiDungDTO.getGioiTinh());
-                writeLine(nguoiDungDTO.getNgaySinh());
-                writeLine(nguoiDungDTO.getTongDiem());
-                writeLine(nguoiDungDTO.getTongTran());
-                writeLine(nguoiDungDTO.getTongTranThang());
+                for (String user : Server.users) {
+                    if (user.equals(nguoiDungDTO.getUsername())) {
+                        flag = false;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    writeLine(Key.NHAN_DANGNHAP);
+                    writeLine(nguoiDungDTO.getTenNguoiDung());
+                    writeLine(nguoiDungDTO.getChuoiThang());
+                    writeLine(nguoiDungDTO.getChuoiThangMax());
+                    writeLine(nguoiDungDTO.getChuoiThua());
+                    writeLine(nguoiDungDTO.getChuoiThuaMax());
+                    writeLine(nguoiDungDTO.getDiemIQ());
+                    writeLine(nguoiDungDTO.getGioiTinh());
+                    writeLine(nguoiDungDTO.getNgaySinh());
+                    writeLine(nguoiDungDTO.getTongDiem());
+                    writeLine(nguoiDungDTO.getTongTran());
+                    writeLine(nguoiDungDTO.getTongTranThang());
+                    Server.users.add(nguoiDungDTO.getUsername());
+                } else {
+                    writeLine(Key.DATONTAI_DANGNHAP);
+                    System.out.println("Tài khoản đã đăng nhập");
+                }
             } else {
                 writeLine(Key.KONHAN_DANGNHAP);
+                System.out.println("Đăng nhập thất bại");
             }
             out.flush();
         } catch (IOException e) {

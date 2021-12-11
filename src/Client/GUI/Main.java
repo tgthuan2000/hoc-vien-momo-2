@@ -16,6 +16,12 @@ public class Main extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Trang chủ");
         initComponents();
+
+        init();
+    }
+
+    private void init() {
+
     }
 
     /**

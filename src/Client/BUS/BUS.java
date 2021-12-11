@@ -13,8 +13,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class BUS {
 
-    public static BufferedWriter out;
     public static Socket socket;
+    public static BufferedWriter out;
     public static BufferedReader in;
     public static NguoiDungDTO user;
 
