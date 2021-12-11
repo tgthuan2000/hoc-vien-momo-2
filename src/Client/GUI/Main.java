@@ -1,11 +1,17 @@
 package Client.GUI;
 
+import Client.BUS.MainBUS;
+import Client.Status;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main extends javax.swing.JFrame {
+
+    private final MainBUS mainBUS;
+    private boolean flag;
 
     public Main() {
         try {
@@ -16,12 +22,8 @@ public class Main extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Trang chủ");
         initComponents();
-
-        init();
-    }
-
-    private void init() {
-
+        mainBUS = new MainBUS();
+        flag = true;
     }
 
     /**
@@ -299,10 +301,35 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchFocusLost
 
     private void btnPlayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlayMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        PlayGame play = new PlayGame();
-        play.setVisible(true);
+        if (flag) {
+            switch (mainBUS.playgame()) {
+                case Status.OK:
+                    flag = false;
+                    btnPlay.setText("Huỷ");
+                    break;
+                case Status.FAILD:
+                    JOptionPane.showMessageDialog(rootPane, "Gia nhập hàng chờ thất bại");
+                    break;
+                case Status.LOI_KETNOI_SERVER:
+                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                    break;
+            }
+        } else {
+            switch (mainBUS.canclegame()) {
+                case Status.OK:
+                    btnPlay.setText("Bắt đầu");
+                    flag = true;
+                    JOptionPane.showMessageDialog(rootPane, "OK huỷ");
+                    break;
+                case Status.FAILD:
+                    JOptionPane.showMessageDialog(rootPane, "Lỗi thoát hàng chờ");
+                    break;
+                case Status.LOI_KETNOI_SERVER:
+                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                    break;
+            }
+
+        }
     }//GEN-LAST:event_btnPlayMouseClicked
 
     private void btnIQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIQActionPerformed

@@ -23,4 +23,15 @@ public class Key {
     public static final String NHAN_KETQUA_DANGKY = "NHAN_KETQUA_DANGKY";
     public static final String KONHAN_KETQUA_DANGKY = "KONHAN_KETQUA_DANGKY";
 
+    public static final String PLAY_GAME = "PLAY_GAME";
+    public static final String WAITTING_GAME = "WAITTING_GAME";
+    public static final String NOWAITTING_GAME = "NOWAITTING_GAME";
+
+    public static final String CANCLE_GAME = "CANCLE_GAME";
+    public static final String ACCEPT_CANCLE_GAME = "ACCEPT_CANCLE_GAME";
+    public static final String DENY_CANCLE_GAME = "DENY_CANCLE_GAME";
+
+    public static final String ACCEPT_GAME = "ACCEPT_GAME";
+    public static final String OK_ACCEPT_GAME = "OK_ACCEPT_GAME";
+    public static final String NO_ACCEPT_GAME = "NO_ACCEPT_GAME";
 }

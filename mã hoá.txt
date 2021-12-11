@@ -1,0 +1,13 @@
+Cặp key RSA -> CỐ ĐỊNH
+Client: giữ public key RSA
+Server: giữ private key RSA
+
+Client:
+Khi kết nối server sẽ sinh ra 1 khoá đối xứng AES -> random
+Mã hoá khoá AES trên bằng public key RSA
+Gửi LẦN ĐẦU lên server
+
+Server:
+Giải mã hỗn hợp public key RSA + AES -> AES
+
+Cả client và server sẽ dùng AES để mã hoá và giải mã
