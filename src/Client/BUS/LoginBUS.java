@@ -1,5 +1,6 @@
 package Client.BUS;
 
+import Client.Status;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import Shares.ServerConfig;
@@ -9,31 +10,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class LoginBUS {
-
-    public ArrayList<NguoiDungDTO> nguoiDungs;
-    private final String host = ServerConfig.SERVER;
-    private final int port = ServerConfig.PORT;
-    private NguoiDungDTO nguoiDung;
 
     public LoginBUS() {
     }
 
     public int login(String usr, String pwd) {
         try {
-            pwd = BUS.getMd5(pwd);
-            BUS.socket = new Socket(host, port);
+            pwd = BUS.getMd5(pwd); // mã hoá mật khẩu
+            // kết nối server
+            BUS.socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
             BUS.out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
             BUS.in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
 
+            // gửi tín hiệu đăng nhập và usr, pwd
             BUS.writeLine(Key.DANGNHAP);
             BUS.writeLine(usr);
             BUS.writeLine(pwd);
             BUS.flush();
 
+            // nhận tín hiệu đăng nhập
             if (BUS.readLine().equals(Key.NHAN_DANGNHAP)) {
+                NguoiDungDTO nguoiDung = new NguoiDungDTO();
                 nguoiDung.setTenNguoiDung(BUS.readLine());
                 nguoiDung.setChuoiThang(BUS.readLineInt());
                 nguoiDung.setChuoiThangMax(BUS.readLineInt());
@@ -46,12 +45,12 @@ public class LoginBUS {
                 nguoiDung.setTongTran(BUS.readLineInt());
                 nguoiDung.setTongTranThang(BUS.readLineInt());
 
-                BUS.user = nguoiDung; // login
-                return 1;
+                BUS.user = nguoiDung; // đăng nhập, ghi nhận thông tin vào biến toàn cục
+                return Status.OK;
             }
-            return 0;
+            return Status.FAILD;
         } catch (IOException ex) {
-            return -1;
+            return Status.LOI_KETNOI_SERVER;
         }
     }
 }

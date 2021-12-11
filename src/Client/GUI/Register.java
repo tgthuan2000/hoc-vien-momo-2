@@ -2,6 +2,7 @@ package Client.GUI;
 
 import Client.BUS.BUS;
 import Client.BUS.RegisterBUS;
+import Client.Status;
 import Shares.DTO.NguoiDungDTO;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -244,15 +245,18 @@ public class Register extends javax.swing.JFrame {
             try {
                 ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
                 NguoiDungDTO nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), BUS.getMd5(txtPass.getText()), txtUser.getText().trim(), isGioiTinh, ngaysinh);
-                switch (bus.handleClientToServer(txtEmail.getText())) {
-                    case 1:
+                switch (bus.dangKy(txtEmail.getText())) {
+                    case Status.OK:
                         this.setVisible(false);
                         new OTP(nguoiDungDTO).setVisible(true);
                         break;
-                    case 0:
+                    case Status.FAILD:
                         JOptionPane.showMessageDialog(null, "Email đã tồn tại");
                         break;
-                    case -1:
+                    case Status.LOI_GUI_OTP:
+                        JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
+                        break;
+                    case Status.LOI_KETNOI_SERVER:
                         JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
                         break;
                 }

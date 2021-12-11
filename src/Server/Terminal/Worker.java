@@ -127,8 +127,11 @@ public class Worker implements Runnable {
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
-                writeLine(Key.NHAN_DANGKY);
-                guiOtp();
+                if (guiOtp()) {
+                    writeLine(Key.NHAN_DANGKY);
+                } else {
+                    writeLine(Key.KONHAN_GUI_OTP);
+                }
             } else {
                 writeLine(Key.KONHAN_DANGKY);
             }
@@ -140,15 +143,18 @@ public class Worker implements Runnable {
 
     private void guiLaiOtp() {
         try {
-            guiOtp();
-            writeLine(Key.NHAN_GUILAI_OTP);
+            if (guiOtp()) {
+                writeLine(Key.NHAN_GUILAI_OTP);
+            } else {
+                writeLine(Key.KONHAN_GUI_OTP);
+            }
             out.flush();
         } catch (IOException ex) {
             System.out.println(ex);
         }
     }
 
-    private void guiOtp() {
+    private boolean guiOtp() {
         Random random = new Random();
         Otp = random.nextInt(from) + to;
 
@@ -183,10 +189,11 @@ public class Worker implements Runnable {
             Transport.send(message);
 
             System.out.println("Done");
-
+            return true;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private void checkOtp() {

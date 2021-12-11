@@ -1,6 +1,7 @@
 package Client.GUI;
 
 import Client.BUS.LoginBUS;
+import Client.Status;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -155,14 +156,14 @@ public class Login extends javax.swing.JFrame {
             Matcher matcher = pattern.matcher(user);
             if (matcher.matches()) {
                 switch (bus.login(user, pwd)) {
-                    case 1:
+                    case Status.OK:
                         this.setVisible(false);
                         new Main().setVisible(true);
                         break;
-                    case 0:
+                    case Status.FAILD:
                         JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
                         break;
-                    case -1:
+                    case Status.LOI_KETNOI_SERVER:
                         JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
                         break;
                 }
