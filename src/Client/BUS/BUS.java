@@ -1,5 +1,6 @@
 package Client.BUS;
 
+import Shares.DTO.NguoiDungDTO;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class BUS {
     public static BufferedWriter out;
     public static Socket socket;
     public static BufferedReader in;
+    public static NguoiDungDTO user;
 
     public static void writeLine(String str) throws IOException {
         out.write(str.trim() + "\n");

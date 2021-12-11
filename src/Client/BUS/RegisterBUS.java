@@ -60,13 +60,18 @@ public class RegisterBUS {
             BUS.writeLine(otp);
             BUS.flush();
             if (BUS.readLine().equals(Key.NHAN_KETQUA_CHECK_OTP)) {
+                // Gửi lại server toàn bộ thông tin user đăng kí để ghi vào cơ sở dữ liệu
                 BUS.writeLine(Key.GUI_THONGTIN_USER);
                 BUS.writeLine(nguoiDung.getPassword());
                 BUS.writeLine(nguoiDung.getTenNguoiDung());
                 BUS.writeLine(nguoiDung.getNgaySinh());
                 BUS.writeLine(nguoiDung.getGioiTinh() + "");
                 BUS.flush();
-                return BUS.readLine().equals(Key.NHAN_KETQUA_DANGKY) ? 1 : -2;
+                if (BUS.readLine().equals(Key.NHAN_KETQUA_DANGKY)) {
+                    BUS.user = nguoiDung; // login
+                    return 1;
+                }
+                return -2;
             }
             return 0;
         } catch (IOException ex) {

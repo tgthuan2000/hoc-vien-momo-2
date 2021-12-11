@@ -46,6 +46,7 @@ public class LoginBUS {
                 nguoiDung.setTongTran(BUS.readLineInt());
                 nguoiDung.setTongTranThang(BUS.readLineInt());
 
+                BUS.user = nguoiDung; // login
                 return 1;
             }
             return 0;
