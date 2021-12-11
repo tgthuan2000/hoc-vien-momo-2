@@ -56,6 +56,11 @@ public class Worker implements Runnable {
         out.write(b + "\n");
     }
 
+    private String readLine(String hash) {
+        // giải mã
+        return "";
+    }
+
     @Override
     public void run() {
         System.out.println("Client " + socket.toString() + " accepted");
@@ -98,8 +103,8 @@ public class Worker implements Runnable {
             nguoiDungDTO = userBUS.login(username, password);
             boolean flag = true;
             if (nguoiDungDTO.getUsername() != null) {
-                for (String user : Server.users) {
-                    if (user.equals(nguoiDungDTO.getUsername())) {
+                for (NguoiDungDTO user : ServerMain.users) {
+                    if (user.getUsername().equals(nguoiDungDTO.getUsername())) {
                         flag = false;
                         break;
                     }
@@ -118,7 +123,7 @@ public class Worker implements Runnable {
                     writeLine(nguoiDungDTO.getTongDiem());
                     writeLine(nguoiDungDTO.getTongTran());
                     writeLine(nguoiDungDTO.getTongTranThang());
-                    Server.users.add(nguoiDungDTO.getUsername());
+                    ServerMain.users.add(nguoiDungDTO);
                 } else {
                     writeLine(Key.DATONTAI_DANGNHAP);
                     System.out.println("Tài khoản đã đăng nhập");
@@ -136,7 +141,7 @@ public class Worker implements Runnable {
     private void dangKy() {
         try {
             StringBuilder str = new StringBuilder();
-            str.append(in.readLine());
+            str.append(in.readLine()); // email
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();

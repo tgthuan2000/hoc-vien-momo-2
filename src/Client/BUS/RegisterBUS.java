@@ -36,7 +36,7 @@ public class RegisterBUS {
 
             // gửi tín hiệu đăng kí và kiểm tra email
             BUS.writeLine(Key.DANGKY);
-            BUS.writeLine(st);
+            BUS.writeLine(st); // email
             BUS.flush();
 
             // kiểm tra nhận đăng kí để chuyển sang otp

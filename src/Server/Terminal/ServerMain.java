@@ -1,5 +1,6 @@
 package Server.Terminal;
 
+import Shares.DTO.NguoiDungDTO;
 import Shares.ServerConfig;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,14 +8,14 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class ServerMain {
 
     public final int port;
     public final int numThread;
     private static ServerSocket server = null;
-    public static Vector<String> users = new Vector<>();
+    public static Vector<NguoiDungDTO> users = new Vector<>();
 
-    public Server() throws IOException {
+    public ServerMain() throws IOException {
         port = ServerConfig.PORT;
         numThread = ServerConfig.NUM_THREAD;
         ExecutorService executor = Executors.newFixedThreadPool(numThread);

@@ -6,17 +6,11 @@
 package Server.GUI;
 
 import Server.BUS.ServerBUS;
-import Shares.DTO.CauHinhDTO;
+import Server.Terminal.ServerMain;
 import Shares.DTO.CauHinhDTO;
 import Shares.DTO.CauHoiDTO;
-import Shares.DTO.CauHoiDTO;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
-import sun.rmi.runtime.Log;
 
 /**
  *
@@ -40,12 +34,13 @@ public class Gui extends javax.swing.JFrame {
         model1 = (DefaultTableModel) tb2.getModel();
         readconfromsql();
         readcauhoifromsql();
+        JOptionPane.showMessageDialog(rootPane, ServerMain.users.size());
     }
 
     public void readconfromsql() {
         for (CauHinhDTO co : bus.readConfig()) {
             model.addRow(new Object[]{
-                 co.getSoLuongCauHoi(), co.getDiemTranDau(), co.getThoiGian()
+                co.getSoLuongCauHoi(), co.getDiemTranDau(), co.getThoiGian()
             });
         }
         tb1.setModel(model);
@@ -54,7 +49,7 @@ public class Gui extends javax.swing.JFrame {
     public void readcauhoifromsql() {
         for (CauHoiDTO cauhoi : bus.readcauhoi()) {
             model1.addRow(new Object[]{
-                 cauhoi.getCauHoi(), cauhoi.getCauDung(), cauhoi.getCauSai1(), cauhoi.getCauSai2(), cauhoi.getCauSai3()
+                cauhoi.getCauHoi(), cauhoi.getCauDung(), cauhoi.getCauSai1(), cauhoi.getCauSai2(), cauhoi.getCauSai3()
             });
         }
         tb2.setModel(model1);
@@ -333,18 +328,17 @@ public class Gui extends javax.swing.JFrame {
     private void tb1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb1MouseClicked
         int i = tb1.getSelectedRow();
         if (i >= 0) {
-         
+
             txtnum.setText(tb1.getModel().getValueAt(i, 0).toString());
             txtcore.setText(tb1.getModel().getValueAt(i, 1).toString());
             txttime.setText(tb1.getModel().getValueAt(i, 2).toString());
 
-          
         }        // TODO add your handling code here:
     }//GEN-LAST:event_tb1MouseClicked
+
     public boolean check() {
 
         boolean ischeck1 = true;
-
 
         if (txtcore.getText().length() == 0) {
             ischeck1 = false;
@@ -361,6 +355,7 @@ public class Gui extends javax.swing.JFrame {
         }
         return ischeck1;
     }
+
     public boolean check1() {
 
         boolean ischeck1 = true;
@@ -378,7 +373,7 @@ public class Gui extends javax.swing.JFrame {
 
         }
         if (false1.getText().length() == 0) {
- 
+
             ischeck1 = false;
 
         }
@@ -411,7 +406,7 @@ public class Gui extends javax.swing.JFrame {
                 int pos = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn sửa trường này?");
                 if (pos == JOptionPane.YES_OPTION) {
                     if (bus.changeconfig(config1)) {
-                        CauHinhDTO cauhinh = bus.readConfig().set(i,config1);
+                        CauHinhDTO cauhinh = bus.readConfig().set(i, config1);
 //                        model.setValueAt(config1.getId(), i, 0);
                         model.setValueAt(config1.getSoLuongCauHoi(), i, 0);
                         model.setValueAt(config1.getDiemTranDau(), i, 1);
@@ -453,8 +448,7 @@ public class Gui extends javax.swing.JFrame {
             cau.setCauSai2(false2.getText());
             cau.setCauSai3(false3.getText());
 
-
-            if (check1 == true ) {
+            if (check1 == true) {
                 int res = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn thêm câu hỏi này?");
                 if (res == JOptionPane.YES_OPTION) {
                     if (bus.addcauhoi(cau)) {
@@ -475,9 +469,9 @@ public class Gui extends javax.swing.JFrame {
 
         txtcore.setText("");
         txttime.setText("");
-        
+
         txtnum.setText("");
-        
+
         txtquestion.setText("");
         txttime.setText("");
         txttrue.setText("");
@@ -487,12 +481,14 @@ public class Gui extends javax.swing.JFrame {
 //        txtid.setEnabled(false);
 //        txtid1.setEnabled(false);
     }//GEN-LAST:event_btnresetActionPerformed
-     public void showResult(){
-         CauHoiDTO cau= bus.dsch.get(bus.dsch.size()-1);
-         model1.addRow(new Object[] {
-            cau.getCauHoi(),cau.getCauDung(),cau.getCauSai1(),cau.getCauSai2(),cau.getCauSai3()
-            });
+
+    public void showResult() {
+        CauHoiDTO cau = bus.dsch.get(bus.dsch.size() - 1);
+        model1.addRow(new Object[]{
+            cau.getCauHoi(), cau.getCauDung(), cau.getCauSai1(), cau.getCauSai2(), cau.getCauSai3()
+        });
     }
+
     public void reset() {
 
 //        txtid.setText("");
@@ -510,7 +506,7 @@ public class Gui extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
