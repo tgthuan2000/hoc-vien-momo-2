@@ -12,7 +12,7 @@ public class LoginBUS {
     public int login(String usr, String pwd) {
         try {
             pwd = BUS.getMd5(pwd); // mã hoá mật khẩu
-            // kết nối server
+            // kết nối serverrrrrrr
             BUS.connect();
             // gửi tín hiệu đăng nhập và usr, pwd
             BUS.writeLine(Key.DANGNHAP);
