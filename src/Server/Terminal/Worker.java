@@ -115,34 +115,40 @@ public class Worker implements Runnable {
             String username = in.readLine();
             String password = in.readLine();
             nguoiDungDTO = userBUS.login(username, password);
-            boolean flag = true;
+
             if (nguoiDungDTO.getUsername() != null) {
-                for (NguoiDungDTO user : ServerMain.users) {
-                    if (user.getUsername().equals(nguoiDungDTO.getUsername())) {
-                        flag = false;
-                        break;
+                if (nguoiDungDTO.isIsBlock()) {
+                    writeLine(Key.TAIKHOAN_BLOCK);
+                    System.out.println("Tài khoản đã bị block");
+                } else {
+                    boolean flag = true;
+                    for (NguoiDungDTO user : ServerMain.users) {
+                        if (user.getUsername().equals(nguoiDungDTO.getUsername())) {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (flag && ServerMain.users.add(nguoiDungDTO)) {
+                        writeLine(Key.NHAN_DANGNHAP);
+                        writeLine(nguoiDungDTO.getTenNguoiDung());
+                        writeLine(nguoiDungDTO.getChuoiThang());
+                        writeLine(nguoiDungDTO.getChuoiThangMax());
+                        writeLine(nguoiDungDTO.getChuoiThua());
+                        writeLine(nguoiDungDTO.getChuoiThuaMax());
+                        writeLine(nguoiDungDTO.getDiemIQ());
+                        writeLine(nguoiDungDTO.getGioiTinh());
+                        writeLine(nguoiDungDTO.getNgaySinh());
+                        writeLine(nguoiDungDTO.getTongDiem());
+                        writeLine(nguoiDungDTO.getTongTran());
+                        writeLine(nguoiDungDTO.getTongTranThang());
+                    } else {
+                        writeLine(Key.DATONTAI_DANGNHAP);
+                        System.out.println("Tài khoản đã đăng nhập");
                     }
                 }
-
-                if (flag && ServerMain.users.add(nguoiDungDTO)) {
-                    writeLine(Key.NHAN_DANGNHAP);
-                    writeLine(nguoiDungDTO.getTenNguoiDung());
-                    writeLine(nguoiDungDTO.getChuoiThang());
-                    writeLine(nguoiDungDTO.getChuoiThangMax());
-                    writeLine(nguoiDungDTO.getChuoiThua());
-                    writeLine(nguoiDungDTO.getChuoiThuaMax());
-                    writeLine(nguoiDungDTO.getDiemIQ());
-                    writeLine(nguoiDungDTO.getGioiTinh());
-                    writeLine(nguoiDungDTO.getNgaySinh());
-                    writeLine(nguoiDungDTO.getTongDiem());
-                    writeLine(nguoiDungDTO.getTongTran());
-                    writeLine(nguoiDungDTO.getTongTranThang());
-                } else {
-                    writeLine(Key.DATONTAI_DANGNHAP);
-                    System.out.println("Tài khoản đã đăng nhập");
-                }
             } else {
-                writeLine(Key.KONHAN_DANGNHAP);
+                writeLine(Key.FAILD);
                 System.out.println("Đăng nhập thất bại");
             }
             out.flush();
@@ -159,12 +165,12 @@ public class Worker implements Runnable {
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
                 if (guiOtp()) {
-                    writeLine(Key.NHAN_DANGKY);
+                    writeLine(Key.OK);
                 } else {
                     writeLine(Key.KONHAN_GUI_OTP);
                 }
             } else {
-                writeLine(Key.KONHAN_DANGKY);
+                writeLine(Key.FAILD);
             }
             out.flush();
         } catch (IOException e) {
@@ -175,9 +181,9 @@ public class Worker implements Runnable {
     private void guiLaiOtp() {
         try {
             if (guiOtp()) {
-                writeLine(Key.NHAN_GUILAI_OTP);
+                writeLine(Key.OK);
             } else {
-                writeLine(Key.KONHAN_GUI_OTP);
+                writeLine(Key.FAILD);
             }
             out.flush();
         } catch (IOException ex) {
@@ -235,7 +241,7 @@ public class Worker implements Runnable {
                 writeLine(Key.NHAN_KETQUA_CHECK_OTP);
             } else {
                 System.out.println("OTP sai");
-                writeLine(Key.KONHAN_KETQUA_CHECK_OTP);
+                writeLine(Key.FAILD);
             }
             out.flush();
         } catch (IOException e) {
@@ -253,11 +259,11 @@ public class Worker implements Runnable {
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(nguoiDungDTO)) {
-                writeLine(Key.NHAN_KETQUA_DANGKY);
+                writeLine(Key.OK);
                 ServerMain.users.add(nguoiDungDTO);
                 System.out.println("Lưu người dùng " + email + " thành công");
             } else {
-                writeLine(Key.KONHAN_KETQUA_DANGKY);
+                writeLine(Key.LOI_GHI_CSDL);
                 System.out.println("Lưu người dùng " + email + " thất bại");
             }
             out.flush();
@@ -270,11 +276,11 @@ public class Worker implements Runnable {
         try {
             if (ServerMain.users_watting.add(nguoiDungDTO)) {
                 System.out.println("Cho người dùng " + nguoiDungDTO.getUsername() + " vào phòng chờ");
-                writeLine(Key.WAITTING_GAME);
+                writeLine(Key.OK);
                 out.flush();
                 ghepcap();
             } else {
-                writeLine(Key.NOWAITTING_GAME);
+                writeLine(Key.FAILD);
                 out.flush();
             }
         } catch (IOException e) {
@@ -327,9 +333,9 @@ public class Worker implements Runnable {
         try {
             if (ServerMain.users_watting.remove(nguoiDungDTO)) {
                 System.out.println("Người dùng " + nguoiDungDTO.getUsername() + " đã thoát phòng chờ");
-                writeLine(Key.ACCEPT_CANCLE_GAME);
+                writeLine(Key.OK);
             } else {
-                writeLine(Key.DENY_CANCLE_GAME);
+                writeLine(Key.FAILD);
             }
             out.flush();
         } catch (IOException e) {

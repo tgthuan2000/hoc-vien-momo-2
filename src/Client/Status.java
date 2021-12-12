@@ -7,6 +7,7 @@ public class Status {
     public static final int LOI_GHI_CSDL = -2;
     public static final int LOI_GUI_OTP = -3;
     public static final int LOI_TONTAI_DANGNHAP = -4;
+    public static final int LOI_BLOCK_TAIKHOAN = -5;
 
     // danh sách trang thái (>=0)
     public static final int OK = 1;// success

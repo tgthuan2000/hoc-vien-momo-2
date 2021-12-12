@@ -1,7 +1,6 @@
 package Client.BUS;
 
 import Client.Status;
-import Client.Thread.WattingGame;
 import Shares.Key;
 import java.io.IOException;
 
@@ -14,12 +13,7 @@ public class MainBUS {
         try {
             BUS.writeLine(Key.PLAY_GAME);
             BUS.flush();
-
-            if (BUS.readLine().equals(Key.WAITTING_GAME)) {
-                BUS.execute(new WattingGame(BUS.socket));
-                return Status.OK;
-            }
-            return Status.FAILD;
+            return Status.OK;
         } catch (IOException ex) {
             return Status.LOI_KETNOI_SERVER;
         }
@@ -29,12 +23,7 @@ public class MainBUS {
         try {
             BUS.writeLine(Key.CANCLE_GAME);
             BUS.flush();
-
-            if (BUS.readLine().equals(Key.ACCEPT_CANCLE_GAME)) {
-                BUS.shutdown();
-                return Status.OK;
-            }
-            return Status.FAILD;
+            return Status.OK;
         } catch (IOException ex) {
             return Status.LOI_KETNOI_SERVER;
         }
