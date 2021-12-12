@@ -1,11 +1,14 @@
 package Client.BUS;
 
 import Shares.DTO.NguoiDungDTO;
+import Shares.ServerConfig;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -20,6 +23,15 @@ public class BUS {
     public static BufferedReader in;
     public static NguoiDungDTO user;
     public static ExecutorService executor = Executors.newFixedThreadPool(10);
+
+    public static void connect() throws IOException {
+        if (socket == null) {
+            socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
+            out = new BufferedWriter(new OutputStreamWriter(BUS.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(BUS.getInputStream()));
+            System.out.println("Client connected");
+        }
+    }
 
     public static void execute(Runnable runnable) {
         executor.execute(runnable);
