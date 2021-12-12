@@ -22,12 +22,14 @@ public class Key {
     public static final String LOI_GHI_CSDL = "LOI_GHI_CSDL";
 
     public static final String PLAY_GAME = "PLAY_GAME";
-    // public static final String WAITTING_GAME = "WAITTING_GAME";
 
     public static final String CANCLE_GAME = "CANCLE_GAME";
 
     public static final String ACCEPT_GAME = "ACCEPT_GAME";
     public static final String OK_ACCEPT_GAME = "OK_ACCEPT_GAME";
     public static final String NO_ACCEPT_GAME = "NO_ACCEPT_GAME";
+
+    // BXH
+    public static final String DANHSACH_BXH = "DANHSACH_BXH";
 
 }

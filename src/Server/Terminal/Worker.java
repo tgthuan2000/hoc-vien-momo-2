@@ -119,9 +119,11 @@ public class Worker implements Runnable {
             if (nguoiDungDTO.getUsername() != null) {
                 if (nguoiDungDTO.isIsBlock()) {
                     writeLine(Key.TAIKHOAN_BLOCK);
+                    out.flush();
                     System.out.println("Tài khoản đã bị block");
                 } else {
                     boolean flag = true;
+                    // kiểm tra user có online chưa
                     for (NguoiDungDTO user : ServerMain.users) {
                         if (user.getUsername().equals(nguoiDungDTO.getUsername())) {
                             flag = false;
@@ -129,32 +131,42 @@ public class Worker implements Runnable {
                         }
                     }
 
-                    if (flag && ServerMain.users.add(nguoiDungDTO)) {
-                        writeLine(Key.NHAN_DANGNHAP);
-                        writeLine(nguoiDungDTO.getTenNguoiDung());
-                        writeLine(nguoiDungDTO.getChuoiThang());
-                        writeLine(nguoiDungDTO.getChuoiThangMax());
-                        writeLine(nguoiDungDTO.getChuoiThua());
-                        writeLine(nguoiDungDTO.getChuoiThuaMax());
-                        writeLine(nguoiDungDTO.getDiemIQ());
-                        writeLine(nguoiDungDTO.getGioiTinh());
-                        writeLine(nguoiDungDTO.getNgaySinh());
-                        writeLine(nguoiDungDTO.getTongDiem());
-                        writeLine(nguoiDungDTO.getTongTran());
-                        writeLine(nguoiDungDTO.getTongTranThang());
+                    if (flag && ServerMain.users.add(nguoiDungDTO)) { // user online
+                        infoUser();
+                        // bxh
+                        writeLine(Key.DANHSACH_BXH);
+
+                        out.flush();
                     } else {
                         writeLine(Key.DATONTAI_DANGNHAP);
                         System.out.println("Tài khoản đã đăng nhập");
+                        out.flush();
                     }
                 }
             } else {
                 writeLine(Key.FAILD);
                 System.out.println("Đăng nhập thất bại");
+                out.flush();
             }
-            out.flush();
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+
+    private void infoUser() throws IOException {
+        writeLine(Key.NHAN_DANGNHAP);
+        writeLine(nguoiDungDTO.getTenNguoiDung());
+        writeLine(nguoiDungDTO.getChuoiThang());
+        writeLine(nguoiDungDTO.getChuoiThangMax());
+        writeLine(nguoiDungDTO.getChuoiThua());
+        writeLine(nguoiDungDTO.getChuoiThuaMax());
+        writeLine(nguoiDungDTO.getDiemIQ());
+        writeLine(nguoiDungDTO.getGioiTinh());
+        writeLine(nguoiDungDTO.getNgaySinh());
+        writeLine(nguoiDungDTO.getTongDiem());
+        writeLine(nguoiDungDTO.getTongTran());
+        writeLine(nguoiDungDTO.getTongTranThang());
+        out.flush();
     }
 
     private void dangKy() {
@@ -345,7 +357,8 @@ public class Worker implements Runnable {
 
     private void gameplay() {
         ServerMain.users_watting.remove(nguoiDungDTO);
-
+        // new thread + add 2 user
+        // out thread cũ
     }
 
     private void ghepcaplai() throws IOException {

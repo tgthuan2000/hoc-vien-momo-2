@@ -26,6 +26,9 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         mainBUS = new MainBUS();
         flag = true;
+
+        lbUserName.setText(BUS.user.getTenNguoiDung());
+        // gán danh sách vô table
     }
 
     /**
@@ -338,7 +341,6 @@ public class Main extends javax.swing.JFrame {
         switch (mainBUS.canclegame()) {
             case Status.OK:
                 if (BUS.continute()) {
-                    System.out.println("run this");
                     switch (WorkerClient.status) {
                         case Status.OK:
                             flag = true;
