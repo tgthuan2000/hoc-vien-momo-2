@@ -37,10 +37,10 @@ public class BUS {
             while (true) {
                 TimeUnit.MILLISECONDS.sleep(500);
                 if (WorkerClient.isContinue) {
-                    System.out.println("Break while true is BUS");
+                    // System.out.println("Break while true is BUS");
                     break;
                 }
-                System.out.println("a");
+                System.out.println("waitting...");
             }
             WorkerClient.isContinue = false;
         } catch (InterruptedException ex) {

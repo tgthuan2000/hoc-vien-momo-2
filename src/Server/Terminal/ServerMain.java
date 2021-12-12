@@ -11,16 +11,20 @@ import java.util.concurrent.Executors;
 public class ServerMain {
 
     public final int port;
-    public final int numThread;
     private static ServerSocket server = null;
-    public static Vector<NguoiDungDTO> users = new Vector<>();
-    public static Vector<NguoiDungDTO> users_watting = new Vector<>();
+
+    public static Vector<NguoiDungDTO> users = new Vector<>();  // danh sách user online
+    public static Vector<NguoiDungDTO> users_watting = new Vector<>(); // danh sách user chờ game
+    public static Vector<Room> waittingRooms = new Vector<>();  // danh sách phòng chờ game
     public static Vector<Worker> workers = new Vector<>();
+    public static Vector<RoomWorker> roomWorkers = new Vector<>();
+    public static ExecutorService executorRoom;
 
     public ServerMain() throws IOException {
         port = ServerConfig.PORT;
-        numThread = ServerConfig.NUM_THREAD;
-        ExecutorService executor = Executors.newFixedThreadPool(numThread);
+        ExecutorService executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
+        executorRoom = Executors.newFixedThreadPool(ServerConfig.NUM_ROOM_THREAD);
+
         try {
             server = new ServerSocket(port);
             System.out.println("Server binding at port " + port);

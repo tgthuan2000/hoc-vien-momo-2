@@ -13,7 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     private final MainBUS mainBUS;
-    private boolean flag;
+    public static boolean flag;
 
     public Main() {
         try {
@@ -404,7 +404,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIQ;
-    private javax.swing.JButton btnPlay;
+    public static javax.swing.JButton btnPlay;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
