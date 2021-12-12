@@ -35,7 +35,7 @@ public class BUS {
     public static boolean continute() {
         try {
             while (true) {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(500);
                 if (WorkerClient.isContinue) {
                     System.out.println("Break while true is BUS");
                     break;
