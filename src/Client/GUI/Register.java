@@ -3,6 +3,7 @@ package Client.GUI;
 import Client.BUS.BUS;
 import Client.BUS.RegisterBUS;
 import Client.Status;
+import Client.WorkerClient;
 import Shares.DTO.NguoiDungDTO;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -247,14 +248,23 @@ public class Register extends javax.swing.JFrame {
                 NguoiDungDTO nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), BUS.getMd5(txtPass.getText()), txtUser.getText().trim(), isGioiTinh, ngaysinh);
                 switch (bus.dangKy(txtEmail.getText())) {
                     case Status.OK:
-                        this.setVisible(false);
-                        new OTP(nguoiDungDTO).setVisible(true);
-                        break;
-                    case Status.FAILD:
-                        JOptionPane.showMessageDialog(null, "Email đã tồn tại");
-                        break;
-                    case Status.LOI_GUI_OTP:
-                        JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
+                        if (BUS.continute()) {
+                            switch (WorkerClient.status) {
+                                case Status.OK:
+                                    this.setVisible(false);
+                                    new OTP(nguoiDungDTO).setVisible(true);
+                                    break;
+                                case Status.FAILD:
+                                    JOptionPane.showMessageDialog(null, "Email đã tồn tại");
+                                    break;
+                                case Status.LOI_GUI_OTP:
+                                    JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
+                                    break;
+                                case Status.LOI_KETNOI_SERVER:
+                                    JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                                    break;
+                            }
+                        }
                         break;
                     case Status.LOI_KETNOI_SERVER:
                         JOptionPane.showMessageDialog(null, "Lỗi kết nối server");

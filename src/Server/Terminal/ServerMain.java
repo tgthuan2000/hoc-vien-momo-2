@@ -14,6 +14,8 @@ public class ServerMain {
     public final int numThread;
     private static ServerSocket server = null;
     public static Vector<NguoiDungDTO> users = new Vector<>();
+    public static Vector<NguoiDungDTO> users_watting = new Vector<>();
+    public static Vector<Worker> workers = new Vector<>();
 
     public ServerMain() throws IOException {
         port = ServerConfig.PORT;
@@ -24,7 +26,9 @@ public class ServerMain {
             System.out.println("Server binding at port " + port);
             System.out.println("Waiting for client...");
             while (true) {
-                executor.execute(new Worker(server.accept()));
+                Worker client = new Worker(server.accept());
+                executor.execute(client);
+                workers.add(client);
             }
         } catch (IOException e) {
             System.out.println(e);

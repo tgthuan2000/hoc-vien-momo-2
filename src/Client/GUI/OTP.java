@@ -1,7 +1,9 @@
 package Client.GUI;
 
+import Client.BUS.BUS;
 import Client.BUS.RegisterBUS;
 import Client.Status;
+import Client.WorkerClient;
 import Shares.DTO.NguoiDungDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -146,15 +148,24 @@ public class OTP extends javax.swing.JFrame {
             if (!otp.equals("")) {
                 switch (bus.checkOtp(otp)) {
                     case Status.OK:
-                        JOptionPane.showMessageDialog(null, "Success");
-                        this.setVisible(false);
-                        new Main().setVisible(true);
-                        break;
-                    case Status.FAILD:
-                        JOptionPane.showMessageDialog(rootPane, "Bạn nhập chưa đúng OTP");
-                        break;
-                    case Status.LOI_KETNOI_SERVER:
-                        JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                        if (BUS.continute()) {
+                            switch (WorkerClient.status) {
+                                case Status.OK:
+                                    JOptionPane.showMessageDialog(null, "Success");
+                                    this.setVisible(false);
+                                    new Main().setVisible(true);
+                                    break;
+                                case Status.FAILD:
+                                    JOptionPane.showMessageDialog(rootPane, "Bạn nhập chưa đúng OTP");
+                                    break;
+                                case Status.LOI_KETNOI_SERVER:
+                                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                                    break;
+                                case Status.LOI_GHI_CSDL:
+                                    JOptionPane.showMessageDialog(rootPane, "Nhận kết quả đăng kí thất bại (Lỗi ghi cơ sở dữ liệu)");
+                                    break;
+                            }
+                        }
                         break;
                     case Status.LOI_GHI_CSDL:
                         JOptionPane.showMessageDialog(rootPane, "Nhận kết quả đăng kí thất bại (Lỗi ghi cơ sở dữ liệu)");
@@ -172,11 +183,20 @@ public class OTP extends javax.swing.JFrame {
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         switch (bus.guiLaiOtp()) {
             case Status.OK:
-                JOptionPane.showMessageDialog(rootPane, "Đã gửi");
-                time = System.currentTimeMillis();
-                break;
-            case Status.FAILD:
-                JOptionPane.showMessageDialog(null, "Quá trình gửi OTP đến mail xảy ra lỗi");
+                if (BUS.continute()) {
+                    switch (WorkerClient.status) {
+                        case Status.OK:
+                            JOptionPane.showMessageDialog(rootPane, "Đã gửi");
+                            time = System.currentTimeMillis();
+                            break;
+                        case Status.FAILD:
+                            JOptionPane.showMessageDialog(null, "Quá trình gửi OTP đến mail xảy ra lỗi");
+                            break;
+                        case Status.LOI_KETNOI_SERVER:
+                            JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                            break;
+                    }
+                }
                 break;
             case Status.LOI_KETNOI_SERVER:
                 JOptionPane.showMessageDialog(null, "Lỗi kết nối server");

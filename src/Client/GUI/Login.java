@@ -1,7 +1,9 @@
 package Client.GUI;
 
+import Client.BUS.BUS;
 import Client.BUS.LoginBUS;
 import Client.Status;
+import Client.WorkerClient;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -157,14 +159,27 @@ public class Login extends javax.swing.JFrame {
             if (matcher.matches()) {
                 switch (bus.login(user, pwd)) {
                     case Status.OK:
-                        this.setVisible(false);
-                        new Main().setVisible(true);
-                        break;
-                    case Status.LOI_TONTAI_DANGNHAP:
-                        JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
-                        break;
-                    case Status.FAILD:
-                        JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
+                        if (BUS.continute()) {
+                            System.out.println("Run ở đây nè" + WorkerClient.status);
+                            switch (WorkerClient.status) {
+                                case Status.OK:
+                                    this.setVisible(false);
+                                    new Main().setVisible(true);
+                                    break;
+                                case Status.FAILD:
+                                    JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
+                                    break;
+                                case Status.LOI_TONTAI_DANGNHAP:
+                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
+                                    break;
+                                case Status.LOI_BLOCK_TAIKHOAN:
+                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã bị khoá!!");
+                                    break;
+                                case Status.LOI_KETNOI_SERVER:
+                                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                                    break;
+                            }
+                        }
                         break;
                     case Status.LOI_KETNOI_SERVER:
                         JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
@@ -200,16 +215,24 @@ public class Login extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>true
         //</editor-fold>true

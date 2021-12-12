@@ -1,45 +1,59 @@
 package Client.BUS;
 
+import Client.WorkerClient;
 import Shares.DTO.NguoiDungDTO;
+import Shares.ServerConfig;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class BUS {
 
-    public static Socket socket;
-    public static BufferedWriter out;
-    public static BufferedReader in;
+    private static Socket socket;
+    private static BufferedWriter out;
+    private static BufferedReader in;
     public static NguoiDungDTO user;
+
+    public static void connect() throws IOException {
+        if (socket == null) {
+            socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
+            out = new BufferedWriter(new OutputStreamWriter(BUS.socket.getOutputStream()));
+            in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
+            Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
+            System.out.println("Client connected");
+        }
+    }
+
+    public static boolean continute() {
+        try {
+            while (true) {
+                TimeUnit.MILLISECONDS.sleep(500);
+                if (WorkerClient.isContinue) {
+                    System.out.println("Break while true is BUS");
+                    break;
+                }
+                System.out.println("a");
+            }
+            WorkerClient.isContinue = false;
+        } catch (InterruptedException ex) {
+        }
+        return true;
+    }
 
     public static void writeLine(String str) throws IOException {
         out.write(str.trim() + "\n");
     }
 
-    public static String readLine() throws IOException {
-        return in.readLine();
-    }
-
-    public static int readLineInt() throws IOException {
-        return Integer.parseInt(in.readLine());
-    }
-
     public static void flush() throws IOException {
         out.flush();
-    }
-
-    public static OutputStream getOutputStream() throws IOException {
-        return socket.getOutputStream();
-    }
-
-    public static InputStream getInputStream() throws IOException {
-        return socket.getInputStream();
     }
 
     public static String getMd5(String input) {

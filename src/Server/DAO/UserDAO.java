@@ -18,7 +18,7 @@ public class UserDAO {
     public NguoiDungDTO dangnhap(String username, String pasword) {
         NguoiDungDTO nd = new NguoiDungDTO();
         try {
-            String sql = "SELECT * FROM NguoiDung WHERE Username = ? AND Password = ? And Block = 0";
+            String sql = "SELECT * FROM NguoiDung WHERE Username = ? AND Password = ?";
             PreparedStatement ps = my.getPreparedStatement(sql);
             ps.setString(1, username);
             ps.setString(2, pasword);
@@ -26,6 +26,7 @@ public class UserDAO {
             ResultSet rs = my.executeQuery();
             while (rs.next()) {
                 nd.setUsername(rs.getString("Username"));
+                nd.setIsBlock(rs.getBoolean("Block"));
                 nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
                 nd.setChuoiThang(rs.getInt("ChuoiThang"));
                 nd.setChuoiThangMax(rs.getInt("ChuoiThangMax"));
