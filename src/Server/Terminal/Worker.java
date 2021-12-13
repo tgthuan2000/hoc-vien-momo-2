@@ -468,11 +468,7 @@ public class Worker implements Runnable {
         RoomWorker rw = new RoomWorker(socket, room);
         ServerMain.executorRoom.execute(rw);
         ServerMain.roomWorkers.add(rw);
-
-        in.close(); // đóng kết nối với worker user hiện tại
-        out.close();
-        socket.close();
-
+        ServerMain.executor.shutdownNow();// đóng kết nối với worker user hiện tại
         ServerMain.workers.remove(this);
     }
 

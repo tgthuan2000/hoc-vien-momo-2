@@ -19,10 +19,11 @@ public class ServerMain {
     public static Vector<Worker> workers = new Vector<>();
     public static Vector<RoomWorker> roomWorkers = new Vector<>();
     public static ExecutorService executorRoom;
+    public static ExecutorService executor;
 
     public ServerMain() throws IOException {
         port = ServerConfig.PORT;
-        ExecutorService executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
+        executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
         executorRoom = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
 
         try {
