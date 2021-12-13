@@ -14,7 +14,7 @@ public class ServerMain {
     private static ServerSocket server = null;
 
     public static Vector<NguoiDungDTO> users = new Vector<>();  // danh sách user online
-    public static Vector<NguoiDungDTO> users_watting = new Vector<>(); // danh sách user chờ game
+    public static Vector<NguoiDungDTO> users_waitting = new Vector<>(); // danh sách user chờ game
     public static Vector<Room> waittingRooms = new Vector<>();  // danh sách phòng chờ game
     public static Vector<Worker> workers = new Vector<>();
     public static Vector<RoomWorker> roomWorkers = new Vector<>();

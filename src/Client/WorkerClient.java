@@ -187,6 +187,11 @@ public class WorkerClient implements Runnable {
                 writeLine(Key.OK);
                 writeLine(roomId);
                 out.flush();
+
+                // block ng dùng
+                Main.btnPlay.setEnabled(false);
+                Main.btnIQ.setEnabled(false);
+
             } else {
                 writeLine(Key.CHECK_ACCEPT_GAME);
                 writeLine(Key.FAILD);
@@ -204,5 +209,7 @@ public class WorkerClient implements Runnable {
 
     private void no_continue_game() {
         JOptionPane.showMessageDialog(null, "Trận đấu bị huỷ do đối phương không chấp nhận trận đấu!!!");
+        Main.btnPlay.setEnabled(true);
+        Main.btnIQ.setEnabled(true);
     }
 }

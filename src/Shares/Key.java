@@ -22,8 +22,8 @@ public class Key {
     public static final String LOI_GHI_CSDL = "LOI_GHI_CSDL";
 
     public static final String PLAY_GAME = "PLAY_GAME";
-    public static final String NO_CONTINUE_GAME = "NO_CONTINUE_GAME";
     public static final String CANCLE_GAME = "CANCLE_GAME";
+    public static final String NO_CONTINUE_GAME = "NO_CONTINUE_GAME";
 
     public static final String ACCEPT_GAME = "ACCEPT_GAME";
     public static final String CHECK_ACCEPT_GAME = "CHECK_ACCEPT_GAME";
