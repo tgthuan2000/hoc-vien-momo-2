@@ -180,6 +180,7 @@ public class WorkerClient implements Runnable {
         try {
             System.out.println("Chấp nhận game");
             String roomId = in.readLine();
+            System.out.println("Room id: " + roomId);
             // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {
                 writeLine(Key.CHECK_ACCEPT_GAME);
