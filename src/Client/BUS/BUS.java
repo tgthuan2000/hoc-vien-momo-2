@@ -25,7 +25,6 @@ public class BUS {
     public static ArrayList<NguoiDungDTO> users;
     public static ArrayList<NguoiDungDTO> userTmp;
 
-
     public static void connect() throws IOException {
         if (socket == null) {
             socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
@@ -33,6 +32,7 @@ public class BUS {
             in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
             Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
             System.out.println("Client connected");
+            users = new ArrayList<>();
         }
     }
 

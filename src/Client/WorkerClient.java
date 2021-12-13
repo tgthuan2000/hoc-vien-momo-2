@@ -164,28 +164,23 @@ public class WorkerClient implements Runnable {
             nguoiDung.setTongTranThang(readLineInt());
 
             BUS.user = nguoiDung; // đăng nhập, ghi nhận thông tin vào biến toàn cục
-            ok();
         } catch (IOException ex) {
             errConn();
         }
     }
 
     private void nhanBangXepHang() throws IOException {
-        BUS.users = new ArrayList<NguoiDungDTO>();
-        ArrayList<String> tmp = new ArrayList<>();;
-        while (true) {
-            StringTokenizer token = new StringTokenizer(readLine(), "$$");
+        ArrayList<String> tmp = new ArrayList<>();
+        StringTokenizer token = new StringTokenizer(readLine(), "$$"); // nội dung tin
 
-            while (token.hasMoreTokens()) {
-                String a = token.nextToken();
-                tmp.add(a);
-            }
-            if (tmp.size() == 6) {
-                BUS.users.add(new NguoiDungDTO(tmp.get(0), Integer.parseInt(tmp.get(1)), Integer.parseInt(tmp.get(2)), Integer.parseInt(tmp.get(3)), Integer.parseInt(tmp.get(4)), Integer.parseInt(tmp.get(5))));
-            }
-            System.out.println("Size : " + BUS.users.size());
-            tmp = new ArrayList<>();
+        while (token.hasMoreTokens()) {
+            String a = token.nextToken();
+            tmp.add(a);
         }
+        if (tmp.size() == 6) {
+            BUS.users.add(new NguoiDungDTO(tmp.get(0), Integer.parseInt(tmp.get(1)), Integer.parseInt(tmp.get(2)), Integer.parseInt(tmp.get(3)), Integer.parseInt(tmp.get(4)), Integer.parseInt(tmp.get(5))));
+        }
+        System.out.println("Size : " + BUS.users.size());
     }
 
     private void nhanKetQuaOTP() {
