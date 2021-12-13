@@ -13,7 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     private final MainBUS mainBUS;
-    private boolean flag;
+    public static boolean flag;
 
     public Main() {
         try {
@@ -306,10 +306,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchFocusLost
 
     private void btnPlayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlayMouseClicked
-        if (flag) {
-            playgame();
-        } else {
-            canclegame();
+        if (btnPlay.isEnabled()) {
+            if (flag) {
+                playgame();
+            } else {
+                canclegame();
+            }
         }
     }//GEN-LAST:event_btnPlayMouseClicked
 
@@ -363,8 +365,9 @@ public class Main extends javax.swing.JFrame {
 
     private void btnIQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIQActionPerformed
         // TODO add your handling code here:true
-        InterfaceIQ iq = new InterfaceIQ();
-        iq.setVisible(true);
+        if (btnIQ.isEnabled()) {
+            new InterfaceIQ().setVisible(true);
+        }
     }//GEN-LAST:event_btnIQActionPerformed
 
     /**
@@ -403,8 +406,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIQ;
-    private javax.swing.JButton btnPlay;
+    public static javax.swing.JButton btnIQ;
+    public static javax.swing.JButton btnPlay;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

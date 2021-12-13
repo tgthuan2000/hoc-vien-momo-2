@@ -1,6 +1,7 @@
 package Client;
 
 import Client.BUS.BUS;
+import Client.GUI.Main;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import java.io.BufferedReader;
@@ -85,6 +86,15 @@ public class WorkerClient implements Runnable {
                         case Key.ACCEPT_GAME:
                             acceptGame();
                             break;
+                        case Key.CANCLE_GAME:
+                            cancleGame();
+                            break;
+                        case Key.NO_CONTINUE_GAME:
+                            no_continue_game();
+                            break;
+                        case Key.LOAD_GAME:
+                            loadgame();
+                            break;
                     }
                 } catch (IOException ex) {
                     break;
@@ -104,7 +114,6 @@ public class WorkerClient implements Runnable {
     }
 
     private void ok() {
-        System.out.println("KEY OK");
         status = Status.OK;
         isContinue = true;
     }
@@ -173,14 +182,42 @@ public class WorkerClient implements Runnable {
     private void acceptGame() {
         try {
             System.out.println("Chấp nhận game");
+            String roomId = in.readLine();
+            System.out.println("Room id: " + roomId);
+            // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {
-                writeLine(Key.OK_ACCEPT_GAME);
+                writeLine(Key.CHECK_ACCEPT_GAME);
+                writeLine(Key.OK);
+                writeLine(roomId);
+                out.flush();
+
+                // block ng dùng
+                Main.btnPlay.setEnabled(false);
+                Main.btnIQ.setEnabled(false);
+
             } else {
-                writeLine(Key.NO_ACCEPT_GAME);
+                writeLine(Key.CHECK_ACCEPT_GAME);
+                writeLine(Key.FAILD);
+                writeLine(roomId);
+                out.flush();
             }
-            out.flush();
         } catch (IOException ex) {
         }
     }
 
+    private void cancleGame() throws IOException {
+        Main.flag = true;
+        Main.btnPlay.setText("Bắt đầu");
+    }
+
+    private void no_continue_game() {
+        JOptionPane.showMessageDialog(null, "Trận đấu bị huỷ do đối phương không chấp nhận trận đấu!!!");
+        Main.btnPlay.setEnabled(true);
+        Main.btnIQ.setEnabled(true);
+    }
+
+    private void loadgame() throws IOException {
+        writeLine(Key.LOAD_GAME);
+        out.flush();
+    }
 }
