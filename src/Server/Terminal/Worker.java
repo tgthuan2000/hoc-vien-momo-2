@@ -144,6 +144,7 @@ public class Worker implements Runnable {
                     }
 
                     if (flag && ServerMain.users.add(nguoiDungDTO)) { // user online
+                        // load data
                         infoUser();
                         inforRank();
                         writeLine(Key.OK);

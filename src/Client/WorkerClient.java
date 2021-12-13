@@ -55,7 +55,7 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.OK:
                             ok();
-
+                            break;
                         //
                         // ĐĂNG NHẬP
                         //
