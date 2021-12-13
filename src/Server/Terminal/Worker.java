@@ -23,8 +23,8 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-    private final String userMail = "tgthuan23012000@gmail.com";
-    private final String pwdMail = "TGThuan12A4";
+    private final String userMail = "hoducthangtn2nhvt@gmail.com";
+    private final String pwdMail = "16112000@Abc";
     private final int from = 89999;
     private final int to = 10000;
     private final String Subject = "OTP from 3 anh em with love";
@@ -134,7 +134,7 @@ public class Worker implements Runnable {
                     if (flag && ServerMain.users.add(nguoiDungDTO)) { // user online
                         infoUser();
                         // bxh
-                        writeLine(Key.DANHSACH_BXH);
+                        inforRank();
 
                         out.flush();
                     } else {
@@ -167,6 +167,23 @@ public class Worker implements Runnable {
         writeLine(nguoiDungDTO.getTongTran());
         writeLine(nguoiDungDTO.getTongTranThang());
         out.flush();
+    }
+    
+    public void inforRank() throws IOException{
+        for(NguoiDungDTO nguoiDungDTO : userBUS.docdulieu()){
+            writeLine(Key.DANHSACH_BXH);
+            StringBuilder builder = new StringBuilder();
+            builder.append(nguoiDungDTO.getTenNguoiDung() + "$$"
+                           +nguoiDungDTO.getChuoiThangMax() + "$$"
+                           +nguoiDungDTO.getChuoiThuaMax()+ "$$"
+                           +nguoiDungDTO.getTongTran() + "$$"
+                           +nguoiDungDTO.getTongTranThang() + "$$"
+                            +nguoiDungDTO.getTongDiem())  ;
+            System.out.println(builder.toString());
+            writeLine(builder.toString());
+            out.flush();
+            System.out.println("done");
+        }
     }
 
     private void dangKy() {
@@ -256,6 +273,7 @@ public class Worker implements Runnable {
                 writeLine(Key.FAILD);
             }
             out.flush();
+            System.out.println("done");
         } catch (IOException e) {
             System.out.println(e);
         }

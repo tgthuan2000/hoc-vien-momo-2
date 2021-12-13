@@ -60,6 +60,11 @@ public class UserDAO {
                 nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
                 nd.setGioiTinh(rs.getBoolean("GioiTinh"));
                 nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+                nd.setChuoiThangMax(rs.getInt("ChuoiThangMax"));
+                nd.setChuoiThuaMax(rs.getInt("ChuoiThuaMax"));
+                nd.setTongTran(rs.getInt("TongTran"));
+                nd.setTongTranThang(rs.getInt("TongTranThang"));
+                nd.setTongDiem(rs.getInt("TongDiem"));
                 list.add(nd);
             }
             my.close();

@@ -50,6 +50,7 @@ public class RegisterBUS {
             BUS.writeLine(Key.CHECK_OTP);
             BUS.writeLine(otp);
             BUS.flush();
+            System.out.println("Dzo check");
             return Status.OK;
         } catch (IOException ex) {
             return Status.LOI_KETNOI_SERVER;
