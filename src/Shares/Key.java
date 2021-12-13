@@ -31,4 +31,6 @@ public class Key {
     public static final String DENY_GAME = "DENY_GAME";
     public static final String LOAD_GAME = "LOAD_GAME";
 
+    public static final String DANHSACH_BXH = "DANHSACH_BXH";
+
 }

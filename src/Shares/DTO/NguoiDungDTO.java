@@ -1,14 +1,24 @@
 package Shares.DTO;
 
-public class NguoiDungDTO {
+public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
 
-    private int tongTran = 0, tongTranThang = 0, chuoiThang = 0, chuoiThua = 0, chuoiThangMax = 0, chuoiThuaMax = 0, tongDiem = 0, diemIQ = 0;
+    private int tongTran = 0, tongTranThang = 0, chuoiThang = 0, chuoiThua = 0, chuoiThangMax = 0, chuoiThuaMax = 0, tongDiem = 0, diemIQ = 0,xephang=0;
     private String username, password, tenNguoiDung, ngaySinh;
     //  gioiTinh: true - nam, false - nữ
     //  trangThaiChuoi: true - thắng, false - thua
     private boolean isBlock = false, gioiTinh, trangThaiChuoi;
 
     public NguoiDungDTO() {
+    }
+    
+    public NguoiDungDTO(NguoiDungDTO nd) {
+        this.tenNguoiDung = nd.tenNguoiDung;
+        this.chuoiThangMax = nd.chuoiThangMax;
+        this.chuoiThuaMax = nd.chuoiThuaMax;
+        this.tongTranThang = nd.tongTranThang;
+        this.tongTran = nd.tongTran;
+        this.tongDiem = nd.tongDiem;
+        this.xephang = nd.xephang;
     }
 
     public NguoiDungDTO(String username, String password, String tenNguoiDung, boolean gioiTinh, String ngaySinh) {
@@ -17,6 +27,25 @@ public class NguoiDungDTO {
         this.tenNguoiDung = tenNguoiDung;
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
+    }
+    
+    public NguoiDungDTO(String tenNguoiDung,int tranThangMax,int tranThuaMax,int tongTranThang,int tongTran,int tongDiem){
+        this.tenNguoiDung = tenNguoiDung;
+        this.chuoiThangMax = tranThangMax;
+        this.chuoiThuaMax = tranThuaMax;
+        this.tongTranThang = tongTranThang;
+        this.tongTran = tongTran;
+        this.tongDiem = tongDiem;
+    }
+    
+    public NguoiDungDTO(String tenNguoiDung,int tranThangMax,int tranThuaMax,int tongTranThang,int tongTran,int tongDiem,int xephang){
+        this.tenNguoiDung = tenNguoiDung;
+        this.chuoiThangMax = tranThangMax;
+        this.chuoiThuaMax = tranThuaMax;
+        this.tongTranThang = tongTranThang;
+        this.tongTran = tongTran;
+        this.tongDiem = tongDiem;
+        this.xephang = xephang;
     }
     
     public NguoiDungDTO(String username, String password) {
@@ -142,6 +171,22 @@ public class NguoiDungDTO {
 
     public void setTrangThaiChuoi(boolean trangThaiChuoi) {
         this.trangThaiChuoi = trangThaiChuoi;
+    }
+
+    public int getXephang() {
+        return xephang;
+    }
+
+    public void setXephang(int xephang) {
+        this.xephang = xephang;
+    }
+    
+    
+
+    @Override
+    public int compareTo(NguoiDungDTO o) {
+        int a = o.getTongDiem();
+        return a - this.tongDiem;
     }
 
 }

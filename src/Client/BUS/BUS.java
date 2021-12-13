@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +22,9 @@ public class BUS {
     private static BufferedWriter out;
     private static BufferedReader in;
     public static NguoiDungDTO user;
+    public static ArrayList<NguoiDungDTO> users;
+    public static ArrayList<NguoiDungDTO> userTmp;
+
 
     public static void connect() throws IOException {
         if (socket == null) {

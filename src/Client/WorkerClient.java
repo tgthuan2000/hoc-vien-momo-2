@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -53,13 +55,15 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.OK:
                             ok();
-                            break;
+
                         //
                         // ĐĂNG NHẬP
                         //
                         case Key.NHAN_DANGNHAP:
                             nhanDangNhap();
                             break;
+                        case Key.DANHSACH_BXH:
+                            nhanBangXepHang();
                         case Key.DATONTAI_DANGNHAP:
                             tonTaiDangNhap();
                             break;
@@ -74,6 +78,7 @@ public class WorkerClient implements Runnable {
                             koNhanOTP();
                             break;
                         case Key.NHAN_KETQUA_CHECK_OTP:
+                            System.out.println("DZO diiii");
                             nhanKetQuaOTP();
                             break;
                         case Key.LOI_GHI_CSDL:
@@ -162,6 +167,24 @@ public class WorkerClient implements Runnable {
             ok();
         } catch (IOException ex) {
             errConn();
+        }
+    }
+
+    private void nhanBangXepHang() throws IOException {
+        BUS.users = new ArrayList<NguoiDungDTO>();
+        ArrayList<String> tmp = new ArrayList<>();;
+        while (true) {
+            StringTokenizer token = new StringTokenizer(readLine(), "$$");
+
+            while (token.hasMoreTokens()) {
+                String a = token.nextToken();
+                tmp.add(a);
+            }
+            if (tmp.size() == 6) {
+                BUS.users.add(new NguoiDungDTO(tmp.get(0), Integer.parseInt(tmp.get(1)), Integer.parseInt(tmp.get(2)), Integer.parseInt(tmp.get(3)), Integer.parseInt(tmp.get(4)), Integer.parseInt(tmp.get(5))));
+            }
+            System.out.println("Size : " + BUS.users.size());
+            tmp = new ArrayList<>();
         }
     }
 
