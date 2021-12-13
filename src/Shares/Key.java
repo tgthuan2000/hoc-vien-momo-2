@@ -33,4 +33,6 @@ public class Key {
 
     public static final String DANHSACH_BXH = "DANHSACH_BXH";
 
+    public static final String INFO_USER_2 = "INFO_USER_2";
+
 }

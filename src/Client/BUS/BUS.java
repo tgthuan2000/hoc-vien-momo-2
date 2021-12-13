@@ -24,6 +24,7 @@ public class BUS {
     public static NguoiDungDTO user;
     public static ArrayList<NguoiDungDTO> users;
     public static ArrayList<NguoiDungDTO> userTmp;
+    public static NguoiDungDTO user2;
 
     public static void connect() throws IOException {
         if (socket == null) {

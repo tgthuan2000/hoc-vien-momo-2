@@ -2,6 +2,7 @@ package Client;
 
 import Client.BUS.BUS;
 import Client.GUI.Main;
+import Client.GUI.PlayGame;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import java.io.BufferedReader;
@@ -99,6 +100,13 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.LOAD_GAME:
                             loadgame();
+                            break;
+
+                        //
+                        // IN GAME
+                        //
+                        case Key.INFO_USER_2:
+                            getInfoUser2();
                             break;
                     }
                 } catch (IOException ex) {
@@ -206,7 +214,7 @@ public class WorkerClient implements Runnable {
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {
                 writeLine(Key.CHECK_ACCEPT_GAME);
                 writeLine(Key.OK);
-                writeLine(roomId);
+                writeLine(roomId); // room id
                 out.flush();
 
                 // block ng dùng
@@ -216,7 +224,7 @@ public class WorkerClient implements Runnable {
             } else {
                 writeLine(Key.CHECK_ACCEPT_GAME);
                 writeLine(Key.FAILD);
-                writeLine(roomId);
+                writeLine(roomId); // room id
                 out.flush();
             }
         } catch (IOException ex) {
@@ -237,5 +245,11 @@ public class WorkerClient implements Runnable {
     private void loadgame() throws IOException {
         writeLine(Key.LOAD_GAME);
         out.flush();
+    }
+
+    private void getInfoUser2() throws IOException {
+        BUS.user2 = new NguoiDungDTO();
+        BUS.user2.setTenNguoiDung(readLine());
+        new PlayGame().setVisible(true);
     }
 }
