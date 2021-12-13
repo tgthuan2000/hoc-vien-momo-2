@@ -6,7 +6,6 @@ import Client.Status;
 import Client.WorkerClient;
 import Shares.DTO.NguoiDungDTO;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,12 +17,8 @@ import javax.swing.table.DefaultTableModel;
 public class Main extends javax.swing.JFrame {
 
     private final MainBUS mainBUS;
-<<<<<<< HEAD
     public static boolean flag;
-=======
-    private boolean flag;
     DefaultTableModel model;
->>>>>>> origin/boyeu
 
     public Main() {
         try {
@@ -39,16 +34,17 @@ public class Main extends javax.swing.JFrame {
 
         lbUserName.setText(BUS.user.getTenNguoiDung());
         lbWin.setText(String.valueOf(BUS.user.getTongTranThang()));
-        lbLose.setText(String.valueOf(BUS.user.getTongTran()-BUS.user.getTongTranThang()));
+        lbLose.setText(String.valueOf(BUS.user.getTongTran() - BUS.user.getTongTranThang()));
         lbChuoiWin.setText(String.valueOf(BUS.user.getChuoiThang()));
         lbChuoiLose.setText(String.valueOf(BUS.user.getChuoiThua()));
         lbIQ.setText(String.valueOf(BUS.user.getDiemIQ()));
-        model=new DefaultTableModel();
-        model= (DefaultTableModel) tblXepHang.getModel();
+        model = new DefaultTableModel();
+        model = (DefaultTableModel) tblXepHang.getModel();
         model.setRowCount(0);
         // gán danh sách vô table
         getDataTable();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -406,39 +402,40 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         searchUserName(txtSearch.getText());
     }//GEN-LAST:event_txtSearchKeyReleased
-    
-    public void getDataTable(){
-        int i =1;
+
+    public void getDataTable() {
+        int i = 1;
         Collections.sort(BUS.users);
         BUS.userTmp = new ArrayList<NguoiDungDTO>();
-        for(NguoiDungDTO nd : BUS.users){
-            double a = (double) nd.getTongTran() ;
+        for (NguoiDungDTO nd : BUS.users) {
+            double a = (double) nd.getTongTran();
             double b = (double) nd.getTongTranThang();
-            double tilethang = Math.round((a/b) * 100);
+            double tilethang = Math.round((a / b) * 100);
             double tilethua = 100 - tilethang;
-            model.addRow(new Object[] {       
-            i+"              ",nd.getTenNguoiDung(),nd.getTongDiem(),nd.getChuoiThangMax(),nd.getChuoiThuaMax(),tilethang+"%",tilethua+"%"
+            model.addRow(new Object[]{
+                i + "              ", nd.getTenNguoiDung(), nd.getTongDiem(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), tilethang + "%", tilethua + "%"
             });
-            BUS.userTmp.add(new NguoiDungDTO(nd.getTenNguoiDung(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), nd.getTongTranThang(), nd.getTongTran(),nd.getTongDiem(),i));
+            BUS.userTmp.add(new NguoiDungDTO(nd.getTenNguoiDung(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), nd.getTongTranThang(), nd.getTongTran(), nd.getTongDiem(), i));
             i++;
         }
         tblXepHang.setModel(model);
     }
-    
-    public void searchUserName(String username){
+
+    public void searchUserName(String username) {
         model.setRowCount(0);
 //        Collections.sort(mainBUS.search(username.toLowerCase()));
-        for(NguoiDungDTO nd : mainBUS.search(username.toLowerCase())){
-            double a = (double) nd.getTongTran() ;
+        for (NguoiDungDTO nd : mainBUS.search(username.toLowerCase())) {
+            double a = (double) nd.getTongTran();
             double b = (double) nd.getTongTranThang();
-            double tilethang = Math.round((a/b) * 100);
+            double tilethang = Math.round((a / b) * 100);
             double tilethua = 100 - tilethang;
-            model.addRow(new Object[] {       
-            nd.getXephang()+"              ",nd.getTenNguoiDung(),nd.getTongDiem(),nd.getChuoiThangMax(),nd.getChuoiThuaMax(),tilethang+"%",tilethua+"%"
+            model.addRow(new Object[]{
+                nd.getXephang() + "              ", nd.getTenNguoiDung(), nd.getTongDiem(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), tilethang + "%", tilethua + "%"
             });
         }
         tblXepHang.setModel(model);
     }
+
     /**
      * @param args the command line arguments
      */
@@ -465,7 +462,7 @@ public class Main extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-     
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
