@@ -33,25 +33,20 @@ public class RoomWorker implements Runnable {
         out.write(b + "\n");
     }
 
-    private String readLine(String hash) {
-        // giải mã
-        return "";
-    }
-
     @Override
     public void run() {
-        System.out.println("Client " + socket.toString() + " accepted");
+        System.out.println("Client " + socket.toString() + " accepted room game");
+
         try {
-            System.out.println("Hellu");
-//            while (true) {
-//                try {
-//                    switch (in.readLine()) {    // cú pháp phân biệt lệnh
-//
-//                    }
-//                } catch (IOException ex) {
-//                    break;
-//                }
-//            }
+            while (true) {
+                try {
+                    switch (in.readLine()) {
+
+                    }
+                } catch (IOException ex) {
+                    break;
+                }
+            }
             in.close();
             out.close();
             socket.close();

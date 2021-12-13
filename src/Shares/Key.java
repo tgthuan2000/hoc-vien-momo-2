@@ -29,5 +29,6 @@ public class Key {
     public static final String CHECK_ACCEPT_GAME = "CHECK_ACCEPT_GAME";
     public static final String OK_ACCEPT_GAME = "OK_ACCEPT_GAME";
     public static final String DENY_GAME = "DENY_GAME";
+    public static final String LOAD_GAME = "LOAD_GAME";
 
 }

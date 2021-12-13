@@ -23,7 +23,7 @@ public class ServerMain {
     public ServerMain() throws IOException {
         port = ServerConfig.PORT;
         ExecutorService executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
-        executorRoom = Executors.newFixedThreadPool(ServerConfig.NUM_ROOM_THREAD);
+        executorRoom = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
 
         try {
             server = new ServerSocket(port);

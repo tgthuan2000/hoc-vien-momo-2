@@ -92,6 +92,9 @@ public class WorkerClient implements Runnable {
                         case Key.NO_CONTINUE_GAME:
                             no_continue_game();
                             break;
+                        case Key.LOAD_GAME:
+                            loadgame();
+                            break;
                     }
                 } catch (IOException ex) {
                     break;
@@ -211,5 +214,10 @@ public class WorkerClient implements Runnable {
         JOptionPane.showMessageDialog(null, "Trận đấu bị huỷ do đối phương không chấp nhận trận đấu!!!");
         Main.btnPlay.setEnabled(true);
         Main.btnIQ.setEnabled(true);
+    }
+
+    private void loadgame() throws IOException {
+        writeLine(Key.LOAD_GAME);
+        out.flush();
     }
 }
