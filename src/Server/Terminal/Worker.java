@@ -23,10 +23,10 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-    //private final String userMail = "tgthuan2000@gmail.com";
-    //private final String pwdMail = "TGThuan12A4";
-    private final String userMail = "ngandoan110500@gmail.com";
-    private final String pwdMail = "ngan@123";
+    private final String userMail = "tgthuan2000@gmail.com";
+    private final String pwdMail = "TGThuan12A4";
+//    private final String userMail = "ngandoan110500@gmail.com";
+//    private final String pwdMail = "ngan@123";
     private final int from = 89999;
     private final int to = 10000;
     private final String Subject = "OTP from 3 anh em with love";
