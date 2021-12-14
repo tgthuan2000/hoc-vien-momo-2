@@ -472,9 +472,9 @@ public class Gui extends javax.swing.JFrame {
 
     public boolean kiemtratrung() {
         boolean flag = true;
-        if (txttrue.getText().equals(false1.getText()) || false1.getText().equals(false2.getText())
-                || false2.getText().equals(false3.getText()) || txttrue.getText().equals(false2.getText())
-                || txttrue.getText().equals(false3.getText()) || false1.getText().equals(false3.getText())) {
+        if (txttrue.getText().trim().equalsIgnoreCase(false1.getText().trim()) || false1.getText().trim().equalsIgnoreCase(false2.getText().trim())
+                || false2.getText().trim().equalsIgnoreCase(false3.getText().trim()) || txttrue.getText().trim().equalsIgnoreCase(false2.getText().trim())
+                || txttrue.getText().trim().equalsIgnoreCase(false3.getText().trim()) || false1.getText().trim().equalsIgnoreCase(false3.getText().trim())) {
             flag = false;
         } else {
 
