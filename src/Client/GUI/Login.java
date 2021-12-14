@@ -2,8 +2,10 @@ package Client.GUI;
 
 import Client.BUS.BUS;
 import Client.BUS.LoginBUS;
+import Client.BUS.RSA_AESBUS;
 import Client.Status;
 import Client.WorkerClient;
+import Shares.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -15,8 +17,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Login extends javax.swing.JFrame {
 
     private final LoginBUS bus;
+    private final RSA_AESBUS mahoabus;
 
-    public Login() {
+    public Login() throws Exception {
         try {
             UIManager.setLookAndFeel(new com.jtattoo.plaf.graphite.GraphiteLookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
@@ -26,6 +29,8 @@ public class Login extends javax.swing.JFrame {
         this.setTitle("Đăng nhập");
         initComponents();
         bus = new LoginBUS();
+        mahoabus = new RSA_AESBUS();
+        RSA_AES();
     }
 
     /**
@@ -158,32 +163,33 @@ public class Login extends javax.swing.JFrame {
             Matcher matcher = pattern.matcher(user);
             if (matcher.matches()) {
                 switch (bus.login(user, pwd)) {
-                    case Status.OK:
-                        if (BUS.continute()) {
-                            switch (WorkerClient.status) {
-                                case Status.OK:
-                                    this.setVisible(false);
-                                    new Main().setVisible(true);
-                                    break;
-                                case Status.FAILD:
-                                    JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
-                                    break;
-                                case Status.LOI_TONTAI_DANGNHAP:
-                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
-                                    break;
-                                case Status.LOI_BLOCK_TAIKHOAN:
-                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã bị khoá!!");
-                                    break;
-                                case Status.LOI_KETNOI_SERVER:
-                                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
-                                    break;
-                            }
-                        }
-                        break;
-                    case Status.LOI_KETNOI_SERVER:
-                        JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
-                        break;
-                }
+                                    case Status.OK:
+                                        if (BUS.continute()) {
+                                            switch (WorkerClient.status) {
+                                                case Status.OK:
+                                                    this.setVisible(false);
+                                                    new Main().setVisible(true);
+                                                    break;
+                                                case Status.FAILD:
+                                                    JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
+                                                    break;
+                                                case Status.LOI_TONTAI_DANGNHAP:
+                                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
+                                                    break;
+                                                case Status.LOI_BLOCK_TAIKHOAN:
+                                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã bị khoá!!");
+                                                    break;
+                                                case Status.LOI_KETNOI_SERVER:
+                                                    JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    case Status.LOI_KETNOI_SERVER:
+                                        JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                                        break;
+                               }
+                
             } else {
                 JOptionPane.showMessageDialog(null, "User name là email (abc@abc.com)");
             }
@@ -197,7 +203,31 @@ public class Login extends javax.swing.JFrame {
         Register register = new Register();
         register.setVisible(true);
     }//GEN-LAST:event_lbRegisterMouseClicked
-
+    
+    public void RSA_AES() throws Exception{
+        switch(mahoabus.sendRequestGetPublicKey()){
+                    case Status.OK:
+                        if (BUS.continute()) {
+                            switch (WorkerClient.status) {
+                                case Status.OK:
+                                switch(mahoabus.encryptAesKey()){
+                                    case Status.OK:
+                                        if (BUS.continute()) {
+                                            switch (WorkerClient.status) {
+                                                case Status.OK:
+                                                
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                }
+                
+    }
     /**
      * true
      *
@@ -241,7 +271,11 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                try {
+                    new Login().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

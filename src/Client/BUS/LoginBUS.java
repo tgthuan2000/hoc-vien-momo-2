@@ -3,11 +3,14 @@ package Client.BUS;
 import Client.Status;
 import Shares.Key;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginBUS {
 
     public LoginBUS() {
     }
+    
 
     public int login(String usr, String pwd) {
         try {

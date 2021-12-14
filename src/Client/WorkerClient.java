@@ -10,7 +10,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +61,16 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.OK:
                             ok();
+                            break;
+                            
+                        //MAHOA
+                        //
+                        //
+                        case Key.RELY_GET_PUBLICKEY:
+                            nhanpublickey();
+                            break;
+                        case Key.REPLY_EN_SEC_KEY:
+                            phanhoisecretkey();
                             break;
                         //
                         // ĐĂNG NHẬP
@@ -103,6 +119,10 @@ public class WorkerClient implements Runnable {
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(WorkerClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidKeySpecException ex) {
+                    Logger.getLogger(WorkerClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             in.close();
@@ -237,5 +257,25 @@ public class WorkerClient implements Runnable {
     private void loadgame() throws IOException {
         writeLine(Key.LOAD_GAME);
         out.flush();
+    }
+
+    private void nhanpublickey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyRSA_AES.publicKey = castStringToPublickey(in.readLine());
+        System.out.println("public key server tra ve : " +KeyRSA_AES.publicKey);
+        ok();
+    }
+    public void phanhoisecretkey(){
+        System.out.println("Vo day");
+        ok();
+    }
+    
+    private PublicKey castStringToPublickey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] publicKeyByteServer = decoder.decode(publicKeyStr.getBytes());
+//        byte[] publicKeyByteServer = Base64.decode(publicKeyString, Base64.NO_WRAP);
+//        // generate the publicKey
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PublicKey publicKeyServer = (PublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyByteServer));
+        return publicKeyServer;
     }
 }

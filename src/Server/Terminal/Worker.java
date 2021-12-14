@@ -1,6 +1,7 @@
 package Server.Terminal;
 
 import Server.BUS.UserBUS;
+import Server.Key_RSA_AES_Server;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import java.io.BufferedReader;
@@ -9,10 +10,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -37,6 +46,7 @@ public class Worker implements Runnable {
     private int Otp;
     private NguoiDungDTO nguoiDungDTO;
     private Room room;
+    public static String privateKey;
 
     public Worker(Socket s) throws IOException {
         this.socket = s;
@@ -49,6 +59,10 @@ public class Worker implements Runnable {
 
     private void writeLine(String str) throws IOException {
         out.write(str.trim() + "\n");
+    }
+    
+     private void writeLine(PublicKey str) throws IOException {
+        out.write(str + "\n");
     }
 
     private void writeLine(int num) throws IOException {
@@ -71,6 +85,12 @@ public class Worker implements Runnable {
             while (true) {
                 try {
                     switch (in.readLine()) {    // cú pháp phân biệt lệnh
+                        case Key.REQUEST_GET_PUBLICKEY:
+                            sendPublicKey();
+                            break;
+                        case Key.SEND_EN_SEC_KEY:
+                            nhanSecretKey();
+                            break;
                         case Key.DANGKY:
                             dangKy();
                             break;
@@ -101,6 +121,8 @@ public class Worker implements Runnable {
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (Exception ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             // clean up
@@ -549,5 +571,56 @@ public class Worker implements Runnable {
                 break;
             }
         }
+    }
+    
+    public void sendPublicKey() throws Exception{
+        Map<String, Object> keys = getRSAKeys();
+        PublicKey publicKey = (PublicKey) keys.get("public");
+        Key_RSA_AES_Server.privateKey = (PrivateKey) keys.get("private");
+        writeLine(Key.RELY_GET_PUBLICKEY);
+        writeLine(castPublicKeyToString(publicKey));
+        System.out.println("send publickey : " +castPublicKeyToString(publicKey));
+        System.out.println("public key : " +publicKey.toString());
+        out.flush();
+        System.out.println("done");
+    }
+    
+    private String castPublicKeyToString(PublicKey publicKey){
+        // get encoded form (byte array)
+        byte[] publicKeyByte = publicKey.getEncoded();
+        // Base64 encoded string
+
+        Base64.Encoder encoder = Base64.getEncoder();
+        String publicKeyStr = encoder.encodeToString(publicKey.getEncoded());
+        System.out.println("publicKeyString: " + publicKeyStr);
+        return publicKeyStr;
+    }
+    
+    private static Map<String,Object> getRSAKeys() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+ 
+        Map<String, Object> keys = new HashMap<String,Object>();
+        keys.put("private", privateKey);
+        keys.put("public", publicKey);
+        return keys;
+    }
+    
+    public void nhanSecretKey() throws IOException, Exception{
+        Key_RSA_AES_Server.secretKey = decryptMessage(in.readLine(), Key_RSA_AES_Server.privateKey);
+        System.out.println(Key_RSA_AES_Server.secretKey);
+        writeLine(Key.REPLY_EN_SEC_KEY);
+        out.flush();
+        System.out.println("done reply");
+    }
+    
+     // Decrypt using RSA public key
+    private static String decryptMessage(String encryptedText, PrivateKey privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
     }
 }

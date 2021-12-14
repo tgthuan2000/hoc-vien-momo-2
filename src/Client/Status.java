@@ -12,4 +12,5 @@ public class Status {
     // danh sách trang thái (>=0)
     public static final int OK = 1;// success
     public static final int FAILD = 0;    // faild
+    
 }
