@@ -103,6 +103,8 @@ public class Worker implements Runnable {
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             // clean up
@@ -468,12 +470,13 @@ public class Worker implements Runnable {
         worker.out.flush();
     }
 
-    private void goToGame() throws IOException {
+    private void goToGame() throws IOException, InterruptedException {
         RoomWorker rw = new RoomWorker(socket, roomId, nguoiDungDTO, player2);
         ServerMain.executorRoom.execute(rw);
         ServerMain.roomWorkers.add(rw); // quản lý
-        ServerMain.executor.shutdownNow();// đóng kết nối với worker user hiện tại
+        //ServerMain.executor.shutdownNow();// đóng kết nối với worker user hiện tại
         ServerMain.workers.remove(this);
+        wait();
     }
 
     private void deny_game() throws IOException {

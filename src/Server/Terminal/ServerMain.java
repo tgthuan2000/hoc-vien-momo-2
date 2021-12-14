@@ -31,11 +31,13 @@ public class ServerMain {
             server = new ServerSocket(port);
             System.out.println("Server binding at port " + port);
             System.out.println("Waiting for client...");
-            new GuiQuery().setVisible(true);
+            GuiQuery gui = new GuiQuery();
+            gui.setVisible(true);
             while (true) {
                 Worker client = new Worker(server.accept());
                 executor.execute(client);
                 workers.add(client);
+                gui.useronl();
             }
         } catch (IOException e) {
             System.out.println(e);

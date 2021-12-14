@@ -491,9 +491,12 @@ public class GuiQuery extends javax.swing.JFrame {
             count++;
         }
         txtsumuser.setText(String.valueOf(count));
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void useronl() {
         workers = ServerMain.workers;
         txtuseronl.setText(String.valueOf(workers.size()));
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }
 
     /**
      * @param args the command line arguments

@@ -21,7 +21,7 @@ public class Connect {
     public Connect() {
         this.host = "localhost";
         this.user = "sa";
-        this.psswd = "ngan2000";
+        this.psswd = "123";
         this.database = "hoc_vien_momo";
     }
 
