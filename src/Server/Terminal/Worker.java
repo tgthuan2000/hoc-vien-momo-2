@@ -1,5 +1,10 @@
 package Server.Terminal;
 
+import Client.BUS.RSA_AESBUS;
+import static Client.BUS.RSA_AESBUS.decrypt;
+import Client.KeyRSA_AES;
+import Server.BUS.MaHoaBUS;
+//import static Server.BUS.MaHoaBUS.decrypt;
 import Server.BUS.UserBUS;
 import Server.Key_RSA_AES_Server;
 import Shares.DTO.NguoiDungDTO;
@@ -48,34 +53,38 @@ public class Worker implements Runnable {
     private Room room;
     public static String privateKey;
 
-    public Worker(Socket s) throws IOException {
+    public Worker(Socket s) throws IOException, Exception {
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
         userBUS = new UserBUS();
         nguoiDungDTO = new NguoiDungDTO();
         room = new Room();
-    }
-
-    private void writeLine(String str) throws IOException {
-        out.write(str.trim() + "\n");
+        sendPublicKey();
+        Key_RSA_AES_Server.secretKey = decryptMessage(in.readLine(), Key_RSA_AES_Server.privateKey);
+        System.out.println(Key_RSA_AES_Server.secretKey);
     }
     
-     private void writeLine(PublicKey str) throws IOException {
-        out.write(str + "\n");
-    }
 
     private void writeLine(int num) throws IOException {
-        out.write(num + "\n");
+        String tmp = MaHoaBUS.encrypt(num+"",Key_RSA_AES_Server.secretKey);
+            out.write(tmp + "\n");
     }
-
+    
     private void writeLine(boolean b) throws IOException {
-        out.write(b + "\n");
+        String tmp = MaHoaBUS.encrypt(b+"",Key_RSA_AES_Server.secretKey);
+            out.write(tmp + "\n");
+    }
+    
+    private void writeLine(String str) throws IOException {
+            String tmp = MaHoaBUS.encrypt(str.trim(),Key_RSA_AES_Server.secretKey);
+            out.write(tmp + "\n");
     }
 
-    private String readLine(String hash) {
-        // giải mã
-        return "";
+    private String readLine() throws IOException {
+            String readline = in.readLine();
+            String tmp = MaHoaBUS.decrypt(readline, Key_RSA_AES_Server.secretKey);
+            return tmp;
     }
 
     @Override
@@ -84,13 +93,7 @@ public class Worker implements Runnable {
         try {
             while (true) {
                 try {
-                    switch (in.readLine()) {    // cú pháp phân biệt lệnh
-                        case Key.REQUEST_GET_PUBLICKEY:
-                            sendPublicKey();
-                            break;
-                        case Key.SEND_EN_SEC_KEY:
-                            nhanSecretKey();
-                            break;
+                    switch (readLine()) {  
                         case Key.DANGKY:
                             dangKy();
                             break;
@@ -146,8 +149,8 @@ public class Worker implements Runnable {
 
     private void dangNhap() {
         try {
-            String username = in.readLine();
-            String password = in.readLine();
+            String username = readLine();
+            String password = readLine();
             nguoiDungDTO = userBUS.login(username, password);
 
             if (nguoiDungDTO.getUsername() != null) {
@@ -223,7 +226,7 @@ public class Worker implements Runnable {
     private void dangKy() {
         try {
             StringBuilder str = new StringBuilder();
-            str.append(in.readLine()); // email
+            str.append(readLine()); // email
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
@@ -299,7 +302,7 @@ public class Worker implements Runnable {
     private void checkOtp() {
         try {
             System.out.println("Nhận OTP");
-            if (in.readLine().equals(Integer.toString(Otp))) {
+            if (readLine().equals(Integer.toString(Otp))) {
                 System.out.println("OTP đúng");
                 writeLine(Key.NHAN_KETQUA_CHECK_OTP);
             } else {
@@ -316,10 +319,10 @@ public class Worker implements Runnable {
     private void luuNguoiDung() {
         try {
             nguoiDungDTO.setUsername(email);
-            nguoiDungDTO.setPassword(in.readLine());
-            nguoiDungDTO.setTenNguoiDung(in.readLine());
-            nguoiDungDTO.setNgaySinh(in.readLine());
-            nguoiDungDTO.setGioiTinh(in.readLine().equals("true"));
+            nguoiDungDTO.setPassword(readLine());
+            nguoiDungDTO.setTenNguoiDung(readLine());
+            nguoiDungDTO.setNgaySinh(readLine());
+            nguoiDungDTO.setGioiTinh(readLine().equals("true"));
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(nguoiDungDTO)) {
@@ -417,7 +420,7 @@ public class Worker implements Runnable {
     }
 
     private void checkAcceptGame() throws IOException {
-        switch (in.readLine()) {
+        switch (readLine()) {
             case Key.OK:
                 ok_accept_game();
                 break;
@@ -428,7 +431,7 @@ public class Worker implements Runnable {
     }
 
     private void ok_accept_game() throws IOException {
-        roomId = in.readLine();
+        roomId = readLine();
         // kiểm tra user nào click accept bằng roomid
         for (Room r : ServerMain.waittingRooms) {
             if (r.getRoomID().equals(roomId)) {
@@ -499,7 +502,7 @@ public class Worker implements Runnable {
     }
 
     private void deny_game() throws IOException {
-        roomId = in.readLine();
+        roomId = readLine();
         // kiểm tra user nào click deny bằng roomid
         for (Room r : ServerMain.waittingRooms) {
             if (r.getRoomID().equals(roomId)) {
@@ -577,8 +580,7 @@ public class Worker implements Runnable {
         Map<String, Object> keys = getRSAKeys();
         PublicKey publicKey = (PublicKey) keys.get("public");
         Key_RSA_AES_Server.privateKey = (PrivateKey) keys.get("private");
-        writeLine(Key.RELY_GET_PUBLICKEY);
-        writeLine(castPublicKeyToString(publicKey));
+        out.write(castPublicKeyToString(publicKey) + "\n");
         System.out.println("send publickey : " +castPublicKeyToString(publicKey));
         System.out.println("public key : " +publicKey.toString());
         out.flush();
@@ -596,6 +598,7 @@ public class Worker implements Runnable {
         return publicKeyStr;
     }
     
+    //sinh khoa
     private static Map<String,Object> getRSAKeys() throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
@@ -608,14 +611,7 @@ public class Worker implements Runnable {
         keys.put("public", publicKey);
         return keys;
     }
-    
-    public void nhanSecretKey() throws IOException, Exception{
-        Key_RSA_AES_Server.secretKey = decryptMessage(in.readLine(), Key_RSA_AES_Server.privateKey);
-        System.out.println(Key_RSA_AES_Server.secretKey);
-        writeLine(Key.REPLY_EN_SEC_KEY);
-        out.flush();
-        System.out.println("done reply");
-    }
+   
     
      // Decrypt using RSA public key
     private static String decryptMessage(String encryptedText, PrivateKey privateKey) throws Exception {

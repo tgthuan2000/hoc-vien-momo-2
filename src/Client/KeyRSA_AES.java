@@ -12,6 +12,6 @@ import java.security.PublicKey;
  * @author thanh
  */
 public class KeyRSA_AES {
-    public static String keyRSA ;
-    public static PublicKey publicKey;
+    public static String keyAES = "";
+    public static PublicKey publicKey = null;
 }

@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 public class BUS {
 
-    private static Socket socket;
-    private static BufferedWriter out;
-    private static BufferedReader in;
+    static Socket socket;
+    public static BufferedWriter out;
+    public static BufferedReader in;
     public static NguoiDungDTO user;
     public static ArrayList<NguoiDungDTO> users;
     public static ArrayList<NguoiDungDTO> userTmp;
@@ -31,7 +31,7 @@ public class BUS {
             socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
             out = new BufferedWriter(new OutputStreamWriter(BUS.socket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
-            Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
+//            Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
             System.out.println("Client connected");
             users = new ArrayList<>();
         }
@@ -52,11 +52,16 @@ public class BUS {
         }
         return true;
     }
-
+    
     public static void writeLine(String str) throws IOException {
-        out.write(str.trim() + "\n");
+            String tmp = RSA_AESBUS.encrypt(str.trim(),KeyRSA_AES.keyAES);
+            out.write(tmp + "\n");
     }
 
+    public static String readLine() throws IOException {
+            return RSA_AESBUS.decrypt(in.readLine(),KeyRSA_AES.keyAES);
+    }
+    
     public static void flush() throws IOException {
         out.flush();
     }

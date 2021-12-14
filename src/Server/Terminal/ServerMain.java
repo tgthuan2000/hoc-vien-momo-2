@@ -20,7 +20,7 @@ public class ServerMain {
     public static Vector<RoomWorker> roomWorkers = new Vector<>();
     public static ExecutorService executorRoom;
 
-    public ServerMain() throws IOException {
+    public ServerMain() throws IOException, Exception {
         port = ServerConfig.PORT;
         ExecutorService executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
         executorRoom = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);

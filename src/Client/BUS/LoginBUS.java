@@ -1,10 +1,9 @@
 package Client.BUS;
 
+
 import Client.Status;
 import Shares.Key;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class LoginBUS {
 
@@ -16,7 +15,7 @@ public class LoginBUS {
         try {
             pwd = BUS.getMd5(pwd); // mã hoá mật khẩu
             // kết nối server
-            BUS.connect();
+            //BUS.connect();
             // gửi tín hiệu đăng nhập và usr, pwd
             BUS.writeLine(Key.DANGNHAP);
             BUS.writeLine(usr);

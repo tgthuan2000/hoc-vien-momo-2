@@ -12,6 +12,6 @@ import java.security.PrivateKey;
  * @author thanh
  */
 public class Key_RSA_AES_Server {
-    public static PrivateKey privateKey;
-    public static String secretKey;
+    public static PrivateKey privateKey = null;
+    public static String secretKey = "";
 }

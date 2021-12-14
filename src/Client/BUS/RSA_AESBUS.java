@@ -5,16 +5,22 @@
  */
 package Client.BUS;
 
+
 import Client.KeyRSA_AES;
 import Client.Status;
+import Client.WorkerClient;
 import Shares.Key;
 import java.io.IOException;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
@@ -31,24 +37,43 @@ public class RSA_AESBUS {
     public RSA_AESBUS() {
     }
     
-    public int sendRequestGetPublicKey(){
+    public int sendRequestGetPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, Exception{
         try {
+            //Receive public key RSA
             BUS.connect();
-            BUS.writeLine(Key.REQUEST_GET_PUBLICKEY);
+            //BUS.out.write(Key.REQUEST_GET_PUBLICKEY + "\n");
+            KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine()); 
+            String keygenerater = castSkToString(generatorSK());
+            KeyRSA_AES.keyAES = keygenerater;
+            System.out.println("pulic key: " + KeyRSA_AES.publicKey);
+            System.out.println("key AES truoc khi bi ma hoa: " +keygenerater);
+            System.out.println("key AES sau khi bi ma hoa: " +encryptMessage(keygenerater, KeyRSA_AES.publicKey));
+            BUS.out.write(encryptMessage(keygenerater, KeyRSA_AES.publicKey) + "\n");
             BUS.flush();
+            Executors.newFixedThreadPool(1).execute(new WorkerClient((BUS.socket)));
             return Status.OK;
         } catch (IOException ex) {
             return Status.LOI_KETNOI_SERVER;
         }
     }
     
+    private PublicKey castStringToPublickey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException{
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] publicKeyByteServer = decoder.decode(publicKeyStr.getBytes());
+//        byte[] publicKeyByteServer = Base64.decode(publicKeyString, Base64.NO_WRAP);
+//        // generate the publicKey
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PublicKey publicKeyServer = (PublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyByteServer));
+        return publicKeyServer;
+    }
+    
     public int encryptAesKey() throws NoSuchAlgorithmException, Exception{
         try {
             BUS.connect();
             BUS.writeLine(Key.SEND_EN_SEC_KEY);
-            KeyRSA_AES.keyRSA = castSkToString(generatorSK());
-            System.out.println("Secret key be generater : " +KeyRSA_AES.keyRSA);
-            String keyEncryt = encryptMessage(KeyRSA_AES.keyRSA, KeyRSA_AES.publicKey);
+            KeyRSA_AES.keyAES = castSkToString(generatorSK());
+            System.out.println("Secret key be generater : " +KeyRSA_AES.keyAES);
+            String keyEncryt = encryptMessage(KeyRSA_AES.keyAES, KeyRSA_AES.publicKey);
             System.out.println("Secret key encrypted : " +keyEncryt);
             BUS.writeLine(keyEncryt);
             BUS.flush();
