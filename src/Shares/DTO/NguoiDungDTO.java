@@ -1,8 +1,8 @@
 package Shares.DTO;
 
-public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
+public class NguoiDungDTO implements Comparable<NguoiDungDTO> {
 
-    private int tongTran = 0, tongTranThang = 0, chuoiThang = 0, chuoiThua = 0, chuoiThangMax = 0, chuoiThuaMax = 0, tongDiem = 0, diemIQ = 0,xephang=0;
+    private int tongTran = 0, tongTranThang = 0, chuoiThang = 0, chuoiThua = 0, chuoiThangMax = 0, chuoiThuaMax = 0, tongDiem = 0, diemIQ = 0, xephang = 0;
     private String username, password, tenNguoiDung, ngaySinh;
     //  gioiTinh: true - nam, false - nữ
     //  trangThaiChuoi: true - thắng, false - thua
@@ -10,7 +10,7 @@ public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
 
     public NguoiDungDTO() {
     }
-    
+
     public NguoiDungDTO(NguoiDungDTO nd) {
         this.tenNguoiDung = nd.tenNguoiDung;
         this.chuoiThangMax = nd.chuoiThangMax;
@@ -28,8 +28,8 @@ public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
     }
-    
-    public NguoiDungDTO(String tenNguoiDung,int tranThangMax,int tranThuaMax,int tongTranThang,int tongTran,int tongDiem){
+
+    public NguoiDungDTO(String tenNguoiDung, int tranThangMax, int tranThuaMax, int tongTranThang, int tongTran, int tongDiem) {
         this.tenNguoiDung = tenNguoiDung;
         this.chuoiThangMax = tranThangMax;
         this.chuoiThuaMax = tranThuaMax;
@@ -37,8 +37,8 @@ public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
         this.tongTran = tongTran;
         this.tongDiem = tongDiem;
     }
-    
-    public NguoiDungDTO(String tenNguoiDung,int tranThangMax,int tranThuaMax,int tongTranThang,int tongTran,int tongDiem,int xephang){
+
+    public NguoiDungDTO(String tenNguoiDung, int tranThangMax, int tranThuaMax, int tongTranThang, int tongTran, int tongDiem, int xephang) {
         this.tenNguoiDung = tenNguoiDung;
         this.chuoiThangMax = tranThangMax;
         this.chuoiThuaMax = tranThuaMax;
@@ -47,7 +47,7 @@ public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
         this.tongDiem = tongDiem;
         this.xephang = xephang;
     }
-    
+
     public NguoiDungDTO(String username, String password) {
         this.username = username;
         this.password = password;
@@ -180,8 +180,6 @@ public class NguoiDungDTO implements Comparable<NguoiDungDTO>{
     public void setXephang(int xephang) {
         this.xephang = xephang;
     }
-    
-    
 
     @Override
     public int compareTo(NguoiDungDTO o) {

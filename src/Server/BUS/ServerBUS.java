@@ -23,6 +23,13 @@ public class ServerBUS {
         return false;
     }
 
+    public boolean changecauhoi(CauHoiDTO cau) {
+        if (new ServerDAO().changecauhoi(cau)) {
+            return true;
+        }
+        return false;
+    }
+
     public ArrayList<CauHoiDTO> readcauhoi() {
         ServerDAO data = new ServerDAO();
         dsch = data.readCauhoi();
