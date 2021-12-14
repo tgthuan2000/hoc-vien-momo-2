@@ -6,9 +6,9 @@
 package Server.GUI;
 
 import Server.BUS.ServerBUS;
-import Server.Terminal.ServerMain;
 import Shares.DTO.CauHinhDTO;
 import Shares.DTO.CauHoiDTO;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,6 +25,7 @@ public class Gui extends javax.swing.JFrame {
     DefaultTableModel model1 = new DefaultTableModel();
     ServerBUS bus = new ServerBUS();
     public String i = null;
+    ArrayList<CauHoiDTO> dschsudung = null;
 
     public Gui() {
 
@@ -34,7 +35,7 @@ public class Gui extends javax.swing.JFrame {
         model1 = (DefaultTableModel) tb2.getModel();
         readconfromsql();
         readcauhoifromsql();
-        JOptionPane.showMessageDialog(rootPane, ServerMain.users.size());
+
     }
 
     public void readconfromsql() {
@@ -47,7 +48,8 @@ public class Gui extends javax.swing.JFrame {
     }
 
     public void readcauhoifromsql() {
-        for (CauHoiDTO cauhoi : bus.readcauhoi()) {
+        dschsudung = bus.readcauhoi();
+        for (CauHoiDTO cauhoi : dschsudung) {
             model1.addRow(new Object[]{
                 cauhoi.getCauHoi(), cauhoi.getCauDung(), cauhoi.getCauSai1(), cauhoi.getCauSai2(), cauhoi.getCauSai3()
             });
@@ -91,6 +93,7 @@ public class Gui extends javax.swing.JFrame {
         tb2 = new javax.swing.JTable();
         txtquestion = new javax.swing.JTextField();
         btnreset = new javax.swing.JButton();
+        btnsua = new javax.swing.JButton();
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -107,6 +110,8 @@ public class Gui extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("guiServer");
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Cấu Hình");
@@ -187,14 +192,18 @@ public class Gui extends javax.swing.JFrame {
             }
         });
         jScrollPane4.setViewportView(tb2);
-        if (tb2.getColumnModel().getColumnCount() > 0) {
-            tb2.getColumnModel().getColumn(0).setResizable(false);
-        }
 
         btnreset.setText("Reset");
         btnreset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnresetActionPerformed(evt);
+            }
+        });
+
+        btnsua.setText("Sửa");
+        btnsua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnsuaActionPerformed(evt);
             }
         });
 
@@ -256,9 +265,11 @@ public class Gui extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txttrue, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(50, 50, 50)
-                                .addComponent(btnreset, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnadd)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnreset))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -296,7 +307,8 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txttrue, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnreset, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnreset, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnsua, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -333,25 +345,27 @@ public class Gui extends javax.swing.JFrame {
             txtcore.setText(tb1.getModel().getValueAt(i, 1).toString());
             txttime.setText(tb1.getModel().getValueAt(i, 2).toString());
 
-        }        // TODO add your handling code here:
+        }
     }//GEN-LAST:event_tb1MouseClicked
 
+    public boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+
     public boolean check() {
-
         boolean ischeck1 = true;
-
-        if (txtcore.getText().length() == 0) {
-            ischeck1 = false;
-
-        }
-        if (txtnum.getText().length() == 0) {
-
-            ischeck1 = false;
-
-        }
-        if (txttime.getText().length() == 0) {
-            // JOptionPane.showMessageDialog(rootPane,"Bạn chưa nhập địa chỉ");             ischeck1 = false;
-
+        try {
+            if (txtnum.getText().equals("") || txtcore.getText().equals("") || txttime.getText().equals("")) {
+                JOptionPane.showConfirmDialog(null, "Chưa điền đủ thông tin");
+                ischeck1 = false;
+            } else if (isNumeric(txttime.getText()) == false || isNumeric(txtcore.getText()) == false || isNumeric(txtnum.getText()) == false) {
+                JOptionPane.showConfirmDialog(null, "Dữ liệu phải là số");
+                ischeck1 = false;
+            } else if (Integer.parseInt(txttime.getText()) < 0 || Integer.parseInt(txtcore.getText()) < 0 || Integer.parseInt(txtnum.getText()) < 0) {
+                JOptionPane.showConfirmDialog(null, "Dữ liệu phải là số dương");
+                ischeck1 = false;
+            }
+        } catch (Exception e) {
         }
         return ischeck1;
     }
@@ -359,9 +373,6 @@ public class Gui extends javax.swing.JFrame {
     public boolean check1() {
 
         boolean ischeck1 = true;
-//        if (txtid1.getText().length() == 0) {
-//            ischeck1 = false;
-//        }
 
         if (txtquestion.getText().length() == 0) {
             ischeck1 = false;
@@ -392,10 +403,30 @@ public class Gui extends javax.swing.JFrame {
 
     public CauHinhDTO textfiled() {
         CauHinhDTO conf = new CauHinhDTO();
+
         conf.setSoLuongCauHoi(Integer.parseInt(txtnum.getText()));
+
         conf.setDiemTranDau(Integer.parseInt(txtcore.getText()));
+
         conf.setThoiGian(Integer.parseInt(txttime.getText()));
+
         return conf;
+    }
+
+    public CauHoiDTO textfiledcauhoi(int i) {
+        CauHoiDTO cauhoi = new CauHoiDTO();
+        cauhoi.setId(i);
+        cauhoi.setCauHoi(txtquestion.getText());
+
+        cauhoi.setCauDung(txttrue.getText());
+
+        cauhoi.setCauSai1(false1.getText());
+
+        cauhoi.setCauSai2(false2.getText());
+
+        cauhoi.setCauSai3(false3.getText());
+
+        return cauhoi;
     }
     private void btnmodifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodifyActionPerformed
 
@@ -403,11 +434,14 @@ public class Gui extends javax.swing.JFrame {
             CauHinhDTO config1 = textfiled();
             int i = tb1.getSelectedRow();
             if (i >= 0) {
+
                 int pos = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn sửa trường này?");
+
                 if (pos == JOptionPane.YES_OPTION) {
+
                     if (bus.changeconfig(config1)) {
+
                         CauHinhDTO cauhinh = bus.readConfig().set(i, config1);
-//                        model.setValueAt(config1.getId(), i, 0);
                         model.setValueAt(config1.getSoLuongCauHoi(), i, 0);
                         model.setValueAt(config1.getDiemTranDau(), i, 1);
                         model.setValueAt(config1.getThoiGian(), i, 2);
@@ -426,22 +460,42 @@ public class Gui extends javax.swing.JFrame {
     private void tb2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb2MouseClicked
         int i = tb2.getSelectedRow();
         if (i >= 0) {
-//            txtid1.setText(tb2.getModel().getValueAt(i, 0).toString());
+
             txtquestion.setText(tb2.getModel().getValueAt(i, 0).toString());
             txttrue.setText(tb2.getModel().getValueAt(i, 1).toString());
             false1.setText(tb2.getModel().getValueAt(i, 2).toString());
             false2.setText(tb2.getModel().getValueAt(i, 3).toString());
             false3.setText(tb2.getModel().getValueAt(i, 4).toString());
 
-//            txtid1.setEnabled(false);
         }
     }//GEN-LAST:event_tb2MouseClicked
 
+    public boolean kiemtratrung() {
+        boolean flag = true;
+        if (txttrue.getText().equals(false1.getText()) || false1.getText().equals(false2.getText())
+                || false2.getText().equals(false3.getText()) || txttrue.getText().equals(false2.getText())
+                || txttrue.getText().equals(false3.getText()) || false1.getText().equals(false3.getText())) {
+            flag = false;
+        } else {
+
+            flag = true;
+
+        }
+        return flag;
+    }
+
+    public boolean kiemtratontai(CauHoiDTO cau) {
+        for (CauHoiDTO cauhoi : dschsudung) {
+            if (cauhoi.getCauHoi().equals(cau.getCauHoi())) {
+                return false;
+            }
+        }
+        return true;
+    }
     private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
         boolean check1 = true;
         if (check1()) {
             CauHoiDTO cau = new CauHoiDTO();
-//            cau.setId((Integer.parseInt(txtid1.getText())));
             cau.setCauHoi(txtquestion.getText());
             cau.setCauDung(txttrue.getText());
             cau.setCauSai1(false1.getText());
@@ -451,13 +505,23 @@ public class Gui extends javax.swing.JFrame {
             if (check1 == true) {
                 int res = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn thêm câu hỏi này?");
                 if (res == JOptionPane.YES_OPTION) {
-                    if (bus.addcauhoi(cau)) {
-                        showResult();
-                        reset();
-                        JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+                    if (kiemtratrung()) {
+                        if (kiemtratontai(cau)) {
+                            if (bus.addcauhoi(cau)) {
+                                showResult();
+                                reset1();
+                                JOptionPane.showMessageDialog(rootPane, "Thêm thành công");
+                            } else {
+                                JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Câu hỏi đã tồn tại");
+                        }
+
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Thêm thất bại");
+                        JOptionPane.showMessageDialog(null, "Dữ liệu không được trùng nhau");
                     }
+
                 }
             }
         } else {
@@ -478,9 +542,42 @@ public class Gui extends javax.swing.JFrame {
         false1.setText("");
         false2.setText("");
         false3.setText("");
-//        txtid.setEnabled(false);
-//        txtid1.setEnabled(false);
+
     }//GEN-LAST:event_btnresetActionPerformed
+
+    private void btnsuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsuaActionPerformed
+
+        int i = tb2.getSelectedRow();
+        CauHoiDTO cauhoi2 = textfiledcauhoi(i + 1);
+        if (i >= 0) {
+
+            int pos = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn sửa trường này?");
+
+            if (pos == JOptionPane.YES_OPTION) {
+                if (kiemtratrung()) {
+                    if (bus.changecauhoi(cauhoi2)) {
+//                        CauHoiDTO cauhoi1 = bus.readcauhoi().set(i, cauhoi2);
+                        model1.setValueAt(cauhoi2.getCauHoi(), i, 0);
+                        model1.setValueAt(cauhoi2.getCauDung(), i, 1);
+                        model1.setValueAt(cauhoi2.getCauSai1(), i, 2);
+                        model1.setValueAt(cauhoi2.getCauSai2(), i, 3);
+                        model1.setValueAt(cauhoi2.getCauSai3(), i, 4);
+                        reset1();
+                        JOptionPane.showMessageDialog(rootPane, "Sửa Thành Công");
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Sửa Thất Bại");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Dữ liệu không được trùng nhau");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Sửa Thất Bại1");
+            }
+        }
+
+    }//GEN-LAST:event_btnsuaActionPerformed
 
     public void showResult() {
         CauHoiDTO cau = bus.dsch.get(bus.dsch.size() - 1);
@@ -491,12 +588,19 @@ public class Gui extends javax.swing.JFrame {
 
     public void reset() {
 
-//        txtid.setText("");
         txtcore.setText("");
         txttime.setText("");
         txtquestion.setText("");
         txtnum.setText("");
 
+    }
+
+    public void reset1() {
+        txtquestion.setText("");
+        txttrue.setText("");
+        false1.setText("");
+        false2.setText("");
+        false3.setText("");
     }
 
     /**
@@ -539,6 +643,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton btnadd;
     private javax.swing.JButton btnmodify;
     private javax.swing.JButton btnreset;
+    private javax.swing.JButton btnsua;
     private javax.swing.JTextField false1;
     private javax.swing.JTextField false2;
     private javax.swing.JTextField false3;

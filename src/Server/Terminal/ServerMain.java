@@ -1,5 +1,6 @@
 package Server.Terminal;
 
+import Server.GUI.GuiQuery;
 import Shares.DTO.NguoiDungDTO;
 import Shares.ServerConfig;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class ServerMain {
             server = new ServerSocket(port);
             System.out.println("Server binding at port " + port);
             System.out.println("Waiting for client...");
+            new GuiQuery().setVisible(true);
             while (true) {
                 Worker client = new Worker(server.accept());
                 executor.execute(client);

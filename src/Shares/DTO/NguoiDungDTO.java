@@ -18,7 +18,7 @@ public class NguoiDungDTO {
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
     }
-    
+
     public NguoiDungDTO(String username, String password) {
         this.username = username;
         this.password = password;

@@ -78,6 +78,26 @@ public class ServerDAO {
         return false;
     }
 
+    public boolean changecauhoi(CauHoiDTO cauhoi) {
+        String sql = "UPDATE CauHoi SET CauHoi=?,CauDung=?,CauSai1=?,CauSai2=?,CauSai3=? WHERE Id=?";
+
+        try {
+            PreparedStatement ps = mysql.getPreparedStatement(sql);
+            ps.setString(1, cauhoi.getCauHoi());
+            ps.setString(2, cauhoi.getCauDung());
+            ps.setString(3, cauhoi.getCauSai1());
+            ps.setString(4, cauhoi.getCauSai2());
+            ps.setString(5, cauhoi.getCauSai3());
+            ps.setInt(6, cauhoi.getId());
+            return mysql.excuteUpdate();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "CHANGE DB ERROR");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public boolean add(CauHoiDTO cauhoi) {
         String sql = "INSERT INTO CauHoi(CauHoi,CauDung,CauSai1,CauSai2,CauSai3)" + "VALUES(?,?,?,?,?)";
         try {
@@ -96,8 +116,4 @@ public class ServerDAO {
         return false;
     }
 
-    public static void main(String[] args) {
-        ServerDAO dao = new ServerDAO();
-        System.out.println("lala" + dao.readCauhinh());
-    }
 }
