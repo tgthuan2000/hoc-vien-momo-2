@@ -160,7 +160,6 @@ public class Login extends javax.swing.JFrame {
                 switch (bus.login(user, pwd)) {
                     case Status.OK:
                         if (BUS.continute()) {
-                            System.out.println("Run ở đây nè" + WorkerClient.status);
                             switch (WorkerClient.status) {
                                 case Status.OK:
                                     this.setVisible(false);

@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +22,9 @@ public class BUS {
     private static BufferedWriter out;
     private static BufferedReader in;
     public static NguoiDungDTO user;
+    public static ArrayList<NguoiDungDTO> users;
+    public static ArrayList<NguoiDungDTO> userTmp;
+    public static NguoiDungDTO user2;
 
     public static void connect() throws IOException {
         if (socket == null) {
@@ -29,6 +33,7 @@ public class BUS {
             in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
             Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
             System.out.println("Client connected");
+            users = new ArrayList<>();
         }
     }
 
@@ -37,10 +42,10 @@ public class BUS {
             while (true) {
                 TimeUnit.MILLISECONDS.sleep(500);
                 if (WorkerClient.isContinue) {
-                    System.out.println("Break while true is BUS");
+                    // System.out.println("Break while true is BUS");
                     break;
                 }
-                System.out.println("a");
+                System.out.println("waitting...");
             }
             WorkerClient.isContinue = false;
         } catch (InterruptedException ex) {

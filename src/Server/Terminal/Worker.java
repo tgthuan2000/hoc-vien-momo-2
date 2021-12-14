@@ -23,6 +23,8 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
+    //private final String userMail = "tgthuan2000@gmail.com";
+    //private final String pwdMail = "TGThuan12A4";
     private final String userMail = "ngandoan110500@gmail.com";
     private final String pwdMail = "ngan@123";
     private final int from = 89999;
@@ -32,9 +34,11 @@ public class Worker implements Runnable {
     private final BufferedReader in;
     private final BufferedWriter out;
     private final UserBUS userBUS;
-    private String email;
+    private String email = null;
     private int Otp;
     private NguoiDungDTO nguoiDungDTO;
+    private NguoiDungDTO player2;
+    private String roomId = null;
 
     public Worker(Socket s) throws IOException {
         this.socket = s;
@@ -42,6 +46,7 @@ public class Worker implements Runnable {
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
         userBUS = new UserBUS();
         nguoiDungDTO = new NguoiDungDTO();
+        player2 = new NguoiDungDTO();
     }
 
     private void writeLine(String str) throws IOException {
@@ -89,25 +94,34 @@ public class Worker implements Runnable {
                         case Key.CANCLE_GAME:
                             canclegame();
                             break;
-                        case Key.OK_ACCEPT_GAME:
-                            gameplay();
+                        case Key.CHECK_ACCEPT_GAME:
+                            checkAcceptGame();
                             break;
-                        case Key.NO_ACCEPT_GAME:
-                            ghepcaplai();
+                        case Key.LOAD_GAME:
+                            goToGame();
                             break;
                     }
                 } catch (IOException ex) {
                     break;
                 }
             }
-            ServerMain.users.remove(nguoiDungDTO);
-            ServerMain.users_watting.remove(nguoiDungDTO);
+            // clean up
+            cleanup();
+            System.out.println("user " + nguoiDungDTO.getUsername() + " disconected");
+            System.out.println("User online: " + ServerMain.users.size());
             in.close();
             out.close();
             socket.close();
         } catch (IOException ex) {
             Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void cleanup() throws IOException {
+        cancleGameWhenUserClose();
+        ServerMain.users_waitting.remove(nguoiDungDTO);
+        ServerMain.users.remove(nguoiDungDTO);
+        ServerMain.workers.remove(this);
     }
 
     private void dangNhap() {
@@ -132,10 +146,10 @@ public class Worker implements Runnable {
                     }
 
                     if (flag && ServerMain.users.add(nguoiDungDTO)) { // user online
+                        // load data
                         infoUser();
-                        // bxh
-                        writeLine(Key.DANHSACH_BXH);
-
+                        inforRank();
+                        writeLine(Key.OK);
                         out.flush();
                     } else {
                         writeLine(Key.DATONTAI_DANGNHAP);
@@ -167,6 +181,23 @@ public class Worker implements Runnable {
         writeLine(nguoiDungDTO.getTongTran());
         writeLine(nguoiDungDTO.getTongTranThang());
         out.flush();
+    }
+
+    public void inforRank() throws IOException {
+        for (NguoiDungDTO nd : userBUS.docdulieu()) {
+            writeLine(Key.DANHSACH_BXH);
+            StringBuilder builder = new StringBuilder();
+            builder.append(nd.getTenNguoiDung() + "$$"
+                    + nd.getChuoiThangMax() + "$$"
+                    + nd.getChuoiThuaMax() + "$$"
+                    + nd.getTongTran() + "$$"
+                    + nd.getTongTranThang() + "$$"
+                    + nd.getTongDiem());
+            System.out.println(builder.toString());
+            writeLine(builder.toString());
+            out.flush();
+            System.out.println("done");
+        }
     }
 
     private void dangKy() {
@@ -218,11 +249,11 @@ public class Worker implements Runnable {
 
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(userMail, pwdMail);
-                    }
-                });
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(userMail, pwdMail);
+            }
+        });
 
         try {
 
@@ -256,6 +287,7 @@ public class Worker implements Runnable {
                 writeLine(Key.FAILD);
             }
             out.flush();
+            System.out.println("done");
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -286,7 +318,7 @@ public class Worker implements Runnable {
 
     private void playgame() {
         try {
-            if (ServerMain.users_watting.add(nguoiDungDTO)) {
+            if (ServerMain.users_waitting.add(nguoiDungDTO)) {
                 System.out.println("Cho người dùng " + nguoiDungDTO.getUsername() + " vào phòng chờ");
                 writeLine(Key.OK);
                 out.flush();
@@ -301,8 +333,8 @@ public class Worker implements Runnable {
     }
 
     private void ghepcap() throws IOException {
-        int size = ServerMain.users_watting.size();
-        System.out.println("size" + size);
+        int size = ServerMain.users_waitting.size();
+
         if (size == 2) {
             sendAccept(0, 1);
         } else if (size > 2) {
@@ -319,31 +351,39 @@ public class Worker implements Runnable {
     }
 
     private void sendAccept(int user1, int user2) throws IOException {
-        String usr1 = ServerMain.users_watting.get(user1).getUsername();
-        String usr2 = ServerMain.users_watting.get(user2).getUsername();
-        System.out.println(usr1);
-        System.out.println(usr2);
+        NguoiDungDTO usr1 = ServerMain.users_waitting.get(user1);
+        NguoiDungDTO usr2 = ServerMain.users_waitting.get(user2);
 
+        Room waittingRoom = new Room();
+        String id = "room-" + (new Random().nextInt(89999999) + 10000000);
+        waittingRoom.setRoomID(id);
+        System.out.println("Room id: " + id);
         for (Worker worker : ServerMain.workers) {
-            String usr = worker.nguoiDungDTO.getUsername();
+            NguoiDungDTO usr = worker.nguoiDungDTO;
             if (usr.equals(usr1)) {
-                System.out.println("Gửi accept user 1");
-                worker.writeLine(Key.ACCEPT_GAME);
-                worker.out.flush();
-                ServerMain.users_watting.remove(worker.nguoiDungDTO);
+                System.out.println("Gửi accept user " + usr1.getUsername());
+                sendAccept(worker, id);
+                waittingRoom.setUser1(worker.nguoiDungDTO);
             }
             if (usr.equals(usr2)) {
-                System.out.println("Gửi accept user 2");
-                worker.writeLine(Key.ACCEPT_GAME);
-                worker.out.flush();
-                ServerMain.users_watting.remove(worker.nguoiDungDTO);
+                System.out.println("Gửi accept user " + usr2.getUsername());
+                sendAccept(worker, id);
+                waittingRoom.setUser2(worker.nguoiDungDTO);
             }
         }
+        ServerMain.waittingRooms.add(waittingRoom);
+    }
+
+    private void sendAccept(Worker worker, String roomId) throws IOException {
+        worker.writeLine(Key.ACCEPT_GAME);
+        worker.writeLine(roomId);
+        worker.out.flush();
+        ServerMain.users_waitting.remove(worker.nguoiDungDTO);
     }
 
     private void canclegame() {
         try {
-            if (ServerMain.users_watting.remove(nguoiDungDTO)) {
+            if (ServerMain.users_waitting.remove(nguoiDungDTO)) {
                 System.out.println("Người dùng " + nguoiDungDTO.getUsername() + " đã thoát phòng chờ");
                 writeLine(Key.OK);
             } else {
@@ -355,16 +395,159 @@ public class Worker implements Runnable {
         }
     }
 
-    private void gameplay() {
-        ServerMain.users_watting.remove(nguoiDungDTO);
-        // new thread + add 2 user
-        // out thread cũ
-    }
-
-    private void ghepcaplai() throws IOException {
-        if (ServerMain.users_watting.add(nguoiDungDTO)) {
-            ghepcap();
+    private void checkAcceptGame() throws IOException {
+        switch (in.readLine()) {
+            case Key.OK:
+                ok_accept_game();
+                break;
+            case Key.FAILD:
+                deny_game();
+                break;
         }
     }
 
+    private void ok_accept_game() throws IOException {
+        roomId = in.readLine();
+        // kiểm tra user nào click accept bằng roomid
+        for (Room r : ServerMain.waittingRooms) {
+            if (r.getRoomID().equals(roomId)) {
+                int currentUser = 0;
+                if (r.getUser1().equals(nguoiDungDTO)) {
+                    currentUser = 1;
+                    r.setUser1Accept(r.ACCEPT);
+                    player2 = r.getUser2();
+                    System.out.println("user " + nguoiDungDTO.getUsername() + " accept");
+                } else {
+                    r.setUser2Accept(r.ACCEPT);
+                    System.out.println("user " + nguoiDungDTO.getUsername() + " accept");
+                    player2 = r.getUser1();
+                }
+
+                // khi user này accept mà có 1 user deny trước đó
+                if (r.getUser1Accept() == r.DENY || r.getUser2Accept() == r.DENY) {
+                    if (ServerMain.waittingRooms.remove(r) && ServerMain.users_waitting.add(nguoiDungDTO)) {
+                        System.out.println("Huỷ room: " + r.getRoomID());
+                        System.out.println("Cho người dùng " + nguoiDungDTO.getTenNguoiDung() + " vào lại hàng chờ");
+                        writeLine(Key.NO_CONTINUE_GAME);
+                        out.flush();
+                        roomId = null;
+                        player2 = new NguoiDungDTO();
+                        ghepcap();
+                    }
+                }
+
+                // cuối
+                if (r.getUser1Accept() == r.ACCEPT && r.getUser2Accept() == r.ACCEPT) {
+                    System.out.println("2 user accept");
+                    if (currentUser == 1) {
+                        for (Worker worker : ServerMain.workers) {
+                            if (worker.nguoiDungDTO.equals(r.getUser2())) {
+                                loadgame(worker);
+                                break;
+                            }
+                        }
+                    } else {
+                        for (Worker worker : ServerMain.workers) {
+                            if (worker.nguoiDungDTO.equals(r.getUser1())) {
+                                loadgame(worker);
+                                break;
+                            }
+                        }
+                    }
+                    ServerMain.waittingRooms.remove(r);
+                }
+                break;
+            }
+        }
+    }
+
+    private void loadgame(Worker worker) throws IOException {
+        writeLine(Key.LOAD_GAME);
+        out.flush();
+        worker.writeLine(Key.LOAD_GAME);
+        worker.out.flush();
+    }
+
+    private void goToGame() throws IOException {
+        RoomWorker rw = new RoomWorker(socket, roomId, nguoiDungDTO, player2);
+        ServerMain.executorRoom.execute(rw);
+        ServerMain.roomWorkers.add(rw); // quản lý
+        ServerMain.executor.shutdownNow();// đóng kết nối với worker user hiện tại
+        ServerMain.workers.remove(this);
+    }
+
+    private void deny_game() throws IOException {
+        roomId = in.readLine();
+        // kiểm tra user nào click deny bằng roomid
+        for (Room r : ServerMain.waittingRooms) {
+            if (r.getRoomID().equals(roomId)) {
+                if (r.getUser1().equals(nguoiDungDTO)) {
+                    r.setUser1Accept(r.DENY);
+                    System.out.println("user " + nguoiDungDTO.getUsername() + " deny");
+
+                    // kiểm tra user trước đó nhấn accept
+                    if (r.getUser2Accept() == r.ACCEPT) {
+                        for (Worker worker : ServerMain.workers) {
+                            if (worker.nguoiDungDTO.equals(r.getUser2())) {
+                                System.out.println("Huỷ room: " + r.getRoomID());
+                                ServerMain.waittingRooms.remove(r);
+                                send_no_continue(worker);
+                                ghepcap();
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    r.setUser2Accept(r.DENY);
+                    System.out.println("user " + nguoiDungDTO.getUsername() + " deny");
+
+                    // kiểm tra user trước đó nhấn accept
+                    if (r.getUser1Accept() == r.ACCEPT) {
+                        for (Worker worker : ServerMain.workers) {
+                            if (worker.nguoiDungDTO.equals(r.getUser1())) {
+                                System.out.println("Huỷ room: " + r.getRoomID());
+                                ServerMain.waittingRooms.remove(r);
+                                send_no_continue(worker);
+                                ghepcap();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                System.out.println("Người dùng " + nguoiDungDTO.getUsername() + " đã thoát phòng chờ");
+                roomId = null;
+                writeLine(Key.CANCLE_GAME);
+                out.flush();
+
+                if (r.getUser1Accept() == r.DENY && r.getUser2Accept() == r.DENY) {
+                    ServerMain.waittingRooms.remove(r);
+                    System.out.println("Huỷ room: " + r.getRoomID());
+                }
+                break;
+            }
+        }
+    }
+
+    private void send_no_continue(Worker worker) throws IOException {
+        ServerMain.users_waitting.add(worker.nguoiDungDTO);
+        System.out.println("Add user " + worker.nguoiDungDTO.getUsername() + " vào hàng chờ");
+        worker.writeLine(Key.NO_CONTINUE_GAME);
+        worker.out.flush();
+        worker.roomId = null;
+    }
+
+    private void cancleGameWhenUserClose() throws IOException {
+        for (Room r : ServerMain.waittingRooms) {
+            if (r.getUser1().equals(nguoiDungDTO)) {
+                r.setUser1Accept(r.DENY);
+                System.out.println("user " + nguoiDungDTO.getUsername() + " disconnected game");
+                break;
+            } else if (r.getUser2().equals(nguoiDungDTO)) {
+                r.setUser2Accept(r.DENY);
+                System.out.println("user " + nguoiDungDTO.getUsername() + " disconnected game");
+                break;
+            }
+        }
+    }
 }

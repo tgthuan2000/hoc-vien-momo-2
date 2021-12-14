@@ -68,7 +68,7 @@ public class Register extends javax.swing.JFrame {
         lbTitle.setText("ĐĂNG KÝ");
 
         lbUser.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        lbUser.setText("Họ và tên :");
+        lbUser.setText("Ten trong game:");
 
         txtUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

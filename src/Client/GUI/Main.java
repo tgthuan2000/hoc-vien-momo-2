@@ -4,16 +4,21 @@ import Client.BUS.BUS;
 import Client.BUS.MainBUS;
 import Client.Status;
 import Client.WorkerClient;
+import Shares.DTO.NguoiDungDTO;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 
 public class Main extends javax.swing.JFrame {
 
     private final MainBUS mainBUS;
-    private boolean flag;
+    public static boolean flag;
+    DefaultTableModel model;
 
     public Main() {
         try {
@@ -28,7 +33,16 @@ public class Main extends javax.swing.JFrame {
         flag = true;
 
         lbUserName.setText(BUS.user.getTenNguoiDung());
+        lbWin.setText(String.valueOf(BUS.user.getTongTranThang()));
+        lbLose.setText(String.valueOf(BUS.user.getTongTran() - BUS.user.getTongTranThang()));
+        lbChuoiWin.setText(String.valueOf(BUS.user.getChuoiThang()));
+        lbChuoiLose.setText(String.valueOf(BUS.user.getChuoiThua()));
+        lbIQ.setText(String.valueOf(BUS.user.getDiemIQ()));
+        model = new DefaultTableModel();
+        model = (DefaultTableModel) tblXepHang.getModel();
+        model.setRowCount(0);
         // gán danh sách vô table
+        getDataTable();
     }
 
     /**
@@ -48,7 +62,7 @@ public class Main extends javax.swing.JFrame {
         btnPlay = new javax.swing.JButton();
         btnIQ = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblXepHang = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         lbXepHang = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -91,6 +105,11 @@ public class Main extends javax.swing.JFrame {
                 btnPlayMouseClicked(evt);
             }
         });
+        btnPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlayActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -116,7 +135,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblXepHang.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -135,7 +154,7 @@ public class Main extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblXepHang);
 
         txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -143,6 +162,11 @@ public class Main extends javax.swing.JFrame {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtSearchFocusLost(evt);
+            }
+        });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
             }
         });
 
@@ -306,10 +330,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_txtSearchFocusLost
 
     private void btnPlayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPlayMouseClicked
-        if (flag) {
-            playgame();
-        } else {
-            canclegame();
+        if (btnPlay.isEnabled()) {
+            if (flag) {
+                playgame();
+            } else {
+                canclegame();
+            }
         }
     }//GEN-LAST:event_btnPlayMouseClicked
 
@@ -363,9 +389,52 @@ public class Main extends javax.swing.JFrame {
 
     private void btnIQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIQActionPerformed
         // TODO add your handling code here:true
-        InterfaceIQ iq = new InterfaceIQ();
-        iq.setVisible(true);
+        if (btnIQ.isEnabled()) {
+            new InterfaceIQ().setVisible(true);
+        }
     }//GEN-LAST:event_btnIQActionPerformed
+
+    private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPlayActionPerformed
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        // TODO add your handling code here:
+        searchUserName(txtSearch.getText());
+    }//GEN-LAST:event_txtSearchKeyReleased
+
+    public void getDataTable() {
+        int i = 1;
+        Collections.sort(BUS.users);
+        BUS.userTmp = new ArrayList<NguoiDungDTO>();
+        for (NguoiDungDTO nd : BUS.users) {
+            double a = (double) nd.getTongTran();
+            double b = (double) nd.getTongTranThang();
+            double tilethang = Math.round((a / b) * 100);
+            double tilethua = 100 - tilethang;
+            model.addRow(new Object[]{
+                i + "              ", nd.getTenNguoiDung(), nd.getTongDiem(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), tilethang + "%", tilethua + "%"
+            });
+            BUS.userTmp.add(new NguoiDungDTO(nd.getTenNguoiDung(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), nd.getTongTranThang(), nd.getTongTran(), nd.getTongDiem(), i));
+            i++;
+        }
+        tblXepHang.setModel(model);
+    }
+
+    public void searchUserName(String username) {
+        model.setRowCount(0);
+//        Collections.sort(mainBUS.search(username.toLowerCase()));
+        for (NguoiDungDTO nd : mainBUS.search(username.toLowerCase())) {
+            double a = (double) nd.getTongTran();
+            double b = (double) nd.getTongTranThang();
+            double tilethang = Math.round((a / b) * 100);
+            double tilethua = 100 - tilethang;
+            model.addRow(new Object[]{
+                nd.getXephang() + "              ", nd.getTenNguoiDung(), nd.getTongDiem(), nd.getChuoiThangMax(), nd.getChuoiThuaMax(), tilethang + "%", tilethua + "%"
+            });
+        }
+        tblXepHang.setModel(model);
+    }
 
     /**
      * @param args the command line arguments
@@ -403,8 +472,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIQ;
-    private javax.swing.JButton btnPlay;
+    public static javax.swing.JButton btnIQ;
+    public static javax.swing.JButton btnPlay;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -416,7 +485,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbChuoiLose;
     private javax.swing.JLabel lbChuoiWin;
     private javax.swing.JLabel lbIQ;
@@ -425,6 +493,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lbWin;
     private javax.swing.JLabel lbXepHang;
     private javax.swing.JPanel pnMain;
+    private javax.swing.JTable tblXepHang;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

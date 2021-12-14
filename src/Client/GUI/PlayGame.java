@@ -1,5 +1,6 @@
 package Client.GUI;
 
+import Client.BUS.BUS;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
@@ -16,6 +17,13 @@ public class PlayGame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Game");
         initComponents();
+        initData();
+    }
+
+    private void initData() {
+        lbUser1.setText(BUS.user.getTenNguoiDung());
+        lbUser2.setText(BUS.user2.getTenNguoiDung());
+
     }
 
     /**

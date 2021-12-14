@@ -1,6 +1,8 @@
 package Client;
 
 import Client.BUS.BUS;
+import Client.GUI.Main;
+import Client.GUI.PlayGame;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import java.io.BufferedReader;
@@ -9,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -59,6 +63,8 @@ public class WorkerClient implements Runnable {
                         case Key.NHAN_DANGNHAP:
                             nhanDangNhap();
                             break;
+                        case Key.DANHSACH_BXH:
+                            nhanBangXepHang();
                         case Key.DATONTAI_DANGNHAP:
                             tonTaiDangNhap();
                             break;
@@ -73,6 +79,7 @@ public class WorkerClient implements Runnable {
                             koNhanOTP();
                             break;
                         case Key.NHAN_KETQUA_CHECK_OTP:
+                            System.out.println("DZO diiii");
                             nhanKetQuaOTP();
                             break;
                         case Key.LOI_GHI_CSDL:
@@ -84,6 +91,22 @@ public class WorkerClient implements Runnable {
                         //
                         case Key.ACCEPT_GAME:
                             acceptGame();
+                            break;
+                        case Key.CANCLE_GAME:
+                            cancleGame();
+                            break;
+                        case Key.NO_CONTINUE_GAME:
+                            no_continue_game();
+                            break;
+                        case Key.LOAD_GAME:
+                            loadgame();
+                            break;
+
+                        //
+                        // IN GAME
+                        //
+                        case Key.INFO_USER_2:
+                            getInfoUser2();
                             break;
                     }
                 } catch (IOException ex) {
@@ -104,7 +127,6 @@ public class WorkerClient implements Runnable {
     }
 
     private void ok() {
-        System.out.println("KEY OK");
         status = Status.OK;
         isContinue = true;
     }
@@ -150,10 +172,23 @@ public class WorkerClient implements Runnable {
             nguoiDung.setTongTranThang(readLineInt());
 
             BUS.user = nguoiDung; // đăng nhập, ghi nhận thông tin vào biến toàn cục
-            ok();
         } catch (IOException ex) {
             errConn();
         }
+    }
+
+    private void nhanBangXepHang() throws IOException {
+        ArrayList<String> tmp = new ArrayList<>();
+        StringTokenizer token = new StringTokenizer(readLine(), "$$"); // nội dung tin
+
+        while (token.hasMoreTokens()) {
+            String a = token.nextToken();
+            tmp.add(a);
+        }
+        if (tmp.size() == 6) {
+            BUS.users.add(new NguoiDungDTO(tmp.get(0), Integer.parseInt(tmp.get(1)), Integer.parseInt(tmp.get(2)), Integer.parseInt(tmp.get(3)), Integer.parseInt(tmp.get(4)), Integer.parseInt(tmp.get(5))));
+        }
+        System.out.println("Size : " + BUS.users.size());
     }
 
     private void nhanKetQuaOTP() {
@@ -173,14 +208,48 @@ public class WorkerClient implements Runnable {
     private void acceptGame() {
         try {
             System.out.println("Chấp nhận game");
+            String roomId = in.readLine();
+            System.out.println("Room id: " + roomId);
+            // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {
-                writeLine(Key.OK_ACCEPT_GAME);
+                writeLine(Key.CHECK_ACCEPT_GAME);
+                writeLine(Key.OK);
+                writeLine(roomId); // room id
+                out.flush();
+
+                // block ng dùng
+                Main.btnPlay.setEnabled(false);
+                Main.btnIQ.setEnabled(false);
+
             } else {
-                writeLine(Key.NO_ACCEPT_GAME);
+                writeLine(Key.CHECK_ACCEPT_GAME);
+                writeLine(Key.FAILD);
+                writeLine(roomId); // room id
+                out.flush();
             }
-            out.flush();
         } catch (IOException ex) {
         }
     }
 
+    private void cancleGame() throws IOException {
+        Main.flag = true;
+        Main.btnPlay.setText("Bắt đầu");
+    }
+
+    private void no_continue_game() {
+        JOptionPane.showMessageDialog(null, "Trận đấu bị huỷ do đối phương không chấp nhận trận đấu!!!");
+        Main.btnPlay.setEnabled(true);
+        Main.btnIQ.setEnabled(true);
+    }
+
+    private void loadgame() throws IOException {
+        writeLine(Key.LOAD_GAME);
+        out.flush();
+    }
+
+    private void getInfoUser2() throws IOException {
+        BUS.user2 = new NguoiDungDTO();
+        BUS.user2.setTenNguoiDung(readLine());
+        new PlayGame().setVisible(true);
+    }
 }
