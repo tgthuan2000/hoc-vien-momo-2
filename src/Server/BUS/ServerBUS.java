@@ -1,16 +1,19 @@
 package Server.BUS;
 
+import Server.DAO.ServerDAO;
 import Shares.DTO.CauHinhDTO;
 import Shares.DTO.CauHoiDTO;
-import Server.DAO.ServerDAO;
 import java.util.ArrayList;
 
 public class ServerBUS {
 
-    public ArrayList<CauHinhDTO> conf;
+    public ServerBUS() {
+    }
+
+    public CauHinhDTO conf;
     public ArrayList<CauHoiDTO> dsch;
 
-    public ArrayList<CauHinhDTO> readConfig() {
+    public CauHinhDTO readConfig() {
         ServerDAO data = new ServerDAO();
         conf = data.readCauhinh();
         return conf;

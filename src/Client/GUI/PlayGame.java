@@ -1,12 +1,18 @@
 package Client.GUI;
 
 import Client.BUS.BUS;
+import Shares.Key;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class PlayGame extends javax.swing.JFrame {
+
+    private static boolean isClick;
+    public static String dapAn;
 
     public PlayGame() {
         try {
@@ -18,12 +24,37 @@ public class PlayGame extends javax.swing.JFrame {
         this.setTitle("Game");
         initComponents();
         initData();
+        isClick = true;
     }
 
     private void initData() {
         lbUser1.setText(BUS.user.getTenNguoiDung());
         lbUser2.setText(BUS.user2.getTenNguoiDung());
+        getCau();
+    }
 
+    public static void getCau() {
+        lblCauHoi.setText(BUS.cauHoi);
+        btnA.setText(BUS.dsDapAn.get(0));
+        btnB.setText(BUS.dsDapAn.get(1));
+        btnC.setText(BUS.dsDapAn.get(2));
+        btnD.setText(BUS.dsDapAn.get(3));
+
+    }
+
+    public static void refresh() {
+        btnA.setFont(new java.awt.Font("Lucida Grande", 0, 14));
+        btnB.setFont(new java.awt.Font("Lucida Grande", 0, 14));
+        btnC.setFont(new java.awt.Font("Lucida Grande", 0, 14));
+        btnD.setFont(new java.awt.Font("Lucida Grande", 0, 14));
+
+        btnA.setBackground(new java.awt.Color(240, 240, 240));
+        btnB.setBackground(new java.awt.Color(240, 240, 240));
+        btnC.setBackground(new java.awt.Color(240, 240, 240));
+        btnD.setBackground(new java.awt.Color(240, 240, 240));
+
+        isClick = true;
+        dapAn = "";
     }
 
     /**
@@ -46,11 +77,12 @@ public class PlayGame extends javax.swing.JFrame {
         lbScore1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         lbQuestion = new javax.swing.JLabel();
+        lblCauHoi = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btnB = new javax.swing.JButton();
         btnC = new javax.swing.JButton();
         btnD = new javax.swing.JButton();
-        btnA2 = new javax.swing.JButton();
+        btnA = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,13 +134,22 @@ public class PlayGame extends javax.swing.JFrame {
         lbQuestion.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbQuestion.setText("Câu hỏi:");
 
+        lblCauHoi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblCauHoi.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblCauHoi.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbQuestion)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbQuestion))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(lblCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -116,7 +157,9 @@ public class PlayGame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbQuestion)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(51, 204, 255));
@@ -124,25 +167,35 @@ public class PlayGame extends javax.swing.JFrame {
 
         btnB.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         btnB.setText("B");
+        btnB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBMouseClicked(evt);
+            }
+        });
 
         btnC.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         btnC.setText("C");
-        btnC.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCActionPerformed(evt);
+        btnC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCMouseClicked(evt);
             }
         });
 
         btnD.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         btnD.setText("D");
-        btnD.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDActionPerformed(evt);
+        btnD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDMouseClicked(evt);
             }
         });
 
-        btnA2.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        btnA2.setText("A");
+        btnA.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        btnA.setText("A");
+        btnA.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -156,7 +209,7 @@ public class PlayGame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                         .addComponent(btnD, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addComponent(btnA2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnA, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnC, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -166,7 +219,7 @@ public class PlayGame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnA2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnA, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnC, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,54 +299,43 @@ public class PlayGame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCActionPerformed
+    private void btnCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCMouseClicked
+        sendRequest(BUS.dsDapAn.get(2), btnC);
+    }//GEN-LAST:event_btnCMouseClicked
 
-    private void btnDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDActionPerformed
+    private void btnAMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAMouseClicked
+        sendRequest(BUS.dsDapAn.get(0), btnA);
+    }//GEN-LAST:event_btnAMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+    private void btnBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBMouseClicked
+        sendRequest(BUS.dsDapAn.get(1), btnB);
+    }//GEN-LAST:event_btnBMouseClicked
+
+    private void btnDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDMouseClicked
+        sendRequest(BUS.dsDapAn.get(3), btnD);
+    }//GEN-LAST:event_btnDMouseClicked
+
+    private void sendRequest(String dapAn, JButton button) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PlayGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PlayGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PlayGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PlayGame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+            if (isClick) {
+                this.dapAn = dapAn;
+                button.setFont(new java.awt.Font("Lucida Grande", 1, 14));
+                button.setBackground(new java.awt.Color(255, 153, 102));
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PlayGame().setVisible(true);
+                BUS.writeLine(Key.GUI_DAPAN);
+                BUS.writeLine(dapAn);
+                BUS.flush();
+                isClick = false;
             }
-        });
+        } catch (IOException ex) {
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnA2;
-    private javax.swing.JButton btnB;
-    private javax.swing.JButton btnC;
-    private javax.swing.JButton btnD;
+    public static javax.swing.JButton btnA;
+    public static javax.swing.JButton btnB;
+    public static javax.swing.JButton btnC;
+    public static javax.swing.JButton btnD;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -306,5 +348,6 @@ public class PlayGame extends javax.swing.JFrame {
     private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbUser1;
     private javax.swing.JLabel lbUser2;
+    public static javax.swing.JLabel lblCauHoi;
     // End of variables declaration//GEN-END:variables
 }

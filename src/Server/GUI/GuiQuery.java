@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Server.GUI;
 
 import Server.BUS.GuiQueryBUS;
@@ -14,10 +9,6 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author NGAN DOAN
- */
 public class GuiQuery extends javax.swing.JFrame {
 
     DefaultTableModel model = new DefaultTableModel();
@@ -374,7 +365,6 @@ public class GuiQuery extends javax.swing.JFrame {
                 max = nguoi.getTongTran();
             }
         }
-        System.out.println(max);
 
     }
 
@@ -385,7 +375,6 @@ public class GuiQuery extends javax.swing.JFrame {
                 max1 = nguoi.getTongTranThang();
             }
         }
-        System.out.println(max1);
         return max1;
     }
 

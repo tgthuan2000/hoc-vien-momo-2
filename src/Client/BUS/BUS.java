@@ -26,6 +26,10 @@ public class BUS {
     public static ArrayList<NguoiDungDTO> userTmp;
     public static NguoiDungDTO user2;
 
+    public static String cauHoi;
+    public static ArrayList<String> dsDapAn;
+    public static String dapAnUser2;
+
     public static void connect() throws IOException {
         if (socket == null) {
             socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
