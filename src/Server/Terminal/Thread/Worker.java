@@ -40,8 +40,8 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-    private final String userMail = "tgthuan2000@gmail.com";
-    private final String pwdMail = "TGThuan12A4";
+    private final String userMail = "hoducthangtn2nhvt@gmail.com";
+    private final String pwdMail = "16112000@Abc";
 //    private final String userMail = "ngandoan110500@gmail.com";
 //    private final String pwdMail = "ngan@123";
     private final int from = 89999;

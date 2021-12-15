@@ -73,31 +73,7 @@ public class EventMenu {
                 case "cau10":
                     pnNode = new Cau10();
                     break;
-//                    break;
-//                case "nhanvien":
-//                    pnNode = new NhanVienGUII();
-//                    break;
-//                case "chucvu":
-//                    pnNode = new ChucVuGUII();
-//                    break;
-//                 case "khachhang":
-//                    pnNode = new KhachHangGUII();
-//                    break;
-//                 case "nhacungcap":
-//                    pnNode = new NhaCungCapGUII();
-//                    break;
-//                 case "hoadon":
-//                    pnNode = new HoaDonGUI_CTHoaDonGUI();
-//                    break;
-//                 case "phieunhap":
-//                    pnNode = new PhieuNhapGUI_CTPhieuNhapGUI();
-//                    break;
-//                 case "khuyenmai":
-//                    pnNode = new KhuyenMaiGUI_CTKhuyenMaiGUI();
-//                    break;
-//                 case "thongke":
-//                    pnNode = new ThongkeGUII();
-//                    break;
+
 
             }
             pnRoot.removeAll();

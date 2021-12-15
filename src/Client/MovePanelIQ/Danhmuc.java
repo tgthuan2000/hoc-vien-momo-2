@@ -16,6 +16,7 @@ public class Danhmuc {
         this.kindOfScreen = kindOfScreen;
         this.pnName = pnName;
         this.lbName = lbName;
+        
     }
 
     public String getKindOfScreen() {
