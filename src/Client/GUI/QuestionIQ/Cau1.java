@@ -6,6 +6,7 @@ package Client.GUI.QuestionIQ;
 
 import Client.GUI.InterfaceIQ;
 import Client.MovePanelIQ.CauDung;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -268,6 +269,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,1));
             JOptionPane.showMessageDialog(null, "Success");
+            jPanel1.setBackground(Color.GRAY);
+            lbA.setEnabled(false);
         }
         
     }//GEN-LAST:event_lbAMouseClicked
@@ -278,6 +281,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,2));
             JOptionPane.showMessageDialog(null, "Success");
+            jPanel1.setBackground(Color.GRAY);
+            lbC.setEnabled(false);
         }
     }//GEN-LAST:event_lbCMouseClicked
 
@@ -287,6 +292,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,3));
             JOptionPane.showMessageDialog(null, "Success");
+             jPanel1.setBackground(Color.GRAY);
+            lbE.setEnabled(false);
         }
     }//GEN-LAST:event_lbEMouseClicked
 
@@ -296,6 +303,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,4));
             JOptionPane.showMessageDialog(null, "Success");
+             jPanel1.setBackground(Color.GRAY);
+            lbB.setEnabled(false);
         }
     }//GEN-LAST:event_lbBMouseClicked
 
@@ -305,6 +314,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,5));
             JOptionPane.showMessageDialog(null, "Success");
+             jPanel1.setBackground(Color.GRAY);
+            lbD.setEnabled(false);
         }
     }//GEN-LAST:event_lbDMouseClicked
 
@@ -314,6 +325,8 @@ public class Cau1 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,6));
             JOptionPane.showMessageDialog(null, "Success");
+             jPanel1.setBackground(Color.GRAY);
+            lbF.setEnabled(false);
         }
     }//GEN-LAST:event_lbFMouseClicked
 

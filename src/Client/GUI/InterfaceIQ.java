@@ -598,7 +598,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
-       
+        pn1.setEnabled(false);
     }//GEN-LAST:event_pn1MouseClicked
 
     private void pn2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn2MouseClicked
@@ -613,6 +613,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn2.setEnabled(false);
     }//GEN-LAST:event_pn2MouseClicked
 
     private void pn3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn3MouseClicked
@@ -627,6 +628,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn3.setEnabled(false);
     }//GEN-LAST:event_pn3MouseClicked
 
     private void pn4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn4MouseClicked
@@ -641,6 +643,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn4.setEnabled(false);
     }//GEN-LAST:event_pn4MouseClicked
 
     private void pn5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn5MouseClicked
@@ -655,6 +658,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn5.setEnabled(false);
     }//GEN-LAST:event_pn5MouseClicked
 
     private void pn6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn6MouseClicked
@@ -669,6 +673,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn6.setEnabled(false);
     }//GEN-LAST:event_pn6MouseClicked
 
     private void pn7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn7MouseClicked
@@ -683,6 +688,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn7.setEnabled(false);
     }//GEN-LAST:event_pn7MouseClicked
 
     private void pn8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn8MouseClicked
@@ -697,6 +703,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(44, 62, 80));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn8.setEnabled(false);
     }//GEN-LAST:event_pn8MouseClicked
 
     private void pn9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn9MouseClicked
@@ -711,6 +718,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(44, 62, 80));
         pn10.setBackground(new Color(1, 133, 153));
+        pn9.setEnabled(false);
     }//GEN-LAST:event_pn9MouseClicked
 
     private void pn10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn10MouseClicked
@@ -725,6 +733,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(44, 62, 80));
+        pn10.setEnabled(false);
     }//GEN-LAST:event_pn10MouseClicked
 
     private void btnDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
