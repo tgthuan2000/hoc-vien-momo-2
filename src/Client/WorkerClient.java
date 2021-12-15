@@ -1,6 +1,7 @@
 package Client;
 
 import Client.BUS.BUS;
+import Client.BUS.RSA_AESBUS;
 import Client.GUI.Main;
 import Client.GUI.PlayGame;
 import Shares.DTO.NguoiDungDTO;
@@ -12,7 +13,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -36,15 +43,17 @@ public class WorkerClient implements Runnable {
     }
 
     private void writeLine(String str) throws IOException {
-        out.write(str.trim() + "\n");
+            out.write(RSA_AESBUS.encrypt(str.trim(),KeyRSA_AES.keyAES )+ "\n");
     }
 
-    public String readLine() throws IOException {
-        return in.readLine();
+    private String readLine() throws IOException {
+            String tmp = RSA_AESBUS.decrypt(in.readLine(),KeyRSA_AES.keyAES);
+            return tmp;
     }
 
     public int readLineInt() throws IOException {
-        return Integer.parseInt(in.readLine());
+        String tmp = readLine();
+        return Integer.parseInt(tmp);
     }
 
     @Override
@@ -52,7 +61,7 @@ public class WorkerClient implements Runnable {
         try {
             while (true) {
                 try {
-                    switch (in.readLine()) {    // cú pháp phân biệt lệnh
+                    switch (readLine()) {    // cú pháp phân biệt lệnh
                         case Key.FAILD:
                             faild();
                             break;
@@ -229,7 +238,7 @@ public class WorkerClient implements Runnable {
     private void acceptGame() {
         try {
             System.out.println("Chấp nhận game");
-            String roomId = in.readLine();
+            String roomId = readLine();
             System.out.println("Room id: " + roomId);
             // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {

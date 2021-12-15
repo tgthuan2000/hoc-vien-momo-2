@@ -1,7 +1,9 @@
 package Server.Terminal;
 
+import Server.BUS.MaHoaBUS;
 import Server.BUS.ServerBUS;
 import Server.BUS.UserBUS;
+import Server.Key_RSA_AES_Server;
 import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
@@ -11,11 +13,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -42,31 +52,41 @@ public class Worker implements Runnable {
     private NguoiDungDTO nguoiDungDTO;
     private NguoiDungDTO player2;
     private String roomId = null;
+    private Room room;
+    public static String privateKey;
 
-    public Worker(Socket s) throws IOException {
+    public Worker(Socket s) throws IOException, Exception {
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
         userBUS = new UserBUS();
         nguoiDungDTO = new NguoiDungDTO();
         player2 = new NguoiDungDTO();
-    }
-
-    private void writeLine(String str) throws IOException {
-        out.write(str.trim() + "\n");
+        room = new Room();
+        sendPublicKey();
+        Key_RSA_AES_Server.secretKey = decryptMessage(in.readLine(), Key_RSA_AES_Server.privateKey);
+        System.out.println(Key_RSA_AES_Server.secretKey);
     }
 
     private void writeLine(int num) throws IOException {
-        out.write(num + "\n");
+        String tmp = MaHoaBUS.encrypt(num + "", Key_RSA_AES_Server.secretKey);
+        out.write(tmp + "\n");
     }
 
     private void writeLine(boolean b) throws IOException {
-        out.write(b + "\n");
+        String tmp = MaHoaBUS.encrypt(b + "", Key_RSA_AES_Server.secretKey);
+        out.write(tmp + "\n");
+    }
+
+    private void writeLine(String str) throws IOException {
+        String tmp = MaHoaBUS.encrypt(str.trim(), Key_RSA_AES_Server.secretKey);
+        out.write(tmp + "\n");
     }
 
     private String readLine() throws IOException {
-        // giải mã
-        return in.readLine();
+        String readline = in.readLine();
+        String tmp = MaHoaBUS.decrypt(readline, Key_RSA_AES_Server.secretKey);
+        return tmp;
     }
 
     @Override
@@ -107,6 +127,7 @@ public class Worker implements Runnable {
                 } catch (IOException ex) {
                     break;
                 } catch (InterruptedException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -589,5 +610,48 @@ public class Worker implements Runnable {
                 break;
             }
         }
+    }
+
+    public void sendPublicKey() throws Exception {
+        Map<String, Object> keys = getRSAKeys();
+        PublicKey publicKey = (PublicKey) keys.get("public");
+        Key_RSA_AES_Server.privateKey = (PrivateKey) keys.get("private");
+        out.write(castPublicKeyToString(publicKey) + "\n");
+        System.out.println("send publickey : " + castPublicKeyToString(publicKey));
+        System.out.println("public key : " + publicKey.toString());
+        out.flush();
+        System.out.println("done");
+    }
+
+    private String castPublicKeyToString(PublicKey publicKey) {
+        // get encoded form (byte array)
+        byte[] publicKeyByte = publicKey.getEncoded();
+        // Base64 encoded string
+
+        Base64.Encoder encoder = Base64.getEncoder();
+        String publicKeyStr = encoder.encodeToString(publicKey.getEncoded());
+        System.out.println("publicKeyString: " + publicKeyStr);
+        return publicKeyStr;
+    }
+
+    //sinh khoa
+    private static Map<String, Object> getRSAKeys() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        PrivateKey privateKey = keyPair.getPrivate();
+        PublicKey publicKey = keyPair.getPublic();
+
+        Map<String, Object> keys = new HashMap<String, Object>();
+        keys.put("private", privateKey);
+        keys.put("public", publicKey);
+        return keys;
+    }
+
+    // Decrypt using RSA public key
+    private static String decryptMessage(String encryptedText, PrivateKey privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
+        return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
     }
 }

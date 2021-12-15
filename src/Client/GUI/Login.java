@@ -2,8 +2,10 @@ package Client.GUI;
 
 import Client.BUS.BUS;
 import Client.BUS.LoginBUS;
+import Client.BUS.RSA_AESBUS;
 import Client.Status;
 import Client.WorkerClient;
+import java.security.spec.InvalidKeySpecException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -15,8 +17,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Login extends javax.swing.JFrame {
 
     private final LoginBUS bus;
+    private final RSA_AESBUS mahoabus;
 
-    public Login() {
+    public Login() throws Exception {
         try {
             UIManager.setLookAndFeel(new com.jtattoo.plaf.graphite.GraphiteLookAndFeel());
         } catch (UnsupportedLookAndFeelException ex) {
@@ -26,6 +29,7 @@ public class Login extends javax.swing.JFrame {
         this.setTitle("Đăng nhập");
         initComponents();
         bus = new LoginBUS();
+        mahoabus = new RSA_AESBUS();
     }
 
     /**
@@ -149,6 +153,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
+
         String user = txtUser.getText().trim();
         String pwd = txtPass.getText();
 
@@ -157,32 +162,42 @@ public class Login extends javax.swing.JFrame {
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(user);
             if (matcher.matches()) {
-                switch (bus.login(user, pwd)) {
-                    case Status.OK:
-                        if (BUS.continute()) {
-                            switch (WorkerClient.status) {
+                try {
+                    switch (mahoabus.sendRequestGetPublicKey()) {
+                        case Status.OK:
+                            switch (bus.login(user, pwd)) {
                                 case Status.OK:
-                                    this.setVisible(false);
-                                    new Main().setVisible(true);
-                                    break;
-                                case Status.FAILD:
-                                    JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
-                                    break;
-                                case Status.LOI_TONTAI_DANGNHAP:
-                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
-                                    break;
-                                case Status.LOI_BLOCK_TAIKHOAN:
-                                    JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã bị khoá!!");
+                                    if (BUS.continute()) {
+                                        switch (WorkerClient.status) {
+                                            case Status.OK:
+                                                this.setVisible(false);
+                                                new Main().setVisible(true);
+                                                break;
+                                            case Status.FAILD:
+                                                JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");
+                                                break;
+                                            case Status.LOI_TONTAI_DANGNHAP:
+                                                JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã đăng nhập!!");
+                                                break;
+                                            case Status.LOI_BLOCK_TAIKHOAN:
+                                                JOptionPane.showMessageDialog(rootPane, "Tài khoản này đã bị khoá!!");
+                                                break;
+                                            case Status.LOI_KETNOI_SERVER:
+                                                JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
+                                                break;
+                                        }
+                                    }
                                     break;
                                 case Status.LOI_KETNOI_SERVER:
                                     JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
                                     break;
                             }
-                        }
-                        break;
-                    case Status.LOI_KETNOI_SERVER:
-                        JOptionPane.showMessageDialog(rootPane, "Lỗi kết nối server");
-                        break;
+                            break;
+                    }
+                } catch (InvalidKeySpecException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "User name là email (abc@abc.com)");
@@ -201,7 +216,11 @@ public class Login extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                try {
+                    new Login().setVisible(true);
+                } catch (Exception ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

@@ -32,6 +32,11 @@ public class Key {
     public static final String LOAD_GAME = "LOAD_GAME";
 
     public static final String DANHSACH_BXH = "DANHSACH_BXH";
+    
+    public static final String REQUEST_GET_PUBLICKEY = "REQUEST_GET_PUBLICKEY";
+    public static final String RELY_GET_PUBLICKEY = "REPLY_GET_PUBLICKEY";
+    public static final String SEND_EN_SEC_KEY = "SEND_EN_SEC_KEY";
+    public static final String REPLY_EN_SEC_KEY = "REPLY_EN_SEC_KEY";
 
     public static final String INFO_USER_2 = "INFO_USER_2";
     public static final String CAU_HOI = "CAU_HOI";

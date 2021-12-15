@@ -24,7 +24,7 @@ public class ServerMain {
     public static ArrayList<Game> games = new ArrayList<>();
     public static GuiQuery gui;
 
-    public ServerMain() throws IOException {
+    public ServerMain() throws IOException, Exception {
         port = ServerConfig.PORT;
         executor = Executors.newFixedThreadPool(ServerConfig.NUM_THREAD);
 
