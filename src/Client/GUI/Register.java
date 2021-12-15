@@ -1,6 +1,7 @@
 package Client.GUI;
 
 import Client.BUS.BUS;
+import Client.BUS.RSA_AESBUS;
 import Client.BUS.RegisterBUS;
 import Client.Status;
 import Client.WorkerClient;
@@ -17,6 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Register extends javax.swing.JFrame {
 
     public RegisterBUS bus;
+    private final RSA_AESBUS mahoabus;
 
     public Register() {
         try {
@@ -30,6 +32,7 @@ public class Register extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Đăng ký");
         bus = new RegisterBUS();
+        mahoabus = new RSA_AESBUS();
     }
 
     /**
@@ -247,29 +250,33 @@ public class Register extends javax.swing.JFrame {
             try {
                 ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
                 NguoiDungDTO nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), BUS.getMd5(txtPass.getText()), txtUser.getText().trim(), isGioiTinh, ngaysinh);
-                switch (bus.dangKy(txtEmail.getText())) {
-                    case Status.OK:
-                        if (BUS.continute()) {
-                            switch (WorkerClient.status) {
-                                case Status.OK:
-                                    this.setVisible(false);
-                                    new OTP(nguoiDungDTO).setVisible(true);
-                                    break;
-                                case Status.FAILD:
-                                    JOptionPane.showMessageDialog(null, "Email đã tồn tại");
-                                    break;
-                                case Status.LOI_GUI_OTP:
-                                    JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
-                                    break;
-                                case Status.LOI_KETNOI_SERVER:
-                                    JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
-                                    break;
+                switch (mahoabus.sendRequestGetPublicKey()) {
+                case Status.OK:
+                    switch (bus.dangKy(txtEmail.getText())) {
+                        case Status.OK:
+                            if (BUS.continute()) {
+                                switch (WorkerClient.status) {
+                                    case Status.OK:
+                                        this.setVisible(false);
+                                        new OTP(nguoiDungDTO).setVisible(true);
+                                        break;
+                                    case Status.FAILD:
+                                        JOptionPane.showMessageDialog(null, "Email đã tồn tại");
+                                        break;
+                                    case Status.LOI_GUI_OTP:
+                                        JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
+                                        break;
+                                    case Status.LOI_KETNOI_SERVER:
+                                        JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                                        break;
+                                }
                             }
-                        }
-                        break;
-                    case Status.LOI_KETNOI_SERVER:
-                        JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
-                        break;
+                            break;
+                        case Status.LOI_KETNOI_SERVER:
+                            JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                            break;
+                    }
+                    break;
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Lỗi ngày sinh");

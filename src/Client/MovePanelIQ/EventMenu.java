@@ -3,6 +3,7 @@ package Client.MovePanelIQ;
 import Client.GUI.QuestionIQ.Cau1;
 import Client.GUI.QuestionIQ.Cau10;
 import Client.GUI.QuestionIQ.Cau2;
+import Client.GUI.QuestionIQ.Cau2;
 import Client.GUI.QuestionIQ.Cau3;
 import Client.GUI.QuestionIQ.Cau4;
 import Client.GUI.QuestionIQ.Cau5;
@@ -11,9 +12,11 @@ import Client.GUI.QuestionIQ.Cau7;
 import Client.GUI.QuestionIQ.Cau8;
 import Client.GUI.QuestionIQ.Cau9;
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -29,7 +32,7 @@ public class EventMenu {
     public void setMenu(ArrayList<Danhmuc> menu) {
         this.menu = menu;
         for (Danhmuc danhmuc : menu) {
-            danhmuc.getPnName().addMouseListener(new Events(danhmuc.getKindOfScreen(), danhmuc.getPnName(), danhmuc.getLbName()));
+            danhmuc.getBtnName().addMouseListener(new Events(danhmuc.getKindOfScreen(), danhmuc.getBtnName()));
         }
     }
 
@@ -37,8 +40,7 @@ public class EventMenu {
 
         private JPanel pnNode;
         private String kind;
-        private JPanel pnName;
-        private JLabel lbName;
+        private JButton btnName;
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -84,10 +86,9 @@ public class EventMenu {
             setBackgroudSeclect(kind);
         }
 
-        public Events(String kind, JPanel pnName, JLabel lbName) {
+        public Events(String kind, JButton btnName){
             this.kind = kind;
-            this.pnName = pnName;
-            this.lbName = lbName;
+            this.btnName = btnName;
         }
 
         @Override

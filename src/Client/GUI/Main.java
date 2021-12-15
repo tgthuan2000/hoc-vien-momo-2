@@ -454,7 +454,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbChuoiLose;
     private javax.swing.JLabel lbChuoiWin;
-    private javax.swing.JLabel lbIQ;
+    public static javax.swing.JLabel lbIQ;
     private javax.swing.JLabel lbLose;
     private javax.swing.JLabel lbUserName;
     private javax.swing.JLabel lbWin;

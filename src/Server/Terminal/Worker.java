@@ -41,10 +41,10 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-    private final String userMail = "tgthuan2000@gmail.com";
-    private final String pwdMail = "TGThuan12A4";
-//    private final String userMail = "hoducthangtn2nhvt@gmail.com";
-//    private final String pwdMail = "16112000@Abc";
+//    private final String userMail = "tgthuan2000@gmail.com";
+//    private final String pwdMail = "TGThuan12A4";
+    private final String userMail = "hoducthangtn2nhvt@gmail.com";
+    private final String pwdMail = "16112000@Abc";
 //    private final String userMail = "ngandoan110500@gmail.com";
 //    private final String pwdMail = "ngan@123";
     private final int from = 89999;
@@ -78,6 +78,7 @@ public class Worker implements Runnable {
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 
         userBUS = new UserBUS();
+        user = new NguoiDungDTO();
         player2 = new NguoiDungDTO();
         AES = new Key_RSA_AES_Server();
 
@@ -120,8 +121,16 @@ public class Worker implements Runnable {
                             writeLine(Key.FAILD_TO_DECRYPT);
                             out.flush();
                             break;
-
+                        
                         //
+                        //SUA IQ
+                        //
+                        case Key.SUA_IQ:
+                            suaIQ();
+                            break;
+                        //
+                            
+                            
                         // SIGNIN
                         //
                         case Key.DANGKY:
@@ -178,6 +187,8 @@ public class Worker implements Runnable {
                         case Key.TIMEOUT:
                             timeout();
                             break;
+                            
+                      
                     }
                 } catch (IOException ex) {
                     break;
@@ -256,6 +267,7 @@ public class Worker implements Runnable {
 
     private void infoUser() throws IOException {
         writeLine(Key.NHAN_DANGNHAP);
+        writeLine(user.getUsername());
         writeLine(user.getTenNguoiDung());
         writeLine(user.getChuoiThang());
         writeLine(user.getChuoiThangMax());
@@ -295,6 +307,7 @@ public class Worker implements Runnable {
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
+                System.out.println(email);
                 if (guiOtp()) {
                     writeLine(Key.OK);
                 } else {
@@ -370,6 +383,8 @@ public class Worker implements Runnable {
             if (readLine().equals(Integer.toString(Otp))) {
                 System.out.println("OTP đúng");
                 writeLine(Key.NHAN_KETQUA_CHECK_OTP);
+                
+                inforRank();
             } else {
                 System.out.println("OTP sai");
                 writeLine(Key.FAILD);
@@ -868,5 +883,18 @@ public class Worker implements Runnable {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
+    }
+
+    private void suaIQ() throws IOException {
+        String username = readLine();
+        String Iq = readLine();
+        if (userBUS.SuaIQ(username,Iq)) {
+            System.out.println("Sua IQ thanh cong");
+            writeLine(Key.SUCCESS_SUA_IQ);
+        }else{
+            
+            System.out.println("Sua IQ that bai");
+        }
+        out.flush();
     }
 }

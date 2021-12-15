@@ -158,6 +158,10 @@ public class WorkerClient implements Runnable {
                         case Key.FINISHED_GAME:
                             finishGame();
                             break;
+                            
+                        case Key.SUCCESS_SUA_IQ:
+                            suaIQ();
+                            break;
                     }
                 } catch (IOException ex) {
                     break;
@@ -213,6 +217,7 @@ public class WorkerClient implements Runnable {
     private void nhanDangNhap() {
         try {
             NguoiDungDTO nguoiDung = new NguoiDungDTO();
+            nguoiDung.setUsername(readLine());
             nguoiDung.setTenNguoiDung(readLine());
             nguoiDung.setChuoiThang(readLineInt());
             nguoiDung.setChuoiThangMax(readLineInt());
@@ -420,6 +425,10 @@ public class WorkerClient implements Runnable {
         Main.flag = true;
         Main.btnPlay.setText("Bắt đầu");
 
+    }
+
+    private void suaIQ() {
+        ok();
     }
 
 }

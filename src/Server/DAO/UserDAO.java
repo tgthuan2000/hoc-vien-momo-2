@@ -132,4 +132,18 @@ public class UserDAO {
         }
         return false;
     }
+    
+    public boolean suaIQ(String username,int IQ){
+       String sql="UPDATE NguoiDung  SET DiemIQ= ? WHERE Username= ?";
+       try {
+           PreparedStatement ps= my.getPreparedStatement(sql);
+            ps.setInt(1, IQ);
+            ps.setString(2, username);
+           return my.excuteUpdate();
+       } catch (Exception e) {
+           
+           JOptionPane.showMessageDialog(null, "Lỗi sửa IQ");
+       }
+       return false;
+   }
 }
