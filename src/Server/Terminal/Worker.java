@@ -1,6 +1,8 @@
 package Server.Terminal;
 
+import Server.BUS.ServerBUS;
 import Server.BUS.UserBUS;
+import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
 import java.io.BufferedReader;
@@ -9,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
@@ -23,10 +26,10 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-    //private final String userMail = "tgthuan2000@gmail.com";
-    //private final String pwdMail = "TGThuan12A4";
-    private final String userMail = "ngandoan110500@gmail.com";
-    private final String pwdMail = "ngan@123";
+    private final String userMail = "tgthuan2000@gmail.com";
+    private final String pwdMail = "TGThuan12A4";
+//    private final String userMail = "ngandoan110500@gmail.com";
+//    private final String pwdMail = "ngan@123";
     private final int from = 89999;
     private final int to = 10000;
     private final String Subject = "OTP from 3 anh em with love";
@@ -61,9 +64,9 @@ public class Worker implements Runnable {
         out.write(b + "\n");
     }
 
-    private String readLine(String hash) {
+    private String readLine() throws IOException {
         // giải mã
-        return "";
+        return in.readLine();
     }
 
     @Override
@@ -72,7 +75,7 @@ public class Worker implements Runnable {
         try {
             while (true) {
                 try {
-                    switch (in.readLine()) {    // cú pháp phân biệt lệnh
+                    switch (readLine()) {    // cú pháp phân biệt lệnh
                         case Key.DANGKY:
                             dangKy();
                             break;
@@ -103,6 +106,8 @@ public class Worker implements Runnable {
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             // clean up
@@ -122,12 +127,13 @@ public class Worker implements Runnable {
         ServerMain.users_waitting.remove(nguoiDungDTO);
         ServerMain.users.remove(nguoiDungDTO);
         ServerMain.workers.remove(this);
+        ServerMain.gui.useronl();
     }
 
     private void dangNhap() {
         try {
-            String username = in.readLine();
-            String password = in.readLine();
+            String username = readLine();
+            String password = readLine();
             nguoiDungDTO = userBUS.login(username, password);
 
             if (nguoiDungDTO.getUsername() != null) {
@@ -193,17 +199,15 @@ public class Worker implements Runnable {
                     + nd.getTongTran() + "$$"
                     + nd.getTongTranThang() + "$$"
                     + nd.getTongDiem());
-            System.out.println(builder.toString());
             writeLine(builder.toString());
             out.flush();
-            System.out.println("done");
         }
     }
 
     private void dangKy() {
         try {
             StringBuilder str = new StringBuilder();
-            str.append(in.readLine()); // email
+            str.append(readLine()); // email
 
             if (userBUS.kiemTra(str.toString())) {
                 email = str.toString();
@@ -279,7 +283,7 @@ public class Worker implements Runnable {
     private void checkOtp() {
         try {
             System.out.println("Nhận OTP");
-            if (in.readLine().equals(Integer.toString(Otp))) {
+            if (readLine().equals(Integer.toString(Otp))) {
                 System.out.println("OTP đúng");
                 writeLine(Key.NHAN_KETQUA_CHECK_OTP);
             } else {
@@ -296,10 +300,10 @@ public class Worker implements Runnable {
     private void luuNguoiDung() {
         try {
             nguoiDungDTO.setUsername(email);
-            nguoiDungDTO.setPassword(in.readLine());
-            nguoiDungDTO.setTenNguoiDung(in.readLine());
-            nguoiDungDTO.setNgaySinh(in.readLine());
-            nguoiDungDTO.setGioiTinh(in.readLine().equals("true"));
+            nguoiDungDTO.setPassword(readLine());
+            nguoiDungDTO.setTenNguoiDung(readLine());
+            nguoiDungDTO.setNgaySinh(readLine());
+            nguoiDungDTO.setGioiTinh(readLine().equals("true"));
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(nguoiDungDTO)) {
@@ -396,7 +400,7 @@ public class Worker implements Runnable {
     }
 
     private void checkAcceptGame() throws IOException {
-        switch (in.readLine()) {
+        switch (readLine()) {
             case Key.OK:
                 ok_accept_game();
                 break;
@@ -407,7 +411,7 @@ public class Worker implements Runnable {
     }
 
     private void ok_accept_game() throws IOException {
-        roomId = in.readLine();
+        roomId = readLine();
         // kiểm tra user nào click accept bằng roomid
         for (Room r : ServerMain.waittingRooms) {
             if (r.getRoomID().equals(roomId)) {
@@ -437,7 +441,7 @@ public class Worker implements Runnable {
                 }
 
                 // cuối
-                if (r.getUser1Accept() == r.ACCEPT && r.getUser2Accept() == r.ACCEPT) {
+                if (r.getUser1Accept() == r.ACCEPT && r.getUser2Accept() == r.ACCEPT && ServerMain.games.add(new Game(r.getRoomID(), randomCauHoi()))) {
                     System.out.println("2 user accept");
                     if (currentUser == 1) {
                         for (Worker worker : ServerMain.workers) {
@@ -468,16 +472,52 @@ public class Worker implements Runnable {
         worker.out.flush();
     }
 
-    private void goToGame() throws IOException {
-        RoomWorker rw = new RoomWorker(socket, roomId, nguoiDungDTO, player2);
-        ServerMain.executorRoom.execute(rw);
-        ServerMain.roomWorkers.add(rw); // quản lý
-        ServerMain.executor.shutdownNow();// đóng kết nối với worker user hiện tại
+    private void goToGame() throws IOException, InterruptedException {
+        GameWorker rw = new GameWorker(socket, roomId, nguoiDungDTO, player2);
+        ServerMain.gameWorkers.add(rw); // quản lý (add vào trước khi start thread)
+        rw.run();
         ServerMain.workers.remove(this);
+        synchronized (rw) {
+            try {
+                System.out.println("Waiting for game to complete...");
+                rw.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("Done");
+        }
+    }
+
+    private ArrayList<CauHoiDTO> randomCauHoi() {
+        ServerBUS bus = new ServerBUS();
+        ArrayList<CauHoiDTO> cauHois = new ArrayList<>();
+
+        ArrayList<Integer> ins = new ArrayList<>();
+        int iNew;
+        Random rd = new Random();
+        int sl = bus.readConfig().getSoLuongCauHoi();
+        ArrayList<CauHoiDTO> dsCauHoi = bus.readcauhoi();
+
+        System.out.println("Số lượng câu hỏi cấu hình: " + sl);
+        System.out.println("Số lượng câu hỏi hiện có: " + dsCauHoi.size());
+
+        for (int i = 1; i <= sl; i++) {
+            while (true) {
+                iNew = rd.nextInt(dsCauHoi.size());
+                System.out.println("random nè " + iNew);
+                if (!ins.contains(iNew)) {
+                    ins.add(iNew);
+                    cauHois.add(dsCauHoi.get(iNew));
+                    break;
+                }
+            }
+        }
+        return cauHois;
     }
 
     private void deny_game() throws IOException {
-        roomId = in.readLine();
+        roomId = readLine();
         // kiểm tra user nào click deny bằng roomid
         for (Room r : ServerMain.waittingRooms) {
             if (r.getRoomID().equals(roomId)) {

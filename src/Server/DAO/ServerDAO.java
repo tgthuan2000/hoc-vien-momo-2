@@ -15,25 +15,22 @@ public class ServerDAO {
         mysql = new Connect();
     }
 
-    public ArrayList<CauHinhDTO> readCauhinh() {
-        ArrayList<CauHinhDTO> list = new ArrayList<CauHinhDTO>();
+    public CauHinhDTO readCauhinh() {
+        CauHinhDTO cauhinh = new CauHinhDTO();
         try {
             String qry = "SELECT * FROM CauHinh";
             PreparedStatement ps = mysql.getPreparedStatement(qry);
             ResultSet rs = mysql.executeQuery();
             while (rs.next()) {
-                CauHinhDTO cauhinh = new CauHinhDTO();
                 cauhinh.setSoLuongCauHoi(rs.getInt("SoLuongCauHoi"));
                 cauhinh.setDiemTranDau(rs.getInt("DiemTranDau"));
                 cauhinh.setThoiGian(rs.getInt("ThoiGian"));
-                list.add(cauhinh);
             }
             mysql.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return list;
+        return cauhinh;
     }
 
     public ArrayList<CauHoiDTO> readCauhoi() {

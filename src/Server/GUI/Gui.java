@@ -39,11 +39,11 @@ public class Gui extends javax.swing.JFrame {
     }
 
     public void readconfromsql() {
-        for (CauHinhDTO co : bus.readConfig()) {
-            model.addRow(new Object[]{
-                co.getSoLuongCauHoi(), co.getDiemTranDau(), co.getThoiGian()
-            });
-        }
+        CauHinhDTO co = bus.readConfig();
+        model.addRow(new Object[]{
+            co.getSoLuongCauHoi(), co.getDiemTranDau(), co.getThoiGian()
+        });
+
         tb1.setModel(model);
     }
 
@@ -441,7 +441,6 @@ public class Gui extends javax.swing.JFrame {
 
                     if (bus.changeconfig(config1)) {
 
-                        CauHinhDTO cauhinh = bus.readConfig().set(i, config1);
                         model.setValueAt(config1.getSoLuongCauHoi(), i, 0);
                         model.setValueAt(config1.getDiemTranDau(), i, 1);
                         model.setValueAt(config1.getThoiGian(), i, 2);

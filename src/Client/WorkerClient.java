@@ -5,6 +5,7 @@ import Client.GUI.Main;
 import Client.GUI.PlayGame;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -108,9 +110,29 @@ public class WorkerClient implements Runnable {
                         case Key.INFO_USER_2:
                             getInfoUser2();
                             break;
+                        case Key.CAU_HOI:
+                            getCauHoi();
+                            break;
+                        case Key.PREPARE_GAME_OK:
+                            prepare_ok();
+                            break;
+                        case Key.DAPAN_USER2:
+                            nhanDapAnUser2();
+                            break;
+                        case Key.DAPAN_DUNG:
+                            dapAnDung();
+                            break;
+                        case Key.MO_2_DAPAN:
+                            moDapAnUser2();
+                            break;
+                        case Key.NEXT_CAU:
+                            nextCau();
+                            break;
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(WorkerClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             in.close();
@@ -188,7 +210,6 @@ public class WorkerClient implements Runnable {
         if (tmp.size() == 6) {
             BUS.users.add(new NguoiDungDTO(tmp.get(0), Integer.parseInt(tmp.get(1)), Integer.parseInt(tmp.get(2)), Integer.parseInt(tmp.get(3)), Integer.parseInt(tmp.get(4)), Integer.parseInt(tmp.get(5))));
         }
-        System.out.println("Size : " + BUS.users.size());
     }
 
     private void nhanKetQuaOTP() {
@@ -250,6 +271,69 @@ public class WorkerClient implements Runnable {
     private void getInfoUser2() throws IOException {
         BUS.user2 = new NguoiDungDTO();
         BUS.user2.setTenNguoiDung(readLine());
+    }
+
+    private void getCauHoi() throws IOException {
+        BUS.cauHoi = readLine();
+        BUS.dsDapAn = new ArrayList<>();
+        BUS.dsDapAn.add(readLine());
+        BUS.dsDapAn.add(readLine());
+        BUS.dsDapAn.add(readLine());
+        BUS.dsDapAn.add(readLine());
+    }
+
+    private void prepare_ok() {
         new PlayGame().setVisible(true);
+    }
+
+    private void nhanDapAnUser2() throws IOException {
+        BUS.dapAnUser2 = in.readLine();
+        writeLine(Key.NHAN_DAPAN_USER2);
+        out.flush();
+
+    }
+
+    private void dapAnDung() throws IOException, InterruptedException {
+        getDapAn(in.readLine(), Color.GREEN);
+        writeLine(Key.CAU_HOI);
+        out.flush();
+    }
+
+    private void getDapAn(String dapAn, Color color) throws InterruptedException {
+        TimeUnit.MILLISECONDS.sleep(2000);
+        for (int i = 0; i < BUS.dsDapAn.size(); i++) {
+            if (BUS.dsDapAn.get(i).equals(dapAn)) {
+                switch (i) {
+                    case 0:
+                        PlayGame.btnA.setBackground(color);
+                        break;
+                    case 1:
+                        PlayGame.btnB.setBackground(color);
+                        break;
+                    case 2:
+                        PlayGame.btnC.setBackground(color);
+                        break;
+                    case 3:
+                        PlayGame.btnD.setBackground(color);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void moDapAnUser2() throws InterruptedException, IOException {
+        if (PlayGame.dapAn.equals(BUS.dapAnUser2)) {
+            getDapAn(BUS.dapAnUser2, Color.ORANGE);
+        } else {
+            getDapAn(BUS.dapAnUser2, Color.BLUE);
+        }
+        writeLine(Key.DAPAN_DUNG);
+        out.flush();
+    }
+
+    private void nextCau() throws InterruptedException {
+        TimeUnit.MILLISECONDS.sleep(3000);
+        PlayGame.getCau();
+        PlayGame.refresh();
     }
 }
