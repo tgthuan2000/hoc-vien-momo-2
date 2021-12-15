@@ -502,6 +502,7 @@ public class Worker implements Runnable {
     }
 
     private void goToGame() throws IOException, InterruptedException {
+
         GameWorker rw = new GameWorker(socket, AES, roomId, nguoiDungDTO, player2);
         ServerMain.gameWorkers.add(rw); // quản lý (add vào trước khi start thread)
         rw.run();
@@ -516,6 +517,7 @@ public class Worker implements Runnable {
 
             System.out.println("Done");
         }
+
     }
 
     private ArrayList<CauHoiDTO> randomCauHoi() {
@@ -534,7 +536,6 @@ public class Worker implements Runnable {
         for (int i = 1; i <= sl; i++) {
             while (true) {
                 iNew = rd.nextInt(dsCauHoi.size());
-                System.out.println("random nè " + iNew);
                 if (!ins.contains(iNew)) {
                     ins.add(iNew);
                     cauHois.add(dsCauHoi.get(iNew));

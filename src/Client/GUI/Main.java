@@ -143,7 +143,7 @@ public class Main extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Stt", "Họ tên", "Xếp hạng ", "Chuỗi thắng dài nhất nhất", "Chuỗi thắng ngắn nhất", "Tỉ lệ thắng", "Tỉ lệ thua"
+                "Xếp hạng", "Họ tên", "Tổng điểm", "Chuỗi thắng dài nhất nhất", "Chuỗi thua dài nhất", "Tỉ lệ thắng", "Tỉ lệ thua"
             }
         ) {
             Class[] types = new Class [] {

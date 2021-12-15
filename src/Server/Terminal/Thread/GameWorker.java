@@ -1,6 +1,8 @@
 package Server.Terminal.Thread;
 
 import Server.BUS.MaHoaBUS;
+import Server.BUS.ServerBUS;
+import Server.BUS.UserBUS;
 import Server.Terminal.DTO.Game;
 import Server.Terminal.DTO.Key_RSA_AES_Server;
 import Server.Terminal.ServerMain;
@@ -15,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +34,11 @@ public class GameWorker implements Runnable {
     public String dapAn;
     public GameWorker user2;
     public final Key_RSA_AES_Server AES;
+    public int score;
+    public int totalScore;
+    public long timeStart;
+    public long timeEnd;
+    public long time;
 
     public GameWorker(Socket s, Key_RSA_AES_Server aes, String roomId, NguoiDungDTO player1, NguoiDungDTO player2) throws IOException {
         this.AES = aes;
@@ -40,6 +48,7 @@ public class GameWorker implements Runnable {
         cauHois = new ArrayList<>();
         STT = 1;
         dapAn = "";
+        totalScore = 0;
 
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -47,6 +56,10 @@ public class GameWorker implements Runnable {
     }
 
     private void writeLine(int num) throws IOException {
+        out.write(MaHoaBUS.encrypt(num + "", AES.secretKey) + "\n");
+    }
+
+    private void writeLine(long num) throws IOException {
         out.write(MaHoaBUS.encrypt(num + "", AES.secretKey) + "\n");
     }
 
@@ -77,18 +90,22 @@ public class GameWorker implements Runnable {
                         case Key.NHAN_DAPAN_USER2:
                             checkDapAn2User();
                             break;
+                        case Key.TONGDIEM_USER2:
+                            guiTongDiemUser2();
+                            break;
                         case Key.DAPAN_DUNG:
                             guiDapAnDung();
                             break;
-                        case Key.CAU_HOI:
-                            nextCauHoi();
+                        case Key.TIMEOUT:
+                            timeout();
                             break;
                     }
                 } catch (IOException ex) {
                     break;
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GameWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            ServerMain.gui.useronl();
             in.close();
             out.close();
             socket.close();
@@ -99,16 +116,12 @@ public class GameWorker implements Runnable {
 
     private void prepareGame() throws IOException {
         getUser2();
+        getCauHinh();
         getCauHoi();
         guiInfoUser2();
         guiCauHoi();
+        guiCauHinh();
         prepareOK();
-        System.out.println("Danh sách câu hỏi");
-
-        for (int i = 0; i < cauHois.size(); i++) {
-            System.out.println("Câu hỏi số " + (i + 1) + " :" + cauHois.get(i).getCauHoi());
-        }
-
         System.out.println("Khởi tạo user " + player1.getUsername() + " hoàn tất!");
 
     }
@@ -122,6 +135,13 @@ public class GameWorker implements Runnable {
         return null;
     }
 
+    private void getCauHinh() {
+        ServerBUS bus = new ServerBUS();
+        score = bus.readConfig().getDiemTranDau(); // điểm tối đa 1 câu đúng
+        time = bus.readConfig().getThoiGian(); // thời gian mỗi câu
+
+    }
+
     private void getCauHoi() {
         for (Game game : ServerMain.games) {
             if (game.getRoomId().equals(roomId)) {
@@ -131,25 +151,30 @@ public class GameWorker implements Runnable {
     }
 
     private void guiInfoUser2() throws IOException {
-        writeLine(Key.INFO_USER_2);
+        writeLine(Key.CAUHINH_INFO_USER_2);
         writeLine(player2.getTenNguoiDung());
-        out.flush();
-    }
-
-    private void nextCauHoi() throws IOException {
-        guiCauHoi();
-        writeLine(Key.NEXT_CAU);
         out.flush();
     }
 
     private void guiCauHoi() throws IOException {
         System.out.println("STT câu " + STT);
         CauHoiDTO cauHoi = cauHois.get(STT - 1);
-        writeLine(Key.CAU_HOI);
+        writeLine(Key.CAUHINH_CAUHOI);
         writeLine(cauHoi.getCauHoi());
         for (String str : randomDapAn(cauHoi)) {
             writeLine(str);
         }
+        out.flush();
+        timeStart = System.currentTimeMillis(); // tính thời gian gửi câu hỏi
+    }
+
+    private void guiCauHinh() throws IOException {
+        writeLine(Key.CAUHINH_THOIGIAN);
+        writeLine(time);
+        out.flush();
+
+        writeLine(Key.CAUHINH_SOCAU);
+        writeLine(cauHois.size());
         out.flush();
     }
 
@@ -168,20 +193,36 @@ public class GameWorker implements Runnable {
         out.flush();
     }
 
+    private void guiDiemCau() throws IOException {
+        int diem = 0;
+        if (dapAn.equals(cauHois.get(STT - 1).getCauDung())) {
+            long second = (timeEnd - timeStart) / 1000;
+            diem = (int) (score * (time - second) / time);
+            totalScore += diem;
+            System.out.println("Điểm câu " + STT + " của " + player1.getUsername() + " là: " + diem);
+        } else {
+            System.out.println("Đáp án của " + player1.getUsername() + " sai => 0đ");
+        }
+
+        writeLine(Key.DIEM_CAU);
+        writeLine(diem);
+        out.flush();
+
+        writeLine(Key.CAPNHAT_TONGDIEM);
+        writeLine(totalScore);
+        out.flush();
+
+        timeStart = 0;
+        timeEnd = 0;
+    }
+
     private void guiDapAnUser2() throws IOException {
         dapAn = readLine();
+        timeEnd = System.currentTimeMillis(); // tính thời gian gửi kq
         System.out.println("Đáp án user " + player1.getUsername() + ": " + dapAn);
         user2.writeLine(Key.DAPAN_USER2);
         user2.writeLine(dapAn);
         user2.out.flush();
-    }
-
-    private void guiDapAnDung() throws IOException {
-        writeLine(Key.DAPAN_DUNG);
-        writeLine(cauHois.get(STT - 1).getCauDung());
-        STT++;
-        dapAn = "";
-        out.flush();
     }
 
     private void checkDapAn2User() throws IOException {
@@ -191,5 +232,55 @@ public class GameWorker implements Runnable {
             writeLine(Key.MO_2_DAPAN);
             out.flush();
         }
+    }
+
+    private void guiDapAnDung() throws IOException {
+        writeLine(Key.DAPAN_DUNG);
+        writeLine(cauHois.get(STT - 1).getCauDung());
+        out.flush();
+        guiDiemCau(); // gửi điểm trước khi guiCauHoi vì dapAn và STT sẽ bị thay đổi
+    }
+
+    private void nextCauHoi() throws InterruptedException, IOException {
+        if (cauHois.size() == STT) {
+            writeLine(Key.FINISHED_GAME);
+            String status = "";
+            if (totalScore > user2.totalScore) {
+                status = Key.WINER;
+            } else if (totalScore < user2.totalScore) {
+                status = Key.LOSER;
+            } else {
+                status = Key.DRAW;
+            }
+            writeLine(status);
+            out.flush();
+
+            new UserBUS().capNhatDiem(player1, totalScore, status);
+
+            user2.notify(); // back home
+        } else {
+            STT++;
+            dapAn = "";
+            TimeUnit.MILLISECONDS.sleep(6000);
+            guiCauHoi();
+            writeLine(Key.NEXT_CAU);
+            out.flush();
+        }
+    }
+
+    private void guiTongDiemUser2() throws IOException, InterruptedException {
+        writeLine(Key.TONGDIEM_USER2);
+        writeLine(user2.totalScore);
+        out.flush();
+        nextCauHoi();
+    }
+
+    private void timeout() throws IOException {
+        dapAn = "";
+        timeEnd = System.currentTimeMillis(); // tính thời gian gửi kq
+        System.out.println("Đáp án user " + player1.getUsername() + ": " + dapAn);
+        user2.writeLine(Key.DAPAN_USER2);
+        user2.writeLine(dapAn);
+        user2.out.flush();
     }
 }

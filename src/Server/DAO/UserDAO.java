@@ -1,6 +1,7 @@
 package Server.DAO;
 
 import Shares.DTO.NguoiDungDTO;
+import Shares.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -98,6 +99,35 @@ public class UserDAO {
             return my.excuteUpdate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Insert Error");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean capNhatDiem(NguoiDungDTO nd, int diem, String trangThai) {
+        String sql = "UPDATE NguoiDung SET "
+                + "TongDiem = TongDiem + ?, "
+                + "TongTran = TongTran + 1, ";
+        switch (trangThai) {
+            case Key.WINER:
+                sql += "ChuoiThang = ChuoiThang + 1, "
+                        + "TongTranThang = TongTranThang + 1, "
+                        + "ChuoiThua = 0";
+                break;
+            case Key.LOSER:
+                sql += "ChuoiThua = ChuoiThua + 1, "
+                        + "ChuoiThang = 0";
+                break;
+        }
+        sql += "WHERE Username = ?";
+
+        try {
+            PreparedStatement ps = my.getPreparedStatement(sql);
+            ps.setInt(1, diem);
+            ps.setString(2, nd.getUsername());
+            return my.excuteUpdate();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Update Error");
             e.printStackTrace();
         }
         return false;

@@ -36,6 +36,10 @@ public class WorkerClient implements Runnable {
         isContinue = false;
     }
 
+    private void writeLine(int num) throws IOException {
+        out.write(RSA_AESBUS.encrypt(num + "", KeyRSA_AES.keyAES) + "\n");
+    }
+
     private void writeLine(String str) throws IOException {
         out.write(RSA_AESBUS.encrypt(str.trim(), KeyRSA_AES.keyAES) + "\n");
     }
@@ -45,7 +49,7 @@ public class WorkerClient implements Runnable {
         return temp != null ? temp : Key.FAILD_TO_DECRYPT;
     }
 
-    public int readLineInt() throws IOException {
+    private int readLineInt() throws IOException {
         return Integer.parseInt(readLine());
     }
 
@@ -114,11 +118,17 @@ public class WorkerClient implements Runnable {
                         //
                         // IN GAME
                         //
-                        case Key.INFO_USER_2:
+                        case Key.CAUHINH_INFO_USER_2:
                             getInfoUser2();
                             break;
-                        case Key.CAU_HOI:
+                        case Key.CAUHINH_CAUHOI:
                             getCauHoi();
+                            break;
+                        case Key.CAUHINH_THOIGIAN:
+                            getThoiGian();
+                            break;
+                        case Key.CAUHINH_SOCAU:
+                            getSoCauHoi();
                             break;
                         case Key.PREPARE_GAME_OK:
                             prepare_ok();
@@ -129,11 +139,23 @@ public class WorkerClient implements Runnable {
                         case Key.DAPAN_DUNG:
                             dapAnDung();
                             break;
+                        case Key.DIEM_CAU:
+                            readScore();
+                            break;
+                        case Key.CAPNHAT_TONGDIEM:
+                            readTotalScore();
+                            break;
+                        case Key.TONGDIEM_USER2:
+                            setTotalScoreUser2();
+                            break;
                         case Key.MO_2_DAPAN:
                             moDapAnUser2();
                             break;
                         case Key.NEXT_CAU:
                             nextCau();
+                            break;
+                        case Key.FINISHED_GAME:
+                            finishGame();
                             break;
                     }
                 } catch (IOException ex) {
@@ -291,21 +313,27 @@ public class WorkerClient implements Runnable {
         BUS.dsDapAn.add(readLine());
     }
 
+    private void getThoiGian() throws IOException {
+        BUS.thoiGian = readLineInt();
+    }
+
+    private void getSoCauHoi() throws IOException {
+        BUS.soCau = readLineInt();
+    }
+
     private void prepare_ok() {
         new PlayGame().setVisible(true);
+        // PlayGame.setThoiGian();
     }
 
     private void nhanDapAnUser2() throws IOException {
         BUS.dapAnUser2 = readLine();
         writeLine(Key.NHAN_DAPAN_USER2);
         out.flush();
-
     }
 
     private void dapAnDung() throws IOException, InterruptedException {
         getDapAn(readLine(), Color.GREEN);
-        writeLine(Key.CAU_HOI);
-        out.flush();
     }
 
     private void getDapAn(String dapAn, Color color) throws InterruptedException {
@@ -340,9 +368,45 @@ public class WorkerClient implements Runnable {
         out.flush();
     }
 
-    private void nextCau() throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(3000);
+    private void nextCau() {
         PlayGame.getCau();
         PlayGame.refresh();
+        //PlayGame.setThoiGian();
     }
+
+    private void readScore() throws IOException {
+        BUS.diem = readLineInt();
+        PlayGame.showScore();
+    }
+
+    private void readTotalScore() throws IOException {
+        BUS.tongDiem = readLineInt();
+        PlayGame.setTotalScore();
+        writeLine(Key.TONGDIEM_USER2);
+        writeLine(BUS.tongDiem);
+        out.flush();
+    }
+
+    private void setTotalScoreUser2() throws IOException {
+        BUS.tongDiemUser2 = readLineInt();
+        PlayGame.setTotalScoreUser2();
+    }
+
+    private void finishGame() throws IOException {
+        String rs = "";
+        switch (readLine()) {
+            case Key.WINER:
+                rs = "Chúc mừng người chiến thắng!!!";
+                break;
+            case Key.LOSER:
+                rs = "Thua gòi làm lại game mới đi :(";
+                break;
+            case Key.DRAW:
+                rs = "Cân tài cân sức ha :D";
+                break;
+        }
+        JOptionPane.showMessageDialog(null, "Kết thúc game\n" + rs);
+        System.out.println("Kết thức game!");
+    }
+
 }

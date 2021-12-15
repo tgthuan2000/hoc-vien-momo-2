@@ -13,6 +13,8 @@ public class PlayGame extends javax.swing.JFrame {
 
     private static boolean isClick;
     public static String dapAn;
+    private static int soCau;
+    private static int thGian;
 
     public PlayGame() {
         try {
@@ -23,14 +25,16 @@ public class PlayGame extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Game");
         initComponents();
-        initData();
+        soCau = 1;
         isClick = true;
+        initData();
     }
 
     private void initData() {
         lbUser1.setText(BUS.user.getTenNguoiDung());
         lbUser2.setText(BUS.user2.getTenNguoiDung());
         getCau();
+        setSTTCau();
     }
 
     public static void getCau() {
@@ -40,6 +44,28 @@ public class PlayGame extends javax.swing.JFrame {
         btnC.setText(BUS.dsDapAn.get(2));
         btnD.setText(BUS.dsDapAn.get(3));
 
+    }
+
+//    public static void setThoiGian() {
+//        try {
+//            thGian = BUS.thoiGian;
+//            while (thGian > 0) {
+//                if (!isClick) {
+//                    break;
+//                }
+//                TimeUnit.MILLISECONDS.sleep(1000);
+//                lbTime.setText(--thGian + "");
+//                System.out.println("thoi gian: " + thGian);
+//            }
+//            if (isClick) {
+////            BUS.writeLine(Key.TIMEOUT);
+////            BUS.flush();
+//            }
+//        } catch (Exception ex) {
+//        }
+//    }
+    public static void setSTTCau() {
+        lblSTTCau.setText("Câu " + soCau++ + "/" + BUS.soCau);
     }
 
     public static void refresh() {
@@ -55,6 +81,24 @@ public class PlayGame extends javax.swing.JFrame {
 
         isClick = true;
         dapAn = "";
+        setSTTCau();
+        refreshDiem();
+    }
+
+    public static void showScore() {
+        lblScoreAnswer.setText("Số điểm câu này là: " + BUS.diem + " điểm");
+    }
+
+    public static void refreshDiem() {
+        lblScoreAnswer.setText("");
+    }
+
+    public static void setTotalScore() {
+        lbScore1.setText(Integer.toString(BUS.tongDiem));
+    }
+
+    public static void setTotalScoreUser2() {
+        lbScore2.setText(Integer.toString(BUS.tongDiemUser2));
     }
 
     /**
@@ -83,6 +127,8 @@ public class PlayGame extends javax.swing.JFrame {
         btnC = new javax.swing.JButton();
         btnD = new javax.swing.JButton();
         btnA = new javax.swing.JButton();
+        lblScoreAnswer = new javax.swing.JLabel();
+        lblSTTCau = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -228,32 +274,43 @@ public class PlayGame extends javax.swing.JFrame {
                 .addGap(33, 33, 33))
         );
 
+        lblSTTCau.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
+        lblSTTCau.setText("Câu 1/3");
+        lblSTTCau.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(lbUser1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(lbScore1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbUser2, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(lbScore2))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(lbUser1)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(lbScore1)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbUser2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(lbScore2)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(lblScoreAnswer, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblSTTCau, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -270,15 +327,20 @@ public class PlayGame extends javax.swing.JFrame {
                                 .addComponent(lbUser1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbScore1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lbUser2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lbScore2)))))
-                .addGap(68, 68, 68)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbScore2)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblScoreAnswer, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSTTCau, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -343,11 +405,13 @@ public class PlayGame extends javax.swing.JFrame {
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JProgressBar jProgressBar2;
     private javax.swing.JLabel lbQuestion;
-    private javax.swing.JLabel lbScore1;
-    private javax.swing.JLabel lbScore2;
-    private javax.swing.JLabel lbTime;
+    private static javax.swing.JLabel lbScore1;
+    private static javax.swing.JLabel lbScore2;
+    private static javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbUser1;
     private javax.swing.JLabel lbUser2;
     public static javax.swing.JLabel lblCauHoi;
+    private static javax.swing.JLabel lblSTTCau;
+    private static javax.swing.JLabel lblScoreAnswer;
     // End of variables declaration//GEN-END:variables
 }

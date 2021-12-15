@@ -272,11 +272,11 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="7" rowCount="4">
-                    <Column editable="true" title="Stt" type="java.lang.Integer"/>
+                    <Column editable="true" title="X&#x1ebf;p h&#x1ea1;ng" type="java.lang.Integer"/>
                     <Column editable="true" title="H&#x1ecd; t&#xea;n" type="java.lang.String"/>
-                    <Column editable="true" title="X&#x1ebf;p h&#x1ea1;ng " type="java.lang.String"/>
+                    <Column editable="true" title="T&#x1ed5;ng &#x111;i&#x1ec3;m" type="java.lang.String"/>
                     <Column editable="true" title="Chu&#x1ed7;i th&#x1eaf;ng d&#xe0;i nh&#x1ea5;t nh&#x1ea5;t" type="java.lang.String"/>
-                    <Column editable="true" title="Chu&#x1ed7;i th&#x1eaf;ng ng&#x1eaf;n nh&#x1ea5;t" type="java.lang.String"/>
+                    <Column editable="true" title="Chu&#x1ed7;i thua d&#xe0;i nh&#x1ea5;t" type="java.lang.String"/>
                     <Column editable="true" title="T&#x1ec9; l&#x1ec7; th&#x1eaf;ng" type="java.lang.String"/>
                     <Column editable="true" title="T&#x1ec9; l&#x1ec7; thua" type="java.lang.String"/>
                   </Table>

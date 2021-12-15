@@ -3,6 +3,7 @@ package Client.BUS;
 import Client.KeyRSA_AES;
 import Client.WorkerClient;
 import Shares.DTO.NguoiDungDTO;
+import Shares.Key;
 import Shares.ServerConfig;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,6 +30,11 @@ public class BUS {
     public static String cauHoi;
     public static ArrayList<String> dsDapAn;
     public static String dapAnUser2;
+    public static int diem;
+    public static int tongDiem;
+    public static int tongDiemUser2;
+    public static int soCau;
+    public static int thoiGian;
 
     public static boolean connect() throws IOException {
         if (socket == null) {
@@ -63,7 +69,12 @@ public class BUS {
     }
 
     public static String readLine() throws IOException {
-        return RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
+        String temp = RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
+        return temp != null ? temp : Key.FAILD_TO_DECRYPT;
+    }
+
+    public static int readLineInt() throws IOException {
+        return Integer.parseInt(readLine());
     }
 
     public static void flush() throws IOException {
