@@ -4,12 +4,17 @@
  */
 package Client.GUI.QuestionIQ;
 
+import Client.GUI.InterfaceIQ;
+import Client.MovePanelIQ.CauDung;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author thanh
  */
 public class Cau2 extends javax.swing.JPanel {
-
+    private static String cauhoi = "cau2";
     /**
      * Creates new form Cau2
      */
@@ -27,7 +32,6 @@ public class Cau2 extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         Cau2 = new javax.swing.JLabel();
         A = new javax.swing.JPanel();
@@ -46,8 +50,6 @@ public class Cau2 extends javax.swing.JPanel {
         setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setText("Câu 2: ");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -68,6 +70,11 @@ public class Cau2 extends javax.swing.JPanel {
         A.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageA2.png"))); // NOI18N
+        lbA.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbAMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout ALayout = new javax.swing.GroupLayout(A);
         A.setLayout(ALayout);
@@ -86,6 +93,11 @@ public class Cau2 extends javax.swing.JPanel {
         C.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageC2.png"))); // NOI18N
+        lbC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbCMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout CLayout = new javax.swing.GroupLayout(C);
         C.setLayout(CLayout);
@@ -104,6 +116,11 @@ public class Cau2 extends javax.swing.JPanel {
         D.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbD.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageD2.png"))); // NOI18N
+        lbD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbDMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout DLayout = new javax.swing.GroupLayout(D);
         D.setLayout(DLayout);
@@ -122,6 +139,11 @@ public class Cau2 extends javax.swing.JPanel {
         B.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageB2.png"))); // NOI18N
+        lbB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbBMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout BLayout = new javax.swing.GroupLayout(B);
         B.setLayout(BLayout);
@@ -140,6 +162,11 @@ public class Cau2 extends javax.swing.JPanel {
         E.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbE.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageE2.png"))); // NOI18N
+        lbE.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbEMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout ELayout = new javax.swing.GroupLayout(E);
         E.setLayout(ELayout);
@@ -158,6 +185,11 @@ public class Cau2 extends javax.swing.JPanel {
         F.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         lbF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Webp.net-resizeimageF2.png"))); // NOI18N
+        lbF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbFMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout FLayout = new javax.swing.GroupLayout(F);
         F.setLayout(FLayout);
@@ -177,33 +209,28 @@ public class Cau2 extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(A, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(B, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(A, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(B, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(C, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(C, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(E, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(D, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(F, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(17, Short.MAX_VALUE))
+                        .addComponent(E, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(D, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(F, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(59, 59, 59)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -231,6 +258,72 @@ public class Cau2 extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void lbAMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 1 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,1));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbA.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbAMouseClicked
+
+    private void lbCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbCMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 2 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,2));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbC.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbCMouseClicked
+
+    private void lbEMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 3 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,3));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbE.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbEMouseClicked
+
+    private void lbBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 4 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,4));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbB.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbBMouseClicked
+
+    private void lbDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 5 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,5));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbD.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbDMouseClicked
+
+    private void lbFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbFMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 6 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,6));
+            JOptionPane.showMessageDialog(null, "Success");
+             jPanel2.setBackground(Color.GRAY);
+            lbF.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbFMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel A;
@@ -240,7 +333,6 @@ public class Cau2 extends javax.swing.JPanel {
     private javax.swing.JPanel D;
     private javax.swing.JPanel E;
     private javax.swing.JPanel F;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbA;

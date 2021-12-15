@@ -391,6 +391,7 @@ public class Main extends javax.swing.JFrame {
     private void btnIQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIQActionPerformed
         // TODO add your handling code here:true
         if (btnIQ.isEnabled()) {
+            
             new InterfaceIQ().setVisible(true);
         }
     }//GEN-LAST:event_btnIQActionPerformed

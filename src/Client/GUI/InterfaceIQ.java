@@ -1,16 +1,24 @@
 package Client.GUI;
 
+import Client.BUS.BUS;
+import Client.MovePanelIQ.CauDung;
 import Client.MovePanelIQ.Danhmuc;
 import Client.MovePanelIQ.EventMenu;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class InterfaceIQ extends javax.swing.JFrame {
-
+    public static ArrayList<Danhmuc> menu;
+    public static ArrayList<CauDung> caudungs;
+    public static ArrayList<CauDung> tmp;
     public InterfaceIQ() {
         try {
             UIManager.setLookAndFeel(new com.jtattoo.plaf.graphite.GraphiteLookAndFeel());
@@ -23,28 +31,93 @@ public class InterfaceIQ extends javax.swing.JFrame {
         this.setTitle("KIỂM TRA IQ");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         EventMenu catchEvent = new EventMenu(pnIQ);
-        ArrayList<Danhmuc> menu = new ArrayList<Danhmuc>();
-
-        menu.add(new Danhmuc("cau1", pn1, lb1));
-        menu.add(new Danhmuc("cau2", pn2, lb2));
-        menu.add(new Danhmuc("cau3", pn3, lb3));
-        menu.add(new Danhmuc("cau4", pn4, lb4));
-        menu.add(new Danhmuc("cau5", pn5, lb5));
-        menu.add(new Danhmuc("cau6", pn6, lb6));
-        menu.add(new Danhmuc("cau7", pn7, lb7));
-        menu.add(new Danhmuc("cau8", pn8, lb8));
-        menu.add(new Danhmuc("cau9", pn9, lb9));
-        menu.add(new Danhmuc("cau10", pn10, lb10));
-//        menu.add(new Danhmuc("sanpham", pnsp, lbsp));
-//        menu.add(new Danhmuc("loaisanpham", pnlsp, lblsp));
-//        menu.add(new Danhmuc("nhanvien", pnnv, lbnv));
-//        menu.add(new Danhmuc("chucvu", pncv, lbcv));
-//        menu.add(new Danhmuc("khachhang", pnkh, lbkh));
-//        menu.add(new Danhmuc("nhacungcap", pnncc, lbncc));
-//        menu.add(new Danhmuc("hoadon", pnhd, lbhd));
-//        menu.add(new Danhmuc("phieunhap", pnpn, lbpn));
-//        menu.add(new Danhmuc("khuyenmai", pnkm, lbkm));
+        menu = new ArrayList<Danhmuc>();
+        ArrayList<String> questions = new ArrayList<>();
+        ArrayList<JPanel> panels = new ArrayList<>();
+        caudungs = new ArrayList<>();
+        tmp = new ArrayList<>();
+        ArrayList<JLabel> labels = new ArrayList<>();
+        questions.add("cau1");
+        questions.add("cau2");
+        questions.add("cau3");
+        questions.add("cau4");
+        questions.add("cau5");
+        questions.add("cau6");
+        questions.add("cau7");
+        questions.add("cau8");
+        questions.add("cau9");
+        questions.add("cau10");
+        
+        panels.add(pn1);
+        panels.add(pn2);
+        panels.add(pn3);
+        panels.add(pn4);
+        panels.add(pn5);
+        panels.add(pn6);
+        panels.add(pn7);
+        panels.add(pn8);
+        panels.add(pn9);
+        panels.add(pn10);
+        
+        labels.add(lb1);
+        labels.add(lb2);
+        labels.add(lb3);
+        labels.add(lb4);
+        labels.add(lb5);
+        labels.add(lb6);
+        labels.add(lb7);
+        labels.add(lb8);
+        labels.add(lb9);
+        labels.add(lb10);
+        
+        Collections.shuffle(questions);
+        for(int i = 0 ; i < questions.size() ; i++){
+            switch (questions.get(i)) {
+                case "cau1":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),1));
+                    break;
+                case "cau2":
+                     menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                     caudungs.add(new CauDung(questions.get(i),4));
+                    break;
+                case "cau3":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),2));
+                    break;
+                case "cau4":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),3));
+                    break;
+                case "cau5":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),6));
+                    break;
+                case "cau6":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),1));
+                    break;
+                case "cau7":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),2));
+                    break;
+                case "cau8":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),4));
+                    break;
+                case "cau9":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),4));
+                    break;
+                case "cau10":
+                    menu.add(new Danhmuc(questions.get(i), panels.get(i) , labels.get(i)));
+                    caudungs.add(new CauDung(questions.get(i),4));
+                    break;
+            }
+        }
         catchEvent.setMenu(menu);
+        
+       
     }
 
     /**
@@ -165,7 +238,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn1Layout.setVerticalGroup(
             pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb1)
                 .addContainerGap())
         );
@@ -193,7 +266,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn2Layout.setVerticalGroup(
             pn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn2Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb2)
                 .addContainerGap())
         );
@@ -221,7 +294,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn4Layout.setVerticalGroup(
             pn4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn4Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb4)
                 .addContainerGap())
         );
@@ -249,7 +322,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn5Layout.setVerticalGroup(
             pn5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn5Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb5)
                 .addContainerGap())
         );
@@ -277,7 +350,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn3Layout.setVerticalGroup(
             pn3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn3Layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb3)
                 .addContainerGap())
         );
@@ -305,7 +378,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn6Layout.setVerticalGroup(
             pn6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn6Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb6)
                 .addContainerGap())
         );
@@ -333,7 +406,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn7Layout.setVerticalGroup(
             pn7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn7Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb7)
                 .addContainerGap())
         );
@@ -361,7 +434,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8Layout.setVerticalGroup(
             pn8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn8Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb8)
                 .addContainerGap())
         );
@@ -389,7 +462,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn9Layout.setVerticalGroup(
             pn9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn9Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb9)
                 .addContainerGap())
         );
@@ -417,12 +490,17 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn10Layout.setVerticalGroup(
             pn10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn10Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lb10)
                 .addContainerGap())
         );
 
         btnDone.setText("Xong");
+        btnDone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDoneActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -502,6 +580,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
 
         menu.add(new Danhmuc("trangchu", pn1, lb1));
         catchEvent.setMenu(menu);
+        
     }//GEN-LAST:event_lb1MouseClicked
 
     private void pn1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn1MouseEntered
@@ -520,6 +599,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn1.setEnabled(false);
     }//GEN-LAST:event_pn1MouseClicked
 
     private void pn2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn2MouseClicked
@@ -534,6 +614,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn2.setEnabled(false);
     }//GEN-LAST:event_pn2MouseClicked
 
     private void pn3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn3MouseClicked
@@ -548,6 +629,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn3.setEnabled(false);
     }//GEN-LAST:event_pn3MouseClicked
 
     private void pn4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn4MouseClicked
@@ -562,6 +644,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn4.setEnabled(false);
     }//GEN-LAST:event_pn4MouseClicked
 
     private void pn5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn5MouseClicked
@@ -576,6 +659,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn5.setEnabled(false);
     }//GEN-LAST:event_pn5MouseClicked
 
     private void pn6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn6MouseClicked
@@ -590,6 +674,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn6.setEnabled(false);
     }//GEN-LAST:event_pn6MouseClicked
 
     private void pn7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn7MouseClicked
@@ -604,6 +689,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn7.setEnabled(false);
     }//GEN-LAST:event_pn7MouseClicked
 
     private void pn8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn8MouseClicked
@@ -618,6 +704,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(44, 62, 80));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(1, 133, 153));
+        pn8.setEnabled(false);
     }//GEN-LAST:event_pn8MouseClicked
 
     private void pn9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn9MouseClicked
@@ -632,6 +719,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(44, 62, 80));
         pn10.setBackground(new Color(1, 133, 153));
+        pn9.setEnabled(false);
     }//GEN-LAST:event_pn9MouseClicked
 
     private void pn10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn10MouseClicked
@@ -646,7 +734,21 @@ public class InterfaceIQ extends javax.swing.JFrame {
         pn8.setBackground(new Color(1, 133, 153));
         pn9.setBackground(new Color(1, 133, 153));
         pn10.setBackground(new Color(44, 62, 80));
+        pn10.setEnabled(false);
     }//GEN-LAST:event_pn10MouseClicked
+
+    private void btnDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
+        // TODO add your handling code here:
+        int score = 0;
+        for(CauDung c : caudungs){
+            for(CauDung d : tmp){
+                if(c.getCauhoi().equals(d.getCauhoi()) && c.getCaudung() == d.getCaudung()){
+                    score+=20;
+                }
+            }
+        }
+         JOptionPane.showMessageDialog(null, BUS.user.getTenNguoiDung()+"'s score is : " +score);
+    }//GEN-LAST:event_btnDoneActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -662,26 +764,26 @@ public class InterfaceIQ extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lb1;
-    private javax.swing.JLabel lb10;
-    private javax.swing.JLabel lb2;
-    private javax.swing.JLabel lb3;
-    private javax.swing.JLabel lb4;
-    private javax.swing.JLabel lb5;
-    private javax.swing.JLabel lb6;
-    private javax.swing.JLabel lb7;
-    private javax.swing.JLabel lb8;
-    private javax.swing.JLabel lb9;
-    private javax.swing.JPanel pn1;
-    private javax.swing.JPanel pn10;
-    private javax.swing.JPanel pn2;
-    private javax.swing.JPanel pn3;
-    private javax.swing.JPanel pn4;
-    private javax.swing.JPanel pn5;
-    private javax.swing.JPanel pn6;
-    private javax.swing.JPanel pn7;
-    private javax.swing.JPanel pn8;
-    private javax.swing.JPanel pn9;
-    private javax.swing.JPanel pnIQ;
+    public static javax.swing.JLabel lb1;
+    public static javax.swing.JLabel lb10;
+    public static javax.swing.JLabel lb2;
+    public static javax.swing.JLabel lb3;
+    public static javax.swing.JLabel lb4;
+    public static javax.swing.JLabel lb5;
+    public static javax.swing.JLabel lb6;
+    public static javax.swing.JLabel lb7;
+    public static javax.swing.JLabel lb8;
+    public static javax.swing.JLabel lb9;
+    public static javax.swing.JPanel pn1;
+    public static javax.swing.JPanel pn10;
+    public static javax.swing.JPanel pn2;
+    public static javax.swing.JPanel pn3;
+    public static javax.swing.JPanel pn4;
+    public static javax.swing.JPanel pn5;
+    public static javax.swing.JPanel pn6;
+    public static javax.swing.JPanel pn7;
+    public static javax.swing.JPanel pn8;
+    public static javax.swing.JPanel pn9;
+    public static javax.swing.JPanel pnIQ;
     // End of variables declaration//GEN-END:variables
 }
