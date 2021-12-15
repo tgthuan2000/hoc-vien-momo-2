@@ -1,5 +1,7 @@
 package Server.Terminal;
 
+import Server.Terminal.DTO.Room;
+import Server.Terminal.DTO.Game;
 import Server.GUI.GuiQuery;
 import Shares.DTO.NguoiDungDTO;
 import Shares.ServerConfig;

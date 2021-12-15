@@ -14,7 +14,6 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class BUS {
@@ -36,7 +35,6 @@ public class BUS {
             socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
             out = new BufferedWriter(new OutputStreamWriter(BUS.socket.getOutputStream()));
             in = new BufferedReader(new InputStreamReader(BUS.socket.getInputStream()));
-//            Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
             System.out.println("Client connected");
             users = new ArrayList<>();
             return true;
@@ -59,16 +57,15 @@ public class BUS {
         }
         return true;
     }
-    
+
     public static void writeLine(String str) throws IOException {
-            String tmp = RSA_AESBUS.encrypt(str.trim(),KeyRSA_AES.keyAES);
-            out.write(tmp + "\n");
+        out.write(RSA_AESBUS.encrypt(str.trim(), KeyRSA_AES.keyAES) + "\n");
     }
 
     public static String readLine() throws IOException {
-            return RSA_AESBUS.decrypt(in.readLine(),KeyRSA_AES.keyAES);
+        return RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
     }
-    
+
     public static void flush() throws IOException {
         out.flush();
     }

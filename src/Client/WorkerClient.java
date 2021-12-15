@@ -13,13 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -43,17 +37,15 @@ public class WorkerClient implements Runnable {
     }
 
     private void writeLine(String str) throws IOException {
-            out.write(RSA_AESBUS.encrypt(str.trim(),KeyRSA_AES.keyAES )+ "\n");
+        out.write(RSA_AESBUS.encrypt(str.trim(), KeyRSA_AES.keyAES) + "\n");
     }
 
     private String readLine() throws IOException {
-            String tmp = RSA_AESBUS.decrypt(in.readLine(),KeyRSA_AES.keyAES);
-            return tmp;
+        return RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
     }
 
     public int readLineInt() throws IOException {
-        String tmp = readLine();
-        return Integer.parseInt(tmp);
+        return Integer.parseInt(readLine());
     }
 
     @Override
@@ -68,6 +60,7 @@ public class WorkerClient implements Runnable {
                         case Key.OK:
                             ok();
                             break;
+
                         //
                         // ĐĂNG NHẬP
                         //

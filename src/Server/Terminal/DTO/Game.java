@@ -1,4 +1,4 @@
-package Server.Terminal;
+package Server.Terminal.DTO;
 
 import Shares.DTO.CauHoiDTO;
 import java.util.ArrayList;

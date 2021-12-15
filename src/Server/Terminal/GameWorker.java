@@ -1,5 +1,6 @@
 package Server.Terminal;
 
+import Server.Terminal.DTO.Game;
 import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;

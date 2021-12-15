@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Client.BUS;
 
 import Client.KeyRSA_AES;
@@ -13,24 +8,17 @@ import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- *
- * @author thanh
- */
 public class RSA_AESBUS {
 
     public RSA_AESBUS() {
@@ -39,9 +27,7 @@ public class RSA_AESBUS {
     public int sendRequestGetPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, Exception {
         try {
             //Receive public key RSA
-            boolean isConnect = BUS.connect();
-            //BUS.out.write(Key.REQUEST_GET_PUBLICKEY + "\n");
-            if (isConnect) {
+            if (BUS.connect()) {
                 KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine());
                 String keygenerater = castSkToString(generatorSK());
                 KeyRSA_AES.keyAES = keygenerater;
@@ -50,7 +36,6 @@ public class RSA_AESBUS {
                 System.out.println("key AES sau khi bi ma hoa: " + encryptMessage(keygenerater, KeyRSA_AES.publicKey));
                 BUS.out.write(encryptMessage(keygenerater, KeyRSA_AES.publicKey) + "\n");
                 BUS.flush();
-
                 Executors.newFixedThreadPool(1).execute(new WorkerClient((BUS.socket)));
             }
             return Status.OK;
@@ -63,8 +48,7 @@ public class RSA_AESBUS {
     private PublicKey castStringToPublickey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] publicKeyByteServer = decoder.decode(publicKeyStr.getBytes());
-//        byte[] publicKeyByteServer = Base64.decode(publicKeyString, Base64.NO_WRAP);
-//        // generate the publicKey
+        // generate the publicKey
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PublicKey publicKeyServer = (PublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyByteServer));
         return publicKeyServer;
@@ -94,9 +78,7 @@ public class RSA_AESBUS {
     }
 
     public String castSkToString(SecretKey secretKey) {
-        byte[] publicKeyByte = secretKey.getEncoded();
         // Base64 encoded string
-
         Base64.Encoder encoder = Base64.getEncoder();
         String keyStr = encoder.encodeToString(secretKey.getEncoded());
 
