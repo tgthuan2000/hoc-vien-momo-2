@@ -5,7 +5,6 @@
  */
 package Client.BUS;
 
-
 import Client.KeyRSA_AES;
 import Client.Status;
 import Client.WorkerClient;
@@ -36,28 +35,32 @@ public class RSA_AESBUS {
 
     public RSA_AESBUS() {
     }
-    
-    public int sendRequestGetPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, Exception{
+
+    public int sendRequestGetPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, Exception {
         try {
             //Receive public key RSA
-            BUS.connect();
+            boolean isConnect = BUS.connect();
             //BUS.out.write(Key.REQUEST_GET_PUBLICKEY + "\n");
-            KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine()); 
-            String keygenerater = castSkToString(generatorSK());
-            KeyRSA_AES.keyAES = keygenerater;
-            System.out.println("pulic key: " + KeyRSA_AES.publicKey);
-            System.out.println("key AES truoc khi bi ma hoa: " +keygenerater);
-            System.out.println("key AES sau khi bi ma hoa: " +encryptMessage(keygenerater, KeyRSA_AES.publicKey));
-            BUS.out.write(encryptMessage(keygenerater, KeyRSA_AES.publicKey) + "\n");
-            BUS.flush();
-            Executors.newFixedThreadPool(1).execute(new WorkerClient((BUS.socket)));
+            if (isConnect) {
+                KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine());
+                String keygenerater = castSkToString(generatorSK());
+                KeyRSA_AES.keyAES = keygenerater;
+                System.out.println("pulic key: " + KeyRSA_AES.publicKey);
+                System.out.println("key AES truoc khi bi ma hoa: " + keygenerater);
+                System.out.println("key AES sau khi bi ma hoa: " + encryptMessage(keygenerater, KeyRSA_AES.publicKey));
+                BUS.out.write(encryptMessage(keygenerater, KeyRSA_AES.publicKey) + "\n");
+                BUS.flush();
+
+                Executors.newFixedThreadPool(1).execute(new WorkerClient((BUS.socket)));
+            }
             return Status.OK;
+
         } catch (IOException ex) {
             return Status.LOI_KETNOI_SERVER;
         }
     }
-    
-    private PublicKey castStringToPublickey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException{
+
+    private PublicKey castStringToPublickey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] publicKeyByteServer = decoder.decode(publicKeyStr.getBytes());
 //        byte[] publicKeyByteServer = Base64.decode(publicKeyString, Base64.NO_WRAP);
@@ -66,15 +69,15 @@ public class RSA_AESBUS {
         PublicKey publicKeyServer = (PublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyByteServer));
         return publicKeyServer;
     }
-    
-    public int encryptAesKey() throws NoSuchAlgorithmException, Exception{
+
+    public int encryptAesKey() throws NoSuchAlgorithmException, Exception {
         try {
             BUS.connect();
             BUS.writeLine(Key.SEND_EN_SEC_KEY);
             KeyRSA_AES.keyAES = castSkToString(generatorSK());
-            System.out.println("Secret key be generater : " +KeyRSA_AES.keyAES);
+            System.out.println("Secret key be generater : " + KeyRSA_AES.keyAES);
             String keyEncryt = encryptMessage(KeyRSA_AES.keyAES, KeyRSA_AES.publicKey);
-            System.out.println("Secret key encrypted : " +keyEncryt);
+            System.out.println("Secret key encrypted : " + keyEncryt);
             BUS.writeLine(keyEncryt);
             BUS.flush();
             return Status.OK;
@@ -82,32 +85,32 @@ public class RSA_AESBUS {
             return Status.LOI_KETNOI_SERVER;
         }
     }
-    
-    public SecretKey generatorSK() throws NoSuchAlgorithmException{
+
+    public SecretKey generatorSK() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         keyGen.init(256); // for example
         SecretKey secretKey = keyGen.generateKey();
         return secretKey;
     }
-    
-    public String castSkToString(SecretKey secretKey){
+
+    public String castSkToString(SecretKey secretKey) {
         byte[] publicKeyByte = secretKey.getEncoded();
         // Base64 encoded string
 
         Base64.Encoder encoder = Base64.getEncoder();
         String keyStr = encoder.encodeToString(secretKey.getEncoded());
-        
+
         return keyStr;
     }
-    
-     private static String encryptMessage(String plainText,PublicKey publicKey) throws Exception {
+
+    private static String encryptMessage(String plainText, PublicKey publicKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         return Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes()));
     }
-     
+
     public static String encrypt(String strToEncrypt, String myKey) {
-      try {
+        try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] key = myKey.getBytes("UTF-8");
             key = sha.digest(key);
@@ -116,14 +119,14 @@ public class RSA_AESBUS {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
-      } catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
-      }
-      return null;
+        }
+        return null;
     }
-    
+
     public static String decrypt(String strToDecrypt, String myKey) {
-      try {
+        try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] key = myKey.getBytes("UTF-8");
             key = sha.digest(key);
@@ -132,9 +135,9 @@ public class RSA_AESBUS {
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
-      } catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
-      }
-      return null;
-}
+        }
+        return null;
+    }
 }

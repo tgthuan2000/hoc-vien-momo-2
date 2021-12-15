@@ -26,7 +26,7 @@ public class BUS {
     public static ArrayList<NguoiDungDTO> users;
     public static ArrayList<NguoiDungDTO> userTmp;
 
-    public static void connect() throws IOException {
+    public static boolean connect() throws IOException {
         if (socket == null) {
             socket = new Socket(ServerConfig.SERVER, ServerConfig.PORT);
             out = new BufferedWriter(new OutputStreamWriter(BUS.socket.getOutputStream()));
@@ -34,7 +34,9 @@ public class BUS {
 //            Executors.newFixedThreadPool(1).execute(new WorkerClient((socket)));
             System.out.println("Client connected");
             users = new ArrayList<>();
+            return true;
         }
+        return false;
     }
 
     public static boolean continute() {
