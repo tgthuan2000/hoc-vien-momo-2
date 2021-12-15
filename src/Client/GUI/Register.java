@@ -25,6 +25,7 @@ public class Register extends javax.swing.JFrame {
             Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
+        Form.register = this;
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Đăng ký");

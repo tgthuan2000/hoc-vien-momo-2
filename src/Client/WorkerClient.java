@@ -2,6 +2,7 @@ package Client;
 
 import Client.BUS.BUS;
 import Client.BUS.RSA_AESBUS;
+import Client.GUI.Form;
 import Client.GUI.Main;
 import Client.GUI.PlayGame;
 import Shares.DTO.NguoiDungDTO;
@@ -162,6 +163,8 @@ public class WorkerClient implements Runnable {
                     break;
                 } catch (InterruptedException ex) {
                     Logger.getLogger(WorkerClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(WorkerClient.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             in.close();
@@ -297,6 +300,7 @@ public class WorkerClient implements Runnable {
     private void loadgame() throws IOException {
         writeLine(Key.LOAD_GAME);
         out.flush();
+        Form.hideMain();
     }
 
     private void getInfoUser2() throws IOException {
@@ -321,8 +325,9 @@ public class WorkerClient implements Runnable {
         BUS.soCau = readLineInt();
     }
 
-    private void prepare_ok() {
-        new PlayGame().setVisible(true);
+    private void prepare_ok() throws Exception {
+        Form.showPlayGame();
+        //new PlayGame().setVisible(true);
         // PlayGame.setThoiGian();
     }
 
@@ -337,7 +342,7 @@ public class WorkerClient implements Runnable {
     }
 
     private void getDapAn(String dapAn, Color color) throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(2000);
+        TimeUnit.MILLISECONDS.sleep(3000);
         for (int i = 0; i < BUS.dsDapAn.size(); i++) {
             if (BUS.dsDapAn.get(i).equals(dapAn)) {
                 switch (i) {
@@ -392,7 +397,8 @@ public class WorkerClient implements Runnable {
         PlayGame.setTotalScoreUser2();
     }
 
-    private void finishGame() throws IOException {
+    private void finishGame() throws IOException, InterruptedException, Exception {
+        TimeUnit.MILLISECONDS.sleep(2000);
         String rs = "";
         switch (readLine()) {
             case Key.WINER:
@@ -407,6 +413,13 @@ public class WorkerClient implements Runnable {
         }
         JOptionPane.showMessageDialog(null, "Kết thúc game\n" + rs);
         System.out.println("Kết thức game!");
+        Form.hidePlayGame();
+        Form.showMain();
+        Main.btnPlay.setEnabled(true);
+        Main.btnIQ.setEnabled(true);
+        Main.flag = true;
+        Main.btnPlay.setText("Bắt đầu");
+
     }
 
 }

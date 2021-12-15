@@ -23,6 +23,7 @@ public class OTP extends javax.swing.JFrame {
             Logger.getLogger(OTP.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
+        Form.oTP = this;
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("OTP");

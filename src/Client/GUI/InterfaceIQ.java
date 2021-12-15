@@ -18,6 +18,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
             Logger.getLogger(InterfaceIQ.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
+        Form.interfaceIQ = this;
         this.setLocationRelativeTo(null);
         this.setTitle("KIỂM TRA IQ");
         setDefaultCloseOperation(EXIT_ON_CLOSE);

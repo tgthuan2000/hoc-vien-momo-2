@@ -28,6 +28,7 @@ public class Login extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Đăng nhập");
         initComponents();
+        Form.login = this;
         bus = new LoginBUS();
         mahoabus = new RSA_AESBUS();
     }
@@ -170,8 +171,8 @@ public class Login extends javax.swing.JFrame {
                                     if (BUS.continute()) {
                                         switch (WorkerClient.status) {
                                             case Status.OK:
-                                                this.setVisible(false);
-                                                new Main().setVisible(true);
+                                                Form.hideLogin();
+                                                Form.showMain();
                                                 break;
                                             case Status.FAILD:
                                                 JOptionPane.showMessageDialog(rootPane, "Tên đăng nhập hoặc mật khẩu không đúng");

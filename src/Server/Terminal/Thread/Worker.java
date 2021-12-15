@@ -506,7 +506,6 @@ public class Worker implements Runnable {
         GameWorker rw = new GameWorker(socket, AES, roomId, nguoiDungDTO, player2);
         ServerMain.gameWorkers.add(rw); // quản lý (add vào trước khi start thread)
         rw.run();
-        ServerMain.workers.remove(this);
         synchronized (rw) {
             try {
                 System.out.println("Waiting for game to complete...");
@@ -517,7 +516,6 @@ public class Worker implements Runnable {
 
             System.out.println("Done");
         }
-
     }
 
     private ArrayList<CauHoiDTO> randomCauHoi() {

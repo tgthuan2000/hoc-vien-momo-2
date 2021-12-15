@@ -39,6 +39,7 @@ public class GameWorker implements Runnable {
     public long timeStart;
     public long timeEnd;
     public long time;
+    private boolean life;
 
     public GameWorker(Socket s, Key_RSA_AES_Server aes, String roomId, NguoiDungDTO player1, NguoiDungDTO player2) throws IOException {
         this.AES = aes;
@@ -49,6 +50,7 @@ public class GameWorker implements Runnable {
         STT = 1;
         dapAn = "";
         totalScore = 0;
+        life = true;
 
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -81,7 +83,7 @@ public class GameWorker implements Runnable {
         System.out.println("Client " + socket.toString() + " accepted room game");
         try {
             prepareGame();
-            while (true) {
+            while (life) {
                 try {
                     switch (readLine()) {
                         case Key.GUI_DAPAN:
@@ -106,9 +108,9 @@ public class GameWorker implements Runnable {
                     Logger.getLogger(GameWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            in.close();
-            out.close();
-            socket.close();
+            synchronized (this) {
+                notify(); // back home
+            }
         } catch (IOException ex) {
             Logger.getLogger(GameWorker.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -244,7 +246,7 @@ public class GameWorker implements Runnable {
     private void nextCauHoi() throws InterruptedException, IOException {
         if (cauHois.size() == STT) {
             writeLine(Key.FINISHED_GAME);
-            String status = "";
+            String status;
             if (totalScore > user2.totalScore) {
                 status = Key.WINER;
             } else if (totalScore < user2.totalScore) {
@@ -257,11 +259,11 @@ public class GameWorker implements Runnable {
 
             new UserBUS().capNhatDiem(player1, totalScore, status);
 
-            user2.notify(); // back home
+            life = false;
         } else {
             STT++;
             dapAn = "";
-            TimeUnit.MILLISECONDS.sleep(6000);
+            TimeUnit.MILLISECONDS.sleep(4000);
             guiCauHoi();
             writeLine(Key.NEXT_CAU);
             out.flush();
