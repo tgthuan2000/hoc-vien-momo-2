@@ -1,13 +1,13 @@
 package Server.Terminal.Thread;
 
-import Server.Terminal.Thread.GameWorker;
-import Server.Terminal.DTO.Room;
-import Server.Terminal.DTO.Key_RSA_AES_Server;
-import Server.Terminal.DTO.Game;
 import Server.BUS.MaHoaBUS;
 import Server.BUS.ServerBUS;
 import Server.BUS.UserBUS;
+import Server.Terminal.DTO.Game;
+import Server.Terminal.DTO.Key_RSA_AES_Server;
+import Server.Terminal.DTO.Room;
 import Server.Terminal.ServerMain;
+import static Server.Terminal.ServerMain.gui;
 import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;
@@ -56,41 +56,39 @@ public class Worker implements Runnable {
     private NguoiDungDTO nguoiDungDTO;
     private NguoiDungDTO player2;
     private String roomId = null;
-    private Room room;
     public static String privateKey;
+    private final Key_RSA_AES_Server AES;
 
     public Worker(Socket s) throws IOException, Exception {
         this.socket = s;
         this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+
         userBUS = new UserBUS();
         nguoiDungDTO = new NguoiDungDTO();
         player2 = new NguoiDungDTO();
-        room = new Room();
-        sendPublicKey();
-        Key_RSA_AES_Server.secretKey = decryptMessage(in.readLine(), Key_RSA_AES_Server.privateKey);
-        System.out.println(Key_RSA_AES_Server.secretKey);
+        AES = new Key_RSA_AES_Server();
+
+        sendPublicKey(); // read and send public key RSA to client
+        AES.secretKey = decryptMessage(in.readLine(), AES.privateKey); // decode public key RSA => get AES key
+        System.out.println("AES key of client: " + AES.secretKey);
     }
 
     private void writeLine(int num) throws IOException {
-        String tmp = MaHoaBUS.encrypt(num + "", Key_RSA_AES_Server.secretKey);
-        out.write(tmp + "\n");
+        out.write(MaHoaBUS.encrypt(num + "", AES.secretKey) + "\n");
     }
 
     private void writeLine(boolean b) throws IOException {
-        String tmp = MaHoaBUS.encrypt(b + "", Key_RSA_AES_Server.secretKey);
-        out.write(tmp + "\n");
+        out.write(MaHoaBUS.encrypt(b + "", AES.secretKey) + "\n");
     }
 
     private void writeLine(String str) throws IOException {
-        String tmp = MaHoaBUS.encrypt(str.trim(), Key_RSA_AES_Server.secretKey);
-        out.write(tmp + "\n");
+        out.write(MaHoaBUS.encrypt(str.trim(), AES.secretKey) + "\n");
     }
 
     private String readLine() throws IOException {
-        String readline = in.readLine();
-        String tmp = MaHoaBUS.decrypt(readline, Key_RSA_AES_Server.secretKey);
-        return tmp;
+        String temp = MaHoaBUS.decrypt(in.readLine(), AES.secretKey);
+        return temp != null ? temp : Key.FAILD_TO_DECRYPT;
     }
 
     @Override
@@ -100,6 +98,11 @@ public class Worker implements Runnable {
             while (true) {
                 try {
                     switch (readLine()) {    // cú pháp phân biệt lệnh
+                        case Key.FAILD_TO_DECRYPT:
+                            System.out.println(nguoiDungDTO.getUsername() + " faild to decrypt!!!");
+                            writeLine(Key.FAILD_TO_DECRYPT);
+                            out.flush();
+                            break;
                         case Key.DANGKY:
                             dangKy();
                             break;
@@ -177,6 +180,7 @@ public class Worker implements Runnable {
                     }
 
                     if (flag && ServerMain.users.add(nguoiDungDTO)) { // user online
+                        gui.useronl();
                         // load data
                         infoUser();
                         inforRank();
@@ -498,7 +502,7 @@ public class Worker implements Runnable {
     }
 
     private void goToGame() throws IOException, InterruptedException {
-        GameWorker rw = new GameWorker(socket, roomId, nguoiDungDTO, player2);
+        GameWorker rw = new GameWorker(socket, AES, roomId, nguoiDungDTO, player2);
         ServerMain.gameWorkers.add(rw); // quản lý (add vào trước khi start thread)
         rw.run();
         ServerMain.workers.remove(this);
@@ -618,23 +622,17 @@ public class Worker implements Runnable {
 
     public void sendPublicKey() throws Exception {
         Map<String, Object> keys = getRSAKeys();
-        PublicKey publicKey = (PublicKey) keys.get("public");
-        Key_RSA_AES_Server.privateKey = (PrivateKey) keys.get("private");
-        out.write(castPublicKeyToString(publicKey) + "\n");
-        System.out.println("send publickey : " + castPublicKeyToString(publicKey));
-        System.out.println("public key : " + publicKey.toString());
+        PublicKey publicKey = (PublicKey) keys.get("public"); // public key RSA
+        AES.privateKey = (PrivateKey) keys.get("private"); // private key RSA
+        //System.out.println("Server send PLK RSA: " + castPublicKeyToString(publicKey));
+        out.write(castPublicKeyToString(publicKey) + "\n"); // send public RSA to client
         out.flush();
-        System.out.println("done");
     }
 
     private String castPublicKeyToString(PublicKey publicKey) {
-        // get encoded form (byte array)
-        byte[] publicKeyByte = publicKey.getEncoded();
         // Base64 encoded string
-
         Base64.Encoder encoder = Base64.getEncoder();
         String publicKeyStr = encoder.encodeToString(publicKey.getEncoded());
-        System.out.println("publicKeyString: " + publicKeyStr);
         return publicKeyStr;
     }
 
@@ -643,11 +641,11 @@ public class Worker implements Runnable {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        PrivateKey privateKey = keyPair.getPrivate();
+        PrivateKey private_Key = keyPair.getPrivate();
         PublicKey publicKey = keyPair.getPublic();
 
         Map<String, Object> keys = new HashMap<String, Object>();
-        keys.put("private", privateKey);
+        keys.put("private", private_Key);
         keys.put("public", publicKey);
         return keys;
     }

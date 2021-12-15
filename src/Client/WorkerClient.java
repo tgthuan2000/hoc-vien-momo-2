@@ -41,7 +41,8 @@ public class WorkerClient implements Runnable {
     }
 
     private String readLine() throws IOException {
-        return RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
+        String temp = RSA_AESBUS.decrypt(in.readLine(), KeyRSA_AES.keyAES);
+        return temp != null ? temp : Key.FAILD_TO_DECRYPT;
     }
 
     public int readLineInt() throws IOException {
@@ -54,6 +55,10 @@ public class WorkerClient implements Runnable {
             while (true) {
                 try {
                     switch (readLine()) {    // cú pháp phân biệt lệnh
+                        case Key.FAILD_TO_DECRYPT:
+                            System.out.println("Faild to decrypt");
+                            faild();
+                            break;
                         case Key.FAILD:
                             faild();
                             break;
@@ -230,7 +235,7 @@ public class WorkerClient implements Runnable {
 
     private void acceptGame() {
         try {
-            System.out.println("Chấp nhận game");
+            System.out.println("Có game");
             String roomId = readLine();
             System.out.println("Room id: " + roomId);
             // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
@@ -239,6 +244,7 @@ public class WorkerClient implements Runnable {
                 writeLine(Key.OK);
                 writeLine(roomId); // room id
                 out.flush();
+                System.out.println("Chấp nhận game");
 
                 // block ng dùng
                 Main.btnPlay.setEnabled(false);
@@ -249,6 +255,7 @@ public class WorkerClient implements Runnable {
                 writeLine(Key.FAILD);
                 writeLine(roomId); // room id
                 out.flush();
+                System.out.println("Từ chối game");
             }
         } catch (IOException ex) {
         }
@@ -289,14 +296,14 @@ public class WorkerClient implements Runnable {
     }
 
     private void nhanDapAnUser2() throws IOException {
-        BUS.dapAnUser2 = in.readLine();
+        BUS.dapAnUser2 = readLine();
         writeLine(Key.NHAN_DAPAN_USER2);
         out.flush();
 
     }
 
     private void dapAnDung() throws IOException, InterruptedException {
-        getDapAn(in.readLine(), Color.GREEN);
+        getDapAn(readLine(), Color.GREEN);
         writeLine(Key.CAU_HOI);
         out.flush();
     }

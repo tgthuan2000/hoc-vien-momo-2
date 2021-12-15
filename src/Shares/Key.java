@@ -3,6 +3,7 @@ package Shares;
 public class Key {
 
     // giao tiếp server - client
+    public static final String FAILD_TO_DECRYPT = "FAILD_TO_DECRYPT";
     public static final String FAILD = "FAILD";
     public static final String OK = "OK";
 
@@ -32,7 +33,7 @@ public class Key {
     public static final String LOAD_GAME = "LOAD_GAME";
 
     public static final String DANHSACH_BXH = "DANHSACH_BXH";
-    
+
     public static final String REQUEST_GET_PUBLICKEY = "REQUEST_GET_PUBLICKEY";
     public static final String RELY_GET_PUBLICKEY = "REPLY_GET_PUBLICKEY";
     public static final String SEND_EN_SEC_KEY = "SEND_EN_SEC_KEY";

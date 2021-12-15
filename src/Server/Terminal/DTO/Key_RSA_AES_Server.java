@@ -4,6 +4,9 @@ import java.security.PrivateKey;
 
 public class Key_RSA_AES_Server {
 
-    public static PrivateKey privateKey = null;
-    public static String secretKey = "";
+    public Key_RSA_AES_Server() {
+    }
+
+    public PrivateKey privateKey = null;
+    public String secretKey = "";
 }

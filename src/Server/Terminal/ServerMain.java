@@ -1,10 +1,10 @@
 package Server.Terminal;
 
-import Server.Terminal.Thread.Worker;
-import Server.Terminal.Thread.GameWorker;
-import Server.Terminal.DTO.Room;
-import Server.Terminal.DTO.Game;
 import Server.GUI.GuiQuery;
+import Server.Terminal.DTO.Game;
+import Server.Terminal.DTO.Room;
+import Server.Terminal.Thread.GameWorker;
+import Server.Terminal.Thread.Worker;
 import Shares.DTO.NguoiDungDTO;
 import Shares.ServerConfig;
 import java.io.IOException;
@@ -42,7 +42,6 @@ public class ServerMain {
                 Worker client = new Worker(server.accept());
                 executor.execute(client);
                 workers.add(client);
-                gui.useronl();
             }
         } catch (IOException e) {
             System.out.println(e);

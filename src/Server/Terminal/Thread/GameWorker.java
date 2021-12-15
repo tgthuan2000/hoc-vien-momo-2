@@ -1,6 +1,8 @@
 package Server.Terminal.Thread;
 
+import Server.BUS.MaHoaBUS;
 import Server.Terminal.DTO.Game;
+import Server.Terminal.DTO.Key_RSA_AES_Server;
 import Server.Terminal.ServerMain;
 import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
@@ -18,43 +20,47 @@ import java.util.logging.Logger;
 
 public class GameWorker implements Runnable {
 
-    private final Socket socket;
-    private final BufferedReader in;
-    private final BufferedWriter out;
-    private final String roomId;
-    private final NguoiDungDTO player1;
-    private final NguoiDungDTO player2;
-    private ArrayList<CauHoiDTO> cauHois;
-    private int STT;
-    private String dapAn;
-    private GameWorker user2;
+    public final Socket socket;
+    public final BufferedReader in;
+    public final BufferedWriter out;
+    public final String roomId;
+    public final NguoiDungDTO player1;
+    public final NguoiDungDTO player2;
+    public ArrayList<CauHoiDTO> cauHois;
+    public int STT;
+    public String dapAn;
+    public GameWorker user2;
+    public final Key_RSA_AES_Server AES;
 
-    public GameWorker(Socket s, String roomId, NguoiDungDTO player1, NguoiDungDTO player2) throws IOException {
-        this.socket = s;
-        this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-        this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+    public GameWorker(Socket s, Key_RSA_AES_Server aes, String roomId, NguoiDungDTO player1, NguoiDungDTO player2) throws IOException {
+        this.AES = aes;
         this.roomId = roomId;
         this.player1 = player1;
         this.player2 = player2;
         cauHois = new ArrayList<>();
         STT = 1;
         dapAn = "";
-    }
 
-    private void writeLine(String str) throws IOException {
-        out.write(str.trim() + "\n");
+        this.socket = s;
+        this.in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
     }
 
     private void writeLine(int num) throws IOException {
-        out.write(num + "\n");
+        out.write(MaHoaBUS.encrypt(num + "", AES.secretKey) + "\n");
     }
 
     private void writeLine(boolean b) throws IOException {
-        out.write(b + "\n");
+        out.write(MaHoaBUS.encrypt(b + "", AES.secretKey) + "\n");
+    }
+
+    private void writeLine(String str) throws IOException {
+        out.write(MaHoaBUS.encrypt(str.trim(), AES.secretKey) + "\n");
     }
 
     private String readLine() throws IOException {
-        return in.readLine();
+        String temp = MaHoaBUS.decrypt(in.readLine(), AES.secretKey);
+        return temp != null ? temp : Key.FAILD_TO_DECRYPT;
     }
 
     @Override

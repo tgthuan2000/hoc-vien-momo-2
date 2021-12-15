@@ -28,13 +28,13 @@ public class RSA_AESBUS {
         try {
             //Receive public key RSA
             if (BUS.connect()) {
-                KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine());
-                String keygenerater = castSkToString(generatorSK());
-                KeyRSA_AES.keyAES = keygenerater;
-                System.out.println("pulic key: " + KeyRSA_AES.publicKey);
-                System.out.println("key AES truoc khi bi ma hoa: " + keygenerater);
-                System.out.println("key AES sau khi bi ma hoa: " + encryptMessage(keygenerater, KeyRSA_AES.publicKey));
-                BUS.out.write(encryptMessage(keygenerater, KeyRSA_AES.publicKey) + "\n");
+                KeyRSA_AES.publicKey = castStringToPublickey(BUS.in.readLine()); // read public key RSA
+                KeyRSA_AES.keyAES = castSkToString(generatorSK());    // generate AES
+                String encode = encryptMessage(KeyRSA_AES.keyAES, KeyRSA_AES.publicKey);
+                //System.out.println("pulic key: " + KeyRSA_AES.publicKey);
+                System.out.println("AES key: " + KeyRSA_AES.keyAES);
+                System.out.println("Encode RSA_AES: " + encode);
+                BUS.out.write(encode + "\n");
                 BUS.flush();
                 Executors.newFixedThreadPool(1).execute(new WorkerClient((BUS.socket)));
             }

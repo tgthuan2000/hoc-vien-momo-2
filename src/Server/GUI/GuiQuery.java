@@ -2,7 +2,6 @@ package Server.GUI;
 
 import Server.BUS.GuiQueryBUS;
 import Server.Terminal.ServerMain;
-import Server.Terminal.Thread.Worker;
 import Shares.DTO.NguoiDungDTO;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -24,7 +23,6 @@ public class GuiQuery extends javax.swing.JFrame {
     public int max2 = 0;
     public ArrayList<Integer> list = new ArrayList<>();
     public ArrayList<NguoiDungDTO> listnguoidung;
-    public static Vector<Worker> workers = null;
 
     public GuiQuery() {
         initComponents();
@@ -467,8 +465,7 @@ public class GuiQuery extends javax.swing.JFrame {
     }
 
     public void useronl() {
-        workers = ServerMain.workers;
-        txtuseronl.setText(String.valueOf(workers.size()));
+        txtuseronl.setText(String.valueOf(ServerMain.users.size()));
     }
 
     /**
