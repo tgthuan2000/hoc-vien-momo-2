@@ -3,8 +3,6 @@ package Server.Terminal;
 import Server.GUI.GuiQuery;
 import Server.Terminal.DTO.Game;
 import Server.Terminal.DTO.Room;
-import Server.Terminal.Thread.GameWorker;
-import Server.Terminal.Thread.Worker;
 import Shares.DTO.NguoiDungDTO;
 import Shares.ServerConfig;
 import java.io.IOException;
@@ -23,7 +21,7 @@ public class ServerMain {
     public static Vector<NguoiDungDTO> users_waitting = new Vector<>(); // danh sách user chờ game
     public static Vector<Room> waittingRooms = new Vector<>();  // danh sách phòng chờ game
     public static Vector<Worker> workers = new Vector<>(); // danh sách kết nối client server
-    public static Vector<GameWorker> gameWorkers = new Vector<>();  // danh sách kết nối game
+    public static Vector<Worker> gameWorkers = new Vector<>();  // danh sách kết nối game
     public static ExecutorService executor;
     public static ArrayList<Game> games = new ArrayList<>();
     public static GuiQuery gui;
