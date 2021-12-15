@@ -2,7 +2,7 @@ package Server.GUI;
 
 import Server.BUS.GuiQueryBUS;
 import Server.Terminal.ServerMain;
-import Server.Terminal.Worker;
+import Server.Terminal.Thread.Worker;
 import Shares.DTO.NguoiDungDTO;
 import java.util.ArrayList;
 import java.util.Vector;

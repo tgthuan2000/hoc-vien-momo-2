@@ -1,6 +1,7 @@
-package Server.Terminal;
+package Server.Terminal.Thread;
 
 import Server.Terminal.DTO.Game;
+import Server.Terminal.ServerMain;
 import Shares.DTO.CauHoiDTO;
 import Shares.DTO.NguoiDungDTO;
 import Shares.Key;

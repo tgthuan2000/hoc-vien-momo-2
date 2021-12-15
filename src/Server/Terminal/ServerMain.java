@@ -1,5 +1,7 @@
 package Server.Terminal;
 
+import Server.Terminal.Thread.Worker;
+import Server.Terminal.Thread.GameWorker;
 import Server.Terminal.DTO.Room;
 import Server.Terminal.DTO.Game;
 import Server.GUI.GuiQuery;
