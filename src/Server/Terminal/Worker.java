@@ -63,14 +63,14 @@ public class Worker implements Runnable {
     public final Key_RSA_AES_Server AES;
     public NguoiDungDTO player2;
     public ArrayList<CauHoiDTO> cauHois;
-    public int STT = 1;
-    public String dapAn = "";
-    public Worker user2;
-    public int score = 0;
-    public int totalScore = 0;
-    public long timeStart = 0;
-    public long timeEnd = 0;
-    public long time = 0;
+    public int STT;
+    public String dapAn;
+    public Worker workerUser2;
+    public int score;
+    public int totalScore;
+    public long timeStart;
+    public long timeEnd;
+    public long time;
 
     public Worker(Socket s) throws IOException, Exception {
         this.socket = s;
@@ -78,9 +78,8 @@ public class Worker implements Runnable {
         this.out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
 
         userBUS = new UserBUS();
-        player2 = new NguoiDungDTO();
         AES = new Key_RSA_AES_Server();
-
+        refresh();
         sendPublicKey(); // read and send public key RSA to client
         AES.secretKey = decryptMessage(in.readLine(), AES.privateKey); // decode public key RSA => get AES key
         System.out.println("AES key of client: " + AES.secretKey);
@@ -532,7 +531,7 @@ public class Worker implements Runnable {
                     System.out.println("2 user accept");
                     if (currentUser == 1) {
                         for (Worker worker : ServerMain.workers) {
-                            if (worker.user.equals(r.getUser2())) {
+                            if (worker.user != null && worker.user.equals(r.getUser2())) {
                                 loadgame(worker);
                                 break;
                             }
@@ -579,6 +578,8 @@ public class Worker implements Runnable {
         out.flush();
         worker.writeLine(Key.LOAD_GAME);
         worker.out.flush();
+        ServerMain.gameWorkers.add(this);
+        ServerMain.gameWorkers.add(worker);
     }
 
     private ArrayList<CauHoiDTO> randomCauHoi() {
@@ -664,7 +665,6 @@ public class Worker implements Runnable {
     // INGAME
     //
     private void prepareGame() throws IOException, InterruptedException {
-        ServerMain.gameWorkers.add(this);
         getUser2();
         getCauHinh();
         getCauHoi();
@@ -678,7 +678,7 @@ public class Worker implements Runnable {
     private Worker getUser2() {
         for (Worker wk : ServerMain.gameWorkers) {
             if (wk.roomId.equals(roomId) && wk.user.equals(player2)) {
-                user2 = wk;
+                workerUser2 = wk;
             }
         }
         return null;
@@ -769,15 +769,15 @@ public class Worker implements Runnable {
         dapAn = readLine();
         timeEnd = System.currentTimeMillis(); // tính thời gian gửi kq
         System.out.println("Đáp án user " + user.getUsername() + ": " + dapAn);
-        user2.writeLine(Key.DAPAN_USER2);
-        user2.writeLine(dapAn);
-        user2.out.flush();
+        workerUser2.writeLine(Key.DAPAN_USER2);
+        workerUser2.writeLine(dapAn);
+        workerUser2.out.flush();
     }
 
     private void checkDapAn2User() throws IOException {
         if (!dapAn.isEmpty()) {
-            user2.writeLine(Key.MO_2_DAPAN);
-            user2.out.flush();
+            workerUser2.writeLine(Key.MO_2_DAPAN);
+            workerUser2.out.flush();
             writeLine(Key.MO_2_DAPAN);
             out.flush();
         }
@@ -794,16 +794,23 @@ public class Worker implements Runnable {
         if (cauHois.size() == STT) {
             writeLine(Key.FINISHED_GAME);
             String status;
-            if (totalScore > user2.totalScore) {
+            if (totalScore > workerUser2.totalScore) {
                 status = Key.WINER;
-            } else if (totalScore < user2.totalScore) {
+            } else if (totalScore < workerUser2.totalScore) {
                 status = Key.LOSER;
             } else {
                 status = Key.DRAW;
             }
+            new UserBUS().capNhatDiem(user, totalScore, status);
             writeLine(status);
             out.flush();
-            new UserBUS().capNhatDiem(user, totalScore, status);
+            infoUser();
+            inforRank();
+            writeLine(Key.LOAD_INFO_AFTERGAME);
+            out.flush();
+            refresh();
+            ServerMain.gameWorkers.remove(this);
+            ServerMain.gameWorkers.remove(workerUser2);
         } else {
             STT++;
             dapAn = "";
@@ -814,9 +821,21 @@ public class Worker implements Runnable {
         }
     }
 
+    private void refresh() {
+        STT = 1;
+        dapAn = "";
+        workerUser2 = null;
+        score = 0;
+        totalScore = 0;
+        timeStart = 0;
+        timeEnd = 0;
+        time = 0;
+        player2 = new NguoiDungDTO();
+    }
+
     private void guiTongDiemUser2() throws IOException, InterruptedException {
         writeLine(Key.TONGDIEM_USER2);
-        writeLine(user2.totalScore);
+        writeLine(workerUser2.totalScore);
         out.flush();
         nextCauHoi();
     }
@@ -825,9 +844,9 @@ public class Worker implements Runnable {
         dapAn = "";
         timeEnd = System.currentTimeMillis(); // tính thời gian gửi kq
         System.out.println("Đáp án user " + user.getUsername() + ": " + dapAn);
-        user2.writeLine(Key.DAPAN_USER2);
-        user2.writeLine(dapAn);
-        user2.out.flush();
+        workerUser2.writeLine(Key.DAPAN_USER2);
+        workerUser2.writeLine(dapAn);
+        workerUser2.out.flush();
     }
 
     //

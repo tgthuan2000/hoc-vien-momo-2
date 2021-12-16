@@ -2,7 +2,12 @@ package Client.GUI;
 
 import Client.BUS.BUS;
 import Shares.Key;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -36,6 +41,7 @@ public class PlayGame extends javax.swing.JFrame {
         lbUser2.setText(BUS.user2.getTenNguoiDung());
         getCau();
         setSTTCau();
+        setThoiGian();
     }
 
     public static void getCau() {
@@ -47,43 +53,40 @@ public class PlayGame extends javax.swing.JFrame {
 
     }
 
-//    public static void setThoiGian() {
-//        try {
-//            thGian = BUS.thoiGian;
-//            while (thGian > 0) {
-//                if (!isClick) {
-//                    break;
-//                }
-//                TimeUnit.MILLISECONDS.sleep(1000);
-//                lbTime.setText(--thGian + "");
-//                System.out.println("thoi gian: " + thGian);
-//            }
-//            if (isClick) {
-////            BUS.writeLine(Key.TIMEOUT);
-////            BUS.flush();
-//            }
-//        } catch (Exception ex) {
-//        }
-//    }
+    public static void setThoiGian() {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println(new Date().toString());
+            }
+        };
+        long delay = 1000L;
+        Timer timer = new Timer("Timer");
+        timer.schedule(timerTask, 0, delay);
+    }
+
     public static void setSTTCau() {
         lblSTTCau.setText("Câu " + soCau++ + "/" + BUS.soCau);
     }
 
     public static void refresh() {
-        btnA.setFont(new java.awt.Font("Lucida Grande", 0, 14));
-        btnB.setFont(new java.awt.Font("Lucida Grande", 0, 14));
-        btnC.setFont(new java.awt.Font("Lucida Grande", 0, 14));
-        btnD.setFont(new java.awt.Font("Lucida Grande", 0, 14));
+        Font font = new Font("Segoe UI", 0, 16);
+        btnA.setFont(font);
+        btnB.setFont(font);
+        btnC.setFont(font);
+        btnD.setFont(font);
 
-        btnA.setBackground(new java.awt.Color(240, 240, 240));
-        btnB.setBackground(new java.awt.Color(240, 240, 240));
-        btnC.setBackground(new java.awt.Color(240, 240, 240));
-        btnD.setBackground(new java.awt.Color(240, 240, 240));
+        Color color = new Color(240, 240, 240);
+        btnA.setBackground(color);
+        btnB.setBackground(color);
+        btnC.setBackground(color);
+        btnD.setBackground(color);
 
         isClick = true;
         dapAn = "";
         setSTTCau();
         refreshDiem();
+        setThoiGian();
     }
 
     public static void showScore() {
@@ -169,15 +172,15 @@ public class PlayGame extends javax.swing.JFrame {
         lbUser2.setText("User 2");
 
         lbScore2.setFont(new java.awt.Font("Lucida Grande", 3, 14)); // NOI18N
-        lbScore2.setText("Score 2");
+        lbScore2.setText("0");
 
         lbScore1.setFont(new java.awt.Font("Lucida Grande", 3, 14)); // NOI18N
-        lbScore1.setText("Score 1");
+        lbScore1.setText("0");
 
         jPanel3.setBackground(new java.awt.Color(102, 204, 255));
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
-        lblCauHoi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblCauHoi.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblCauHoi.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         lblCauHoi.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
@@ -192,11 +195,11 @@ public class PlayGame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(lblCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addComponent(lblSTTCau, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblSTTCau, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(lblCauHoi, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -212,7 +215,7 @@ public class PlayGame extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(51, 204, 255));
         jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
-        btnB.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        btnB.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnB.setText("B");
         btnB.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -220,7 +223,7 @@ public class PlayGame extends javax.swing.JFrame {
             }
         });
 
-        btnC.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        btnC.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnC.setText("C");
         btnC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -228,7 +231,7 @@ public class PlayGame extends javax.swing.JFrame {
             }
         });
 
-        btnD.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        btnD.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnD.setText("D");
         btnD.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -236,7 +239,7 @@ public class PlayGame extends javax.swing.JFrame {
             }
         });
 
-        btnA.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        btnA.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         btnA.setText("A");
         btnA.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -375,7 +378,7 @@ public class PlayGame extends javax.swing.JFrame {
         try {
             if (isClick) {
                 this.dapAn = dapAn;
-                button.setFont(new java.awt.Font("Lucida Grande", 1, 14));
+                button.setFont(new java.awt.Font("Segoe UI", 1, 18));
                 button.setBackground(new java.awt.Color(255, 153, 102));
 
                 BUS.writeLine(Key.GUI_DAPAN);

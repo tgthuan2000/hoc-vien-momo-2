@@ -93,7 +93,6 @@ public class WorkerClient implements Runnable {
                             koNhanOTP();
                             break;
                         case Key.NHAN_KETQUA_CHECK_OTP:
-                            System.out.println("DZO diiii");
                             nhanKetQuaOTP();
                             break;
                         case Key.LOI_GHI_CSDL:
@@ -157,6 +156,9 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.FINISHED_GAME:
                             finishGame();
+                            break;
+                        case Key.LOAD_INFO_AFTERGAME:
+                            loadInfoAfter();
                             break;
                     }
                 } catch (IOException ex) {
@@ -326,9 +328,7 @@ public class WorkerClient implements Runnable {
     }
 
     private void prepare_ok() throws Exception {
-        Form.showPlayGame();
-        //new PlayGame().setVisible(true);
-        // PlayGame.setThoiGian();
+        Form.newPlayGame();
     }
 
     private void nhanDapAnUser2() throws IOException {
@@ -376,7 +376,6 @@ public class WorkerClient implements Runnable {
     private void nextCau() {
         PlayGame.getCau();
         PlayGame.refresh();
-        //PlayGame.setThoiGian();
     }
 
     private void readScore() throws IOException {
@@ -413,13 +412,13 @@ public class WorkerClient implements Runnable {
         }
         JOptionPane.showMessageDialog(null, "Kết thúc game\n" + rs);
         System.out.println("Kết thức game!");
-        Form.hidePlayGame();
-        Form.showMain();
-        Main.btnPlay.setEnabled(true);
-        Main.btnIQ.setEnabled(true);
-        Main.flag = true;
-        Main.btnPlay.setText("Bắt đầu");
+        BUS.users.clear();
+        BUS.user = new NguoiDungDTO();
+    }
 
+    private void loadInfoAfter() throws Exception {
+        Form.hidePlayGame();
+        Form.newMain();
     }
 
 }

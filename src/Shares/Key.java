@@ -62,5 +62,6 @@ public class Key {
     public static final String WINER = "WINER";
     public static final String LOSER = "LOSER";
     public static final String DRAW = "DRAW";
+    public static final String LOAD_INFO_AFTERGAME = "LOAD_INFO_AFTERGAME";
 
 }

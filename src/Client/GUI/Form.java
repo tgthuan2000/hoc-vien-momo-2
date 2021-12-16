@@ -44,6 +44,11 @@ public class Form {
         main.setVisible(true);
     }
 
+    public static void newMain() throws Exception {
+        main = new Main();
+        main.setVisible(true);
+    }
+
     public static void hideMain() {
         if (main != null) {
         }
@@ -74,6 +79,11 @@ public class Form {
         if (playGame != null) {
         }
         playGame.setVisible(false);
+    }
+
+    public static void newPlayGame() {
+        playGame = new PlayGame();
+        playGame.setVisible(true);
     }
 
     public static void showRegister() throws Exception {

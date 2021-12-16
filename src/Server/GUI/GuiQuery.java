@@ -39,10 +39,11 @@ public class GuiQuery extends javax.swing.JFrame {
     }
 
     public void readinfofromsql() {
-
         for (NguoiDungDTO nguoi : bus.readinfo()) {
+            String gender = nguoi.getGioiTinh() ? "Nam" : "Nữ";
+            model1 = (DefaultTableModel) tb2.getModel();
             model1.addRow(new Object[]{
-                nguoi.getUsername(), nguoi.getTenNguoiDung(), nguoi.getGioiTinh(), nguoi.isIsBlock()
+                nguoi.getUsername(), nguoi.getTenNguoiDung(), gender, nguoi.isIsBlock()
             });
         }
         tb2.setModel(model1);
@@ -406,8 +407,6 @@ public class GuiQuery extends javax.swing.JFrame {
         nguoi.setUsername(txtusername.getText());
         int i = tb2.getSelectedRow();
         if (txtstatus.getText().equals("false")) {
-            btnblock.setEnabled(true);
-            jButton3.setEnabled(false);
             if (i >= 0) {
 
                 int pos = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn block user này?");
@@ -434,9 +433,7 @@ public class GuiQuery extends javax.swing.JFrame {
         nguoi.setUsername(txtusername.getText());
         int i = tb2.getSelectedRow();
         if (txtstatus.getText().equals("true")) {
-
             if (i >= 0) {
-
                 int pos = JOptionPane.showConfirmDialog(rootPane, "Bạn muốn unblock user này?");
 
                 if (pos == JOptionPane.YES_OPTION) {
