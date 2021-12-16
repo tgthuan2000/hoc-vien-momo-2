@@ -25,7 +25,7 @@ public class UserBUS {
 
     public boolean kiemTra(String email) {
         for (NguoiDungDTO nd : docdulieu()) {
-            if (nd.getUsername().equals(email)) {
+            if (nd.getUsername().toLowerCase().equals(email.toLowerCase())) {
                 return false;
             }
         }
@@ -34,6 +34,10 @@ public class UserBUS {
 
     public boolean ThemNguoiDung(NguoiDungDTO nguoiDungDTO) {
         return dao.Them(nguoiDungDTO);
+    }
+    
+    public boolean SuaIQ(String user,String iq){
+        return dao.suaIQ(user, Integer.parseInt(iq));
     }
 
     public NguoiDungDTO login(String email, String password) {

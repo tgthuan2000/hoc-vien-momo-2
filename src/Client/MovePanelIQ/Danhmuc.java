@@ -1,21 +1,21 @@
 package Client.MovePanelIQ;
 
+import java.awt.Button;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Danhmuc {
 
     private String kindOfScreen;
-    private JPanel pnName;
-    private JLabel lbName;
+    private JButton btnName;
 
     Danhmuc() {
     }
 
-    public Danhmuc(String kindOfScreen, JPanel pnName, JLabel lbName) {
+    public Danhmuc(String kindOfScreen, JButton btnName){
         this.kindOfScreen = kindOfScreen;
-        this.pnName = pnName;
-        this.lbName = lbName;
+        this.btnName = btnName;
         
     }
 
@@ -23,24 +23,16 @@ public class Danhmuc {
         return kindOfScreen;
     }
 
-    public JPanel getPnName() {
-        return pnName;
-    }
-
-    public JLabel getLbName() {
-        return lbName;
-    }
-
+   
     public void setKindOfScreen(String kindOfScreen) {
         this.kindOfScreen = kindOfScreen;
     }
 
-    public void setPnName(JPanel pnName) {
-        this.pnName = pnName;
+    public JButton getBtnName() {
+        return btnName;
     }
 
-    public void setLbName(JLabel lbName) {
-        this.lbName = lbName;
+    public void setBtnName(JButton btnName) {
+        this.btnName = btnName;
     }
-
 }

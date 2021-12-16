@@ -159,6 +159,9 @@ public class WorkerClient implements Runnable {
                             break;
                         case Key.LOAD_INFO_AFTERGAME:
                             loadInfoAfter();
+
+                        case Key.SUCCESS_SUA_IQ:
+                            suaIQ();
                             break;
                     }
                 } catch (IOException ex) {
@@ -215,6 +218,7 @@ public class WorkerClient implements Runnable {
     private void nhanDangNhap() {
         try {
             NguoiDungDTO nguoiDung = new NguoiDungDTO();
+            nguoiDung.setUsername(readLine());
             nguoiDung.setTenNguoiDung(readLine());
             nguoiDung.setChuoiThang(readLineInt());
             nguoiDung.setChuoiThangMax(readLineInt());
@@ -419,6 +423,10 @@ public class WorkerClient implements Runnable {
     private void loadInfoAfter() throws Exception {
         Form.hidePlayGame();
         Form.newMain();
+    }
+
+    private void suaIQ() {
+        ok();
     }
 
 }

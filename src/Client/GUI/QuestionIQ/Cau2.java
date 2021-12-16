@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package Client.GUI.QuestionIQ;
 
@@ -14,9 +15,9 @@ import javax.swing.JOptionPane;
  * @author thanh
  */
 public class Cau2 extends javax.swing.JPanel {
-    private static String cauhoi = "cau2";
+    private static String cauhoi="cau2";
     /**
-     * Creates new form Cau2
+     * Creates new form Cau22
      */
     public Cau2() {
         initComponents();
@@ -46,8 +47,6 @@ public class Cau2 extends javax.swing.JPanel {
         lbE = new javax.swing.JLabel();
         F = new javax.swing.JPanel();
         lbF = new javax.swing.JLabel();
-
-        setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -243,7 +242,7 @@ public class Cau2 extends javax.swing.JPanel {
                             .addComponent(B, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(D, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(F, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -264,7 +263,7 @@ public class Cau2 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,1));
             JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
+            jPanel2.setBackground(Color.GRAY);
             lbA.setEnabled(false);
         }
     }//GEN-LAST:event_lbAMouseClicked
@@ -275,32 +274,10 @@ public class Cau2 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,2));
             JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
+            jPanel2.setBackground(Color.GRAY);
             lbC.setEnabled(false);
         }
     }//GEN-LAST:event_lbCMouseClicked
-
-    private void lbEMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEMouseClicked
-        // TODO add your handling code here:
-        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 3 ?" );
-        if(ans == 0){
-            InterfaceIQ.tmp.add(new CauDung(cauhoi,3));
-            JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
-            lbE.setEnabled(false);
-        }
-    }//GEN-LAST:event_lbEMouseClicked
-
-    private void lbBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBMouseClicked
-        // TODO add your handling code here:
-        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 4 ?" );
-        if(ans == 0){
-            InterfaceIQ.tmp.add(new CauDung(cauhoi,4));
-            JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
-            lbB.setEnabled(false);
-        }
-    }//GEN-LAST:event_lbBMouseClicked
 
     private void lbDMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDMouseClicked
         // TODO add your handling code here:
@@ -308,10 +285,32 @@ public class Cau2 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,5));
             JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
+            jPanel2.setBackground(Color.GRAY);
             lbD.setEnabled(false);
         }
     }//GEN-LAST:event_lbDMouseClicked
+
+    private void lbBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 4 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,4));
+            JOptionPane.showMessageDialog(null, "Success");
+            jPanel2.setBackground(Color.GRAY);
+            lbB.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbBMouseClicked
+
+    private void lbEMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEMouseClicked
+        // TODO add your handling code here:
+        int ans = JOptionPane.showConfirmDialog(null, "Are you sure choose answer 3 ?" );
+        if(ans == 0){
+            InterfaceIQ.tmp.add(new CauDung(cauhoi,3));
+            JOptionPane.showMessageDialog(null, "Success");
+            jPanel2.setBackground(Color.GRAY);
+            lbE.setEnabled(false);
+        }
+    }//GEN-LAST:event_lbEMouseClicked
 
     private void lbFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbFMouseClicked
         // TODO add your handling code here:
@@ -319,7 +318,7 @@ public class Cau2 extends javax.swing.JPanel {
         if(ans == 0){
             InterfaceIQ.tmp.add(new CauDung(cauhoi,6));
             JOptionPane.showMessageDialog(null, "Success");
-             jPanel2.setBackground(Color.GRAY);
+            jPanel2.setBackground(Color.GRAY);
             lbF.setEnabled(false);
         }
     }//GEN-LAST:event_lbFMouseClicked

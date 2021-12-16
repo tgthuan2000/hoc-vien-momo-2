@@ -21,7 +21,7 @@ public class RegisterBUS {
     public int dangKy(String st) {
         try {
             // kết nối server
-            BUS.connect();
+//            BUS.connect();
             // gửi tín hiệu đăng kí và kiểm tra email
             BUS.writeLine(Key.DANGKY);
             BUS.writeLine(st); // email

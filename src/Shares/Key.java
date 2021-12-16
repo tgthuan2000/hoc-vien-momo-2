@@ -64,4 +64,6 @@ public class Key {
     public static final String DRAW = "DRAW";
     public static final String LOAD_INFO_AFTERGAME = "LOAD_INFO_AFTERGAME";
 
+    public static final String SUA_IQ = "SUA_IQ";
+    public static final String SUCCESS_SUA_IQ = "SUCCESS_SUA_IQ";
 }
