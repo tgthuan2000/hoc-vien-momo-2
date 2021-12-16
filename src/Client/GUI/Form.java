@@ -20,8 +20,8 @@ public class Form {
 
     public static void hideInterfaceIQ() {
         if (interfaceIQ != null) {
+            interfaceIQ.setVisible(false);
         }
-        interfaceIQ.setVisible(false);
     }
 
     public static void newInterfaceIQ() {
@@ -38,8 +38,8 @@ public class Form {
 
     public static void hideLogin() {
         if (login != null) {
+            login.setVisible(false);
         }
-        login.setVisible(false);
     }
 
     public static void showMain() throws Exception {
@@ -56,8 +56,8 @@ public class Form {
 
     public static void hideMain() {
         if (main != null) {
+            main.setVisible(false);
         }
-        main.setVisible(false);
     }
 
     public static void showOTP(NguoiDungDTO nd) throws Exception {
@@ -69,8 +69,8 @@ public class Form {
 
     public static void hideOTP() {
         if (oTP != null) {
+            oTP.setVisible(false);
         }
-        oTP.setVisible(false);
     }
 
     public static void showPlayGame() throws Exception {
@@ -82,8 +82,8 @@ public class Form {
 
     public static void hidePlayGame() {
         if (playGame != null) {
+            playGame.setVisible(false);
         }
-        playGame.setVisible(false);
     }
 
     public static void newPlayGame() {
@@ -100,8 +100,8 @@ public class Form {
 
     public static void hideRegister() {
         if (register != null) {
+            register.setVisible(false);
         }
-        register.setVisible(false);
     }
 
     static void newRegister() {

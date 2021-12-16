@@ -112,11 +112,11 @@ public class UserDAO {
             case Key.WINER:
                 sql += "ChuoiThang = ChuoiThang + 1, "
                         + "TongTranThang = TongTranThang + 1, "
-                        + "ChuoiThua = 0";
+                        + "ChuoiThua = 0 ";
                 break;
             case Key.LOSER:
                 sql += "ChuoiThua = ChuoiThua + 1, "
-                        + "ChuoiThang = 0";
+                        + "ChuoiThang = 0 ";
                 break;
         }
         sql += "WHERE Username = ?";
@@ -132,18 +132,18 @@ public class UserDAO {
         }
         return false;
     }
-    
-    public boolean suaIQ(String username,int IQ){
-       String sql="UPDATE NguoiDung  SET DiemIQ= ? WHERE Username= ?";
-       try {
-           PreparedStatement ps= my.getPreparedStatement(sql);
+
+    public boolean suaIQ(String username, int IQ) {
+        String sql = "UPDATE NguoiDung  SET DiemIQ= ? WHERE Username= ?";
+        try {
+            PreparedStatement ps = my.getPreparedStatement(sql);
             ps.setInt(1, IQ);
             ps.setString(2, username);
-           return my.excuteUpdate();
-       } catch (Exception e) {
-           
-           JOptionPane.showMessageDialog(null, "Lỗi sửa IQ");
-       }
-       return false;
-   }
+            return my.excuteUpdate();
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, "Lỗi sửa IQ");
+        }
+        return false;
+    }
 }

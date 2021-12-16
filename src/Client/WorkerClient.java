@@ -274,11 +274,11 @@ public class WorkerClient implements Runnable {
     private void acceptGame() {
         try {
             System.out.println("Có game");
-            Main.flag = true;
             String roomId = readLine();
             System.out.println("Room id: " + roomId);
             // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
             if (JOptionPane.showConfirmDialog(null, "Chấp nhận vào game!!!") == JOptionPane.YES_OPTION) {
+                Main.flag = true;
                 writeLine(Key.CHECK_ACCEPT_GAME);
                 writeLine(Key.OK);
                 writeLine(roomId); // room id

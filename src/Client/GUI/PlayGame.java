@@ -62,6 +62,7 @@ public class PlayGame extends javax.swing.JFrame {
                 } else {
                     if (thGian == 0 && isClick) {
                         try {
+                            isClick = false;
                             dapAn = Key.NULL_ANSWER;
                             lbTime.setText("0");
                             System.out.println("time out");

@@ -41,7 +41,6 @@ public class GuiQuery extends javax.swing.JFrame {
     public void readinfofromsql() {
         for (NguoiDungDTO nguoi : bus.readinfo()) {
             String gender = nguoi.getGioiTinh() ? "Nam" : "Nữ";
-            model1 = (DefaultTableModel) tb2.getModel();
             model1.addRow(new Object[]{
                 nguoi.getUsername(), nguoi.getTenNguoiDung(), gender, nguoi.isIsBlock()
             });

@@ -420,10 +420,10 @@ public class Worker implements Runnable {
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(user)) {
+                ServerMain.users.add(user);
                 gui.useronl();
                 gui.users();
                 writeLine(Key.OK);
-                ServerMain.users.add(user);
                 System.out.println("Lưu người dùng " + email + " thành công");
 
             } else {
