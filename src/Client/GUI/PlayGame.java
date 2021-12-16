@@ -5,7 +5,6 @@ import Shares.Key;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -54,10 +53,27 @@ public class PlayGame extends javax.swing.JFrame {
     }
 
     public static void setThoiGian() {
+        thGian = BUS.thoiGian;
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                System.out.println(new Date().toString());
+                if (isClick && thGian > 0) {
+                    lbTime.setText(thGian-- + "");
+                } else {
+                    if (thGian == 0 && isClick) {
+                        try {
+                            dapAn = Key.NULL_ANSWER;
+                            lbTime.setText("0");
+                            System.out.println("time out");
+                            BUS.writeLine(Key.GUI_DAPAN);
+                            BUS.writeLine(dapAn);
+                            BUS.flush();
+                        } catch (IOException ex) {
+                            Logger.getLogger(PlayGame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    cancel();
+                }
             }
         };
         long delay = 1000L;
@@ -140,9 +156,9 @@ public class PlayGame extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(153, 204, 255));
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
-        lbTime.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        lbTime.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbTime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTime.setText("10s");
+        lbTime.setText("0");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

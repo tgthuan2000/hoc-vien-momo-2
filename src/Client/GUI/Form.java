@@ -24,6 +24,11 @@ public class Form {
         interfaceIQ.setVisible(false);
     }
 
+    public static void newInterfaceIQ() {
+        interfaceIQ = new InterfaceIQ();
+        interfaceIQ.setVisible(true);
+    }
+
     public static void showLogin() throws Exception {
         if (login == null) {
             login = new Login();
@@ -55,9 +60,9 @@ public class Form {
         main.setVisible(false);
     }
 
-    public static void showOTP() throws Exception {
+    public static void showOTP(NguoiDungDTO nd) throws Exception {
         if (oTP == null) {
-            oTP = new OTP(new NguoiDungDTO());
+            oTP = new OTP(nd);
         }
         oTP.setVisible(true);
     }
@@ -97,6 +102,11 @@ public class Form {
         if (register != null) {
         }
         register.setVisible(false);
+    }
+
+    static void newRegister() {
+        register = new Register();
+        register.setVisible(true);
     }
 
 }

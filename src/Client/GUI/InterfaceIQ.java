@@ -7,17 +7,12 @@ import Client.MovePanelIQ.Danhmuc;
 import Client.MovePanelIQ.EventMenu;
 import Client.Status;
 import Client.WorkerClient;
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -26,10 +21,10 @@ public class InterfaceIQ extends javax.swing.JFrame {
     public static ArrayList<Danhmuc> menu;
     public static ArrayList<CauDung> caudungs;
     public static ArrayList<CauDung> tmp;
-    
+
     public int length = 0;
     public int score = 0;
-    
+
     MainBUS mainBUS;
 
     public InterfaceIQ() {
@@ -362,38 +357,38 @@ public class InterfaceIQ extends javax.swing.JFrame {
 
     private void btnDoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoneActionPerformed
         // TODO add your handling code here:
-        if(length == 10){
+        if (length == 10) {
 
-           for (CauDung c : caudungs) {
-               for (CauDung d : tmp) {
-                   if (c.getCauhoi().equals(d.getCauhoi()) && c.getCaudung() == d.getCaudung()) {
-                       score += 20;
-                   }
-               }
-           }
-           JOptionPane.showMessageDialog(null, BUS.user.getTenNguoiDung() + "'s score is : " + score);
-           switch(mainBUS.suaDiemIQ(BUS.user.getUsername(),String.valueOf(score))){
-               case Status.OK:
-                   if (BUS.continute()) {
-                                        switch (WorkerClient.status) {
-                                            case Status.OK: 
-                                            break;
-                                        }
-                   }
-                   break;
-           }
-           Main.lbIQ.setText(String.valueOf(score));
-           btnDone.setEnabled(false);  
-           this.setVisible(false);
-        }else{
+            for (CauDung c : caudungs) {
+                for (CauDung d : tmp) {
+                    if (c.getCauhoi().equals(d.getCauhoi()) && c.getCaudung() == d.getCaudung()) {
+                        score += 20;
+                    }
+                }
+            }
+            JOptionPane.showMessageDialog(null, BUS.user.getTenNguoiDung() + "'s score is : " + score);
+            switch (mainBUS.suaDiemIQ(BUS.user.getUsername(), String.valueOf(score))) {
+                case Status.OK:
+                    if (BUS.continute()) {
+                        switch (WorkerClient.status) {
+                            case Status.OK:
+                                break;
+                        }
+                    }
+                    break;
+            }
+            Main.lbIQ.setText(String.valueOf(score));
+            btnDone.setEnabled(false);
+            Form.hideInterfaceIQ();
+        } else {
             JOptionPane.showMessageDialog(null, "Vui lòng trả lời hết những câu hỏi");
         }
-        
+
     }//GEN-LAST:event_btnDoneActionPerformed
 
     private void btn10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn10ActionPerformed
         // TODO add your handling code here:
-        length+=1;
+        length += 1;
         btn10.setEnabled(false);
     }//GEN-LAST:event_btn10ActionPerformed
 
@@ -401,64 +396,64 @@ public class InterfaceIQ extends javax.swing.JFrame {
         // TODO add your handling code here:
         reset();
         Main.lbIQ.setText(String.valueOf(score));
-        this.setVisible(false);
+        Form.hideInterfaceIQ();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
         // TODO add your handling code here:
         btn1.setEnabled(false);
-        length +=1;
+        length += 1;
     }//GEN-LAST:event_btn1ActionPerformed
 
     private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
         // TODO add your handling code here:
         btn2.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn2ActionPerformed
 
     private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
         // TODO add your handling code here:
         btn3.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn3ActionPerformed
 
     private void btn4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn4ActionPerformed
         // TODO add your handling code here:
         btn4.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn4ActionPerformed
 
     private void btn5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn5ActionPerformed
         // TODO add your handling code here:
         btn5.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn5ActionPerformed
 
     private void btn6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn6ActionPerformed
         // TODO add your handling code here:
         btn6.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn6ActionPerformed
 
     private void btn7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn7ActionPerformed
         // TODO add your handling code here:
         btn7.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn7ActionPerformed
 
     private void btn8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn8ActionPerformed
         // TODO add your handling code here:
         btn8.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn8ActionPerformed
 
     private void btn9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn9ActionPerformed
         // TODO add your handling code here:
         btn9.setEnabled(false);
-          length +=1;
+        length += 1;
     }//GEN-LAST:event_btn9ActionPerformed
 
-    public void reset(){
+    public void reset() {
         btn1.setEnabled(true);
         btn2.setEnabled(true);
         btn3.setEnabled(true);
@@ -471,7 +466,7 @@ public class InterfaceIQ extends javax.swing.JFrame {
         btn10.setEnabled(true);
         btnDone.setEnabled(true);
     }
-    
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

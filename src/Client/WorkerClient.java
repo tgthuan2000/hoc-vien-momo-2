@@ -151,6 +151,9 @@ public class WorkerClient implements Runnable {
                         case Key.MO_2_DAPAN:
                             moDapAnUser2();
                             break;
+                        case Key.TIMEOUT:
+                            timeout();
+                            break;
                         case Key.NEXT_CAU:
                             nextCau();
                             break;
@@ -271,6 +274,7 @@ public class WorkerClient implements Runnable {
     private void acceptGame() {
         try {
             System.out.println("Có game");
+            Main.flag = true;
             String roomId = readLine();
             System.out.println("Room id: " + roomId);
             // user có thể bị ghép loại khỏi ghép cặp tức thì do user 2 không chấp nhận game
@@ -311,6 +315,8 @@ public class WorkerClient implements Runnable {
         writeLine(Key.LOAD_GAME);
         out.flush();
         Form.hideMain();
+        Form.hideInterfaceIQ();
+
     }
 
     private void getInfoUser2() throws IOException {
@@ -436,6 +442,11 @@ public class WorkerClient implements Runnable {
         JOptionPane.showMessageDialog(null, "Đã mất kết nối với đối thủ!!!");
         Form.hidePlayGame();
         Form.newMain();
+    }
+
+    private void timeout() throws IOException {
+        writeLine(Key.DAPAN_DUNG);
+        out.flush();
     }
 
 }

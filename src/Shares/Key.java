@@ -46,11 +46,13 @@ public class Key {
     public static final String PREPARE_GAME_OK = "PREPARE_GAME_OK";
 
     public static final String GUI_DAPAN = "GUI_DAPAN";
-    public static final String TIMEOUT = "TIMEOUT";
+    public static final String NULL_ANSWER = "NULL_ANSWER";
+
     public static final String DAPAN_USER2 = "DAPAN_USER2";
     public static final String DAPAN_DUNG = "DAPAN_DUNG";
     public static final String GUI_DAPAN_USER2 = "GUI_DAPAN_USER2";
     public static final String NHAN_DAPAN_USER2 = "NHAN_DAPAN_USER2";
+    public static final String TIMEOUT = "TIMEOUT";
 
     public static final String MO_2_DAPAN = "MO_2_DAPAN";
     public static final String NEXT_CAU = "NEXT_CAU";

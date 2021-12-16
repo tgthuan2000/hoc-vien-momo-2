@@ -153,8 +153,12 @@ public class OTP extends javax.swing.JFrame {
                             switch (WorkerClient.status) {
                                 case Status.OK:
                                     JOptionPane.showMessageDialog(null, "Success");
-                                    this.setVisible(false);
-                                    new Main().setVisible(true);
+                                    Form.hideOTP();
+                                    try {
+                                        Form.newMain();
+                                    } catch (Exception ex) {
+                                        Logger.getLogger(OTP.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     break;
                                 case Status.FAILD:
                                     JOptionPane.showMessageDialog(rootPane, "Bạn nhập chưa đúng OTP");

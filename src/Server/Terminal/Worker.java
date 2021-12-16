@@ -184,9 +184,6 @@ public class Worker implements Runnable {
                         case Key.DAPAN_DUNG:
                             guiDapAnDung();
                             break;
-                        case Key.TIMEOUT:
-                            timeout();
-                            break;
                         case Key.REFRESH_FOR_DISCONNECT:
                             refreshDisconected();
                             break;
@@ -423,9 +420,12 @@ public class Worker implements Runnable {
 
             System.out.println("Nhận người dùng");
             if (userBUS.ThemNguoiDung(user)) {
+                gui.useronl();
+                gui.users();
                 writeLine(Key.OK);
                 ServerMain.users.add(user);
                 System.out.println("Lưu người dùng " + email + " thành công");
+
             } else {
                 writeLine(Key.LOI_GHI_CSDL);
                 System.out.println("Lưu người dùng " + email + " thất bại");
@@ -873,15 +873,6 @@ public class Worker implements Runnable {
         nextCauHoi();
     }
 
-    private void timeout() throws IOException {
-        dapAn = "";
-        timeEnd = System.currentTimeMillis(); // tính thời gian gửi kq
-        System.out.println("Đáp án user " + user.getUsername() + ": " + dapAn);
-        workerUser2.writeLine(Key.DAPAN_USER2);
-        workerUser2.writeLine(dapAn);
-        workerUser2.out.flush();
-    }
-
     //
     // CRYPT
     //
@@ -934,4 +925,5 @@ public class Worker implements Runnable {
         }
         out.flush();
     }
+
 }

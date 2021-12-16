@@ -251,32 +251,32 @@ public class Register extends javax.swing.JFrame {
                 ngaysinh = new SimpleDateFormat("yyyy-MM-dd").format(txtDate.getDate());
                 NguoiDungDTO nguoiDungDTO = new NguoiDungDTO(txtEmail.getText().trim(), BUS.getMd5(txtPass.getText()), txtUser.getText().trim(), isGioiTinh, ngaysinh);
                 switch (mahoabus.sendRequestGetPublicKey()) {
-                case Status.OK:
-                    switch (bus.dangKy(txtEmail.getText())) {
-                        case Status.OK:
-                            if (BUS.continute()) {
-                                switch (WorkerClient.status) {
-                                    case Status.OK:
-                                        this.setVisible(false);
-                                        new OTP(nguoiDungDTO).setVisible(true);
-                                        break;
-                                    case Status.FAILD:
-                                        JOptionPane.showMessageDialog(null, "Email đã tồn tại");
-                                        break;
-                                    case Status.LOI_GUI_OTP:
-                                        JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
-                                        break;
-                                    case Status.LOI_KETNOI_SERVER:
-                                        JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
-                                        break;
+                    case Status.OK:
+                        switch (bus.dangKy(txtEmail.getText())) {
+                            case Status.OK:
+                                if (BUS.continute()) {
+                                    switch (WorkerClient.status) {
+                                        case Status.OK:
+                                            Form.hideRegister();
+                                            Form.showOTP(nguoiDungDTO);
+                                            break;
+                                        case Status.FAILD:
+                                            JOptionPane.showMessageDialog(null, "Email đã tồn tại");
+                                            break;
+                                        case Status.LOI_GUI_OTP:
+                                            JOptionPane.showMessageDialog(null, "Quá trình gửi OTP phát sinh lỗi");
+                                            break;
+                                        case Status.LOI_KETNOI_SERVER:
+                                            JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                                            break;
+                                    }
                                 }
-                            }
-                            break;
-                        case Status.LOI_KETNOI_SERVER:
-                            JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
-                            break;
-                    }
-                    break;
+                                break;
+                            case Status.LOI_KETNOI_SERVER:
+                                JOptionPane.showMessageDialog(null, "Lỗi kết nối server");
+                                break;
+                        }
+                        break;
                 }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Lỗi ngày sinh");
@@ -287,14 +287,6 @@ public class Register extends javax.swing.JFrame {
     private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUserActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Register().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegister;

@@ -209,10 +209,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
-        // TODO add your handling code here:
-        Register register = new Register();
-        register.setVisible(true);
-        this.setVisible(false);
+        Form.newRegister();
+        Form.hideLogin();
     }//GEN-LAST:event_lbRegisterMouseClicked
 
     public static void main(String args[]) {

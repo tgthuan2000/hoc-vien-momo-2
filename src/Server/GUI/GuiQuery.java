@@ -465,6 +465,11 @@ public class GuiQuery extends javax.swing.JFrame {
         txtuseronl.setText(String.valueOf(ServerMain.users.size()));
     }
 
+    public void users() {
+        int num = Integer.parseInt(txtsumuser.getText());
+        txtsumuser.setText((num + 1) + "");
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -527,4 +532,5 @@ public class GuiQuery extends javax.swing.JFrame {
     private javax.swing.JTextField txtusername;
     private javax.swing.JTextField txtuseronl;
     // End of variables declaration//GEN-END:variables
+
 }
