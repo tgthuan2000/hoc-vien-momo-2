@@ -155,7 +155,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel3.setText("Nhập câu hỏi");
 
-        jLabel4.setText("true");
+        jLabel4.setText("Đúng");
 
         btnadd.setText("Thêm CSDL");
         btnadd.addActionListener(new java.awt.event.ActionListener() {
@@ -164,11 +164,11 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("false");
+        jLabel5.setText("Sai 1");
 
-        jLabel6.setText("false");
+        jLabel6.setText("Sai 2");
 
-        jLabel7.setText("false");
+        jLabel7.setText("Sai 3");
 
         tb2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

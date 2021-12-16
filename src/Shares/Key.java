@@ -66,4 +66,9 @@ public class Key {
 
     public static final String SUA_IQ = "SUA_IQ";
     public static final String SUCCESS_SUA_IQ = "SUCCESS_SUA_IQ";
+
+    public static final String DISCONECTED = "DISCONECTED";
+    public static final String USER2_DISCONECTED = "USER2_DISCONECTED";
+    public static final String REFRESH_FOR_DISCONNECT = "REFRESH_FOR_DISCONNECT";
+
 }

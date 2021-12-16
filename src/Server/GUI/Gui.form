@@ -301,7 +301,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
-            <Property name="text" type="java.lang.String" value="true"/>
+            <Property name="text" type="java.lang.String" value="&#x110;&#xfa;ng"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txttrue">
@@ -316,21 +316,21 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="false"/>
+            <Property name="text" type="java.lang.String" value="Sai 1"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="false1">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="false"/>
+            <Property name="text" type="java.lang.String" value="Sai 2"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="false2">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="false"/>
+            <Property name="text" type="java.lang.String" value="Sai 3"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="false3">

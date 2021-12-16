@@ -158,10 +158,14 @@ public class WorkerClient implements Runnable {
                             finishGame();
                             break;
                         case Key.LOAD_INFO_AFTERGAME:
-                            loadInfoAfter();
+                            reloadMain();
 
                         case Key.SUCCESS_SUA_IQ:
-                            suaIQ();
+                            ok();
+                            break;
+
+                        case Key.USER2_DISCONECTED:
+                            sendUserDisconected();
                             break;
                     }
                 } catch (IOException ex) {
@@ -420,13 +424,18 @@ public class WorkerClient implements Runnable {
         BUS.user = new NguoiDungDTO();
     }
 
-    private void loadInfoAfter() throws Exception {
+    private void reloadMain() throws Exception {
         Form.hidePlayGame();
         Form.newMain();
     }
 
-    private void suaIQ() {
-        ok();
+    private void sendUserDisconected() throws Exception {
+        System.out.println("Mất kết nối với đối thủ");
+        writeLine(Key.REFRESH_FOR_DISCONNECT);
+        out.flush();
+        JOptionPane.showMessageDialog(null, "Đã mất kết nối với đối thủ!!!");
+        Form.hidePlayGame();
+        Form.newMain();
     }
 
 }

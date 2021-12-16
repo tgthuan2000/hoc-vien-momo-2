@@ -41,10 +41,10 @@ import javax.mail.internet.MimeMessage;
 
 public class Worker implements Runnable {
 
-//    private final String userMail = "tgthuan2000@gmail.com";
-//    private final String pwdMail = "TGThuan12A4";
-    private final String userMail = "hoducthangtn2nhvt@gmail.com";
-    private final String pwdMail = "16112000@Abc";
+    private final String userMail = "tgthuan23012000@gmail.com";
+    private final String pwdMail = "TGThuan12A4";
+//    private final String userMail = "hoducthangtn2nhvt@gmail.com";
+//    private final String pwdMail = "16112000@Abc";
 //    private final String userMail = "ngandoan110500@gmail.com";
 //    private final String pwdMail = "ngan@123";
     private final int from = 89999;
@@ -187,6 +187,9 @@ public class Worker implements Runnable {
                         case Key.TIMEOUT:
                             timeout();
                             break;
+                        case Key.REFRESH_FOR_DISCONNECT:
+                            refreshDisconected();
+                            break;
 
                     }
                 } catch (IOException ex) {
@@ -196,6 +199,7 @@ public class Worker implements Runnable {
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            disconected();
             // clean up
             cleanup();
             System.out.println("user " + user.getUsername() + " disconected");
@@ -214,6 +218,20 @@ public class Worker implements Runnable {
         ServerMain.users.remove(user);
         ServerMain.workers.remove(this);
         ServerMain.gui.useronl();
+    }
+
+    private void disconected() throws IOException {
+        if (workerUser2 != null) { // in game
+            System.out.println("ingame");
+            workerUser2.writeLine(Key.USER2_DISCONECTED);
+            workerUser2.out.flush();
+            ServerMain.gameWorkers.remove(this);
+        }
+    }
+
+    private void refreshDisconected() throws IOException {
+        refresh();
+        ServerMain.gameWorkers.remove(this);
     }
 
     //
