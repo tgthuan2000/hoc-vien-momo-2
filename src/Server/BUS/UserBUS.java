@@ -35,8 +35,8 @@ public class UserBUS {
     public boolean ThemNguoiDung(NguoiDungDTO nguoiDungDTO) {
         return dao.Them(nguoiDungDTO);
     }
-    
-    public boolean SuaIQ(String user,String iq){
+
+    public boolean SuaIQ(String user, String iq) {
         return dao.suaIQ(user, Integer.parseInt(iq));
     }
 
@@ -46,6 +46,10 @@ public class UserBUS {
 
     public boolean capNhatDiem(NguoiDungDTO nd, int diem, String trangThai) {
         return dao.capNhatDiem(nd, diem, trangThai);
+    }
+
+    public NguoiDungDTO getNewInfo(NguoiDungDTO user) {
+        return dao.getInfo(user.getUsername());
     }
 
 }

@@ -834,7 +834,10 @@ public class Worker implements Runnable {
             } else {
                 status = Key.DRAW;
             }
-            new UserBUS().capNhatDiem(user, totalScore, status);
+
+            userBUS.capNhatDiem(user, totalScore, status);
+            user = userBUS.getNewInfo(user);
+
             writeLine(status);
             out.flush();
             infoUser();
@@ -843,7 +846,6 @@ public class Worker implements Runnable {
             out.flush();
             refresh();
             ServerMain.gameWorkers.remove(this);
-            ServerMain.gameWorkers.remove(workerUser2);
         } else {
             STT++;
             dapAn = "";

@@ -108,6 +108,7 @@ public class UserDAO {
         String sql = "UPDATE NguoiDung SET "
                 + "TongDiem = TongDiem + ?, "
                 + "TongTran = TongTran + 1, ";
+
         switch (trangThai) {
             case Key.WINER:
                 sql += "ChuoiThang = ChuoiThang + 1, "
@@ -145,5 +146,35 @@ public class UserDAO {
             JOptionPane.showMessageDialog(null, "Lỗi sửa IQ");
         }
         return false;
+    }
+
+    public NguoiDungDTO getInfo(String username) {
+        NguoiDungDTO nd = new NguoiDungDTO();
+        try {
+            String sql = "SELECT * FROM NguoiDung WHERE Username = ?";
+            PreparedStatement ps = my.getPreparedStatement(sql);
+            ps.setString(1, username);
+
+            ResultSet rs = my.executeQuery();
+            while (rs.next()) {
+                nd.setUsername(rs.getString("Username"));
+                nd.setIsBlock(rs.getBoolean("Block"));
+                nd.setTenNguoiDung(rs.getString("TenNguoiDung"));
+                nd.setChuoiThang(rs.getInt("ChuoiThang"));
+                nd.setChuoiThangMax(rs.getInt("ChuoiThangMax"));
+                nd.setChuoiThua(rs.getInt("ChuoiThua"));
+                nd.setChuoiThuaMax(rs.getInt("ChuoiThuaMax"));
+                nd.setDiemIQ(rs.getInt("DiemIQ"));
+                nd.setGioiTinh(rs.getBoolean("GioiTinh"));
+                nd.setNgaySinh(String.valueOf(rs.getDate("NgaySinh")));
+                nd.setTongDiem(rs.getInt("TongDiem"));
+                nd.setTongTran(rs.getInt("TongTran"));
+                nd.setTongTranThang(rs.getInt("TongTranThang"));
+            }
+            my.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nd;
     }
 }
